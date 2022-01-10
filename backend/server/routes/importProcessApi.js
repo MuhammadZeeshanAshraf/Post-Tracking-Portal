@@ -1,6 +1,6 @@
 import express from 'express';
 import { TRACKING_WORKSHEET } from '../constants';
-import { itemTemplateController } from '../controllers';
+import { importProcessController } from '../controllers';
 import upload from '../middlewares/upload';
 import { asyncHandler } from '../utils/api';
 import { validator } from '../validators/index';
@@ -27,6 +27,6 @@ const router = express.Router();
  *       '200':
  *         description: "response object"
  */
-router.post('/', upload.single(TRACKING_WORKSHEET), validator.importProcess, asyncHandler(itemTemplateController.createItemTemplates));
+router.post('/', upload.single(TRACKING_WORKSHEET), validator.importProcess, asyncHandler(importProcessController.importTrackingWorkSheet));
 
 export default router;

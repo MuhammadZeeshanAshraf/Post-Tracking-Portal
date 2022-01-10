@@ -11,7 +11,16 @@
         "sourceType": "module"
     },
     "rules": {
-        "semi": ["error", "always"],
-        "camelcase": ["error", {"properties": "never"}]
+        "indent": "off",
+        "semi": [
+            "error",
+            "always"
+        ],
+        "camelcase": [
+            "error",
+            {
+                "properties": "never"
+            }
+        ]
     }
 }

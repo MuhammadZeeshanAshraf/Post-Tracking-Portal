@@ -8,13 +8,13 @@ import app from '../app';
 import Debug from 'debug';
 import http from 'http';
 
-const debug = Debug('post-tracking-portal-backend:server');
+const debug = Debug('configuration-migrator:server');
 
 /**
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(process.env.PORT || '9090');
+const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
