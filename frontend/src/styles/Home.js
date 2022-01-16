@@ -29,11 +29,11 @@ const  FileDiv = styled.div`
    font-size:14px;
    margin-bottom:10px;
    b{
-   }
+     font-size: larger;
+    }
 
     p{
-        // margin-bottom:0px;
-        // margin-right:10px;
+        font-size: larger;
     }
 
 `;
