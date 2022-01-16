@@ -29,4 +29,6 @@ const router = express.Router();
  */
 router.post('/', upload.single(TRACKING_WORKSHEET), validator.importProcess, asyncHandler(importProcessController.importTrackingWorkSheet));
 
+router.get('/data', upload.single(TRACKING_WORKSHEET), asyncHandler(importProcessController.getTrackingWorkData));
+
 export default router;
