@@ -51,7 +51,7 @@ const Home = () => {
     };
 
     const cerateSocketConnection =() =>{
-        const newSocket = io('http://localhost:4000');
+        const newSocket = io('http://localhost:5000/');
         newSocket.on("getData", (response) => {
             setTempRow(response.data);
             setTotalRows(response.total);
@@ -70,16 +70,16 @@ const Home = () => {
     const processFile = async ()=>{
         if(file){
             const data = new FormData()
-            data.append('file', file)
-            data.append('fileName', fileName)
-            // handleToggle();
-            // handleClose();
-            // axios.post("http://localhost:8000/upload", data, { 
-            //    // receive two    parameter endpoint url ,form data
-            // }).then(res => { // then print response status
-            //     console.log(res.statusText)
-               await cerateSocketConnection();
-            // })
+            data.append('TrackingWorkSheet', file[0])
+            handleToggle();
+            handleClose();
+            cerateSocketConnection();
+            axios.post("http://localhost:5000/post-tracking-portal/api/v1/import-process", data, { 
+               // receive two    parameter endpoint url ,form data
+            }).then(res => { // then print response status
+                console.log(res.statusText)
+                
+            })
             setProcessing(true);
         }
     }

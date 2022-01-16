@@ -1,11 +1,11 @@
 # Use an official Python runtime as a parent image
-FROM node:11.14.0-alpine
+FROM node:14
 
 # Set the working directory to /app
 WORKDIR /Portal/UI
 
 COPY package*.json ./
-RUN npm install && npm cache clean --force
+RUN npm install
 
 COPY . .
 
