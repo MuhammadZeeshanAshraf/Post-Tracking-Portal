@@ -10,13 +10,11 @@ import {
   CssBaseline,
   Stack,
   Toolbar,
-  Typography,
 } from "@mui/material";
 import HomeDataTable from "../components/HomeDataTable";
 import styles from "../styles/commonStyle.css";
 import DoubleArrowIcon from "@mui/icons-material/DoubleArrow";
 import axios from "axios";
-import io from "socket.io-client";
 import Dropzone from "react-dropzone";
 import { DropDownSection, FileDiv } from "../styles/Home";
 import CircularStatic from "../components/CircularStatic";
@@ -24,6 +22,8 @@ import { colors } from "../commons/colors";
 import HistoryDataTable from "../components/HistoryDataTable";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { makeStyles } from "@mui/styles";
+import Avatar from '@mui/material/Avatar';
+import { deepOrange } from '@mui/material/colors';
 
 const useStyles = makeStyles((theme) => ({
   logo: {
@@ -42,6 +42,7 @@ const Home = () => {
   const [socket, setSocket] = React.useState(null);
   const [processing, setProcessing] = React.useState(false);
   const [rows, setRows] = React.useState([]);
+  const [historyData, setHistoryData] = React.useState([]);
   const [tempRow, setTempRow] = React.useState(null);
   const [totalRows, setTotalRows] = React.useState(0);
 
@@ -51,38 +52,49 @@ const Home = () => {
     }
   }, [tempRow]);
 
-  const handleClose = () => {
+  const stopLoading = () => {
     setOpen(false);
   };
 
-  const handleToggle = () => {
+  const startLoading = () => {
     setOpen(!open);
   };
 
-  const cerateSocketConnection = () => {
-    const newSocket = io("http://localhost:5000/");
-    newSocket.on("getData", (response) => {
-      setTempRow(response.data);
-      setTotalRows(response.total);
-      if (response.isLast) {
-        closeSocket();
-      }
+  const getFileData = () => {
+    axios.get("http://localhost:5000/post-tracking-portal/api/v1/getFileData", {
+        params: {
+          fileId: '122212'
+        }
+      })
+    .then((res) => {
+        if(Array.isArray(res.data)){
+            setHistoryData(res.data)
+        }
     });
-  };
+  }
 
-  const closeSocket = () => {
-    if (socket) {
-      socket.close();
-    }
-  };
+  const getHistory = () => {
+    startLoading();
+    axios
+    .get(
+      "http://localhost:5000/post-tracking-portal/api/v1/getHistory",
+    )
+    .then((res) => {
+        if(Array.isArray(res.data)){
+            setHistoryData(res.data)
+        }
+        stopLoading();
+    }).catch((error) => {
+        console.log(error);
+      })
+ }
 
   const processFile = async () => {
     if (file) {
       const data = new FormData();
       data.append("TrackingWorkSheet", file[0]);
-      handleToggle();
-      handleClose();
-      // cerateSocketConnection();
+      data.append("key", fileName);
+
       setProcessing(true);
       axios
         .post(
@@ -127,15 +139,19 @@ const Home = () => {
       }, 20000);
     }
   };
+
   const onFileDrop = (uploadFile) => {
     setFileName(uploadFile[0].name);
     setFile(uploadFile);
   };
 
   const classes = useStyles();
-
+ 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    if(newValue == "2"){
+        getHistory();
+    }
   };
   return (
     <div>
@@ -147,17 +163,25 @@ const Home = () => {
         >
           <CssBaseline />
           <Toolbar>
-            <Typography variant="h3" className={classes.logo}>
-              TRACK N TRACE
-            </Typography>
-            <div className={classes.navlinks}></div>
+              <Stack
+               direction={"row"}
+              >
+                <img
+                    src={require("../img/logo.png")}
+                    style={{ width: "500px",padding:"20px", flex:1 }}
+                />
+                <Avatar sx={{ bgcolor: deepOrange[500] }}>N</Avatar>
+                {/* <Typography variant="h3" className={classes.logo}>
+                    TRACK N TRACE
+                </Typography> */}
+              </Stack>
           </Toolbar>
-          <Box sx={{ borderBottom: 1, borderColor: "divider", p: 2 }}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider", p: 2, backgroundColor:"#e69acb" }}>
             <Stack alignItems={"center"}>
               <TabList
                 textColor="primary"
-                TabIndicatorProps={{ style: { background: colors.primary } }}
                 onChange={handleChange}
+                TabIndicatorProps={{ style: { background: colors.primary } }}
                 aria-label="lab API tabs example"
               >
                 <Tab
@@ -180,17 +204,24 @@ const Home = () => {
               <Container sx={{ p: 5 }}>
                 <Stack>
                   <FileDiv>
-                    <b>File:&nbsp;&nbsp;</b>
+                    <b>File Name:&nbsp;&nbsp;</b>
                     <p>{fileName}</p>
                     {file ? (
                       <>
                         <DoubleArrowIcon color={"success"} />
-                        <Button
-                          onClick={processFile}
-                          className={classes.processBtn}
-                        >
-                          PROCESS NOW
-                        </Button>
+                            <Button
+                             onClick={processFile}
+                             className={classes.processBtn}
+                            >
+                                <Stack justifyContent={"center"} alignItems={"center"}>
+                                    <img
+                                        src={require("../img/process-icon.png")}
+                                        style={{ width: "40px" }}
+                                    />
+                                    &nbsp;PROCESS NOW
+                                </Stack>
+                            </Button>                            
+                        
                       </>
                     ) : (
                       <></>
@@ -223,11 +254,18 @@ const Home = () => {
                 alignItems={"center"}
                 spacing={1}
               >
-                <Stack direction={"row"}>
+                <Stack direction={"row"}
+                 justifyContent={"center"}
+                 alignItems={"center"}
+                >
                   <h3 style={{ marginLeft: "10px" }}>Processing</h3>
                   <div style={{ padding: "4px" }}>
                     <p>({totalRows} rows)</p>
                   </div>
+                  <img
+                    src={require("../img/processing.gif")}
+                    style={{ width: "300px" }}
+                 />
                 </Stack>
                 <CircularStatic progress={(rows.length / totalRows) * 100} />
                 <HomeDataTable rows={rows} />
