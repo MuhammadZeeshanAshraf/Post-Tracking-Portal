@@ -23,9 +23,18 @@ const  DropDownSection = styled.section`
 
 const  FileDiv = styled.div`
    display:flex;
+   justify-content: center;
+   align-items: center;
    color:gray;
-    font-size:14px;
+   font-size:14px;
+   margin-bottom:10px;
    b{
    }
+
+    p{
+        margin-bottom:0px;
+        margin-right:10px;
+    }
+
 `;
 export {DropDownSection, FileDiv}

@@ -1,37 +1,75 @@
-import React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import React, { useEffect, useState } from 'react';
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
-const columns = [
-    { field: 'id', headerName: 'Sr#', width: 70 },
-    { field: 'tID', headerName: 'Tracking ID', width: 150 },
-    { field: 'bookingDate', headerName: 'Date of Booking', type: 'date', width: 130 },
-    { field: 'pinCode', headerName: 'Customer PIN Code', type: 'number', width: 170 },
-    { field: 'amount', headerName: 'Amount', type: 'number', width: 130 },
-    { field: 'validate', headerName: 'Validate (Validation Check)', width: 230 },
-];
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+}));
 
-const rows = [
-    { id: 1, tID: 'R12553kcd', bookingDate: '14-01-2022', pinCode: '35', amount: '2309', validate: 'Booked' },
-    { id: 2, tID: 'KPL25sMQt', bookingDate: '14-01-2022', pinCode: '42', amount: '2309', validate: 'Booked' },
-    { id: 3, tID: 'R12553kcd', bookingDate: '14-01-2022', pinCode: 'NA', amount: 'NA', validate: 'Not Booked' },
-    { id: 5, tID: 'R12553kcd', bookingDate: '11-01-2022', pinCode: null, amount: '2309', validate: 'Booked' },
-    { id: 4, tID: '234u54446', bookingDate: '14-01-2022', pinCode: 'NA', amount: 'NA', validate: 'Not Booked' },
-    { id: 7, tID: '66fh467hp', bookingDate: '14-01-2022', pinCode: '44', amount: '2309', validate: 'Booked' },
-    { id: 6, tID: 'R12553kcd', bookingDate: '14-01-2022', pinCode: 'NA', amount: 'NA', validate: 'Not Booked' },
-    { id: 9, tID: '72fftyRDs', bookingDate: '14-01-2022', pinCode: '65', amount: '2309', validate: 'Booked' },
-    { id: 8, tID: 'R12553kcd', bookingDate: '14-01-2022', pinCode: 'NA', amount: 'NA', validate: 'Not Booked' },
-];
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+}));
 
-const HomeDataTable = () => {
+const HomeDataTable = ({rows}) => {
+
+    const [failedCount, setFailedCount] = useState(0);
+    const [totalAmount, setTotalAmount] = useState(0);
+    const [bookedCount, setBookedCount] = useState(0);
+
+    useEffect(() => {
+        const bookedRows = rows.filter(row => row.validate == "Booked");
+        const tAmount = bookedRows.reduce((sum, obj) => sum + parseInt(obj.amount), 0);
+        setTotalAmount(tAmount);
+        setBookedCount(bookedRows.length);
+        setFailedCount(rows.length - bookedRows.length);
+    }, [rows]);
+
     return (
-        <div style={{ height: 400, width: '100%' }}>
-            <DataGrid
-                rows={rows}
-                columns={columns}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-            />
-        </div>
+        <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                <TableHead>
+                    <TableRow>
+                        <StyledTableCell>Tracking ID</StyledTableCell>
+                        <StyledTableCell align="right">Date of Booking</StyledTableCell>
+                        <StyledTableCell align="right">Customer PIN Code</StyledTableCell>
+                        <StyledTableCell align="right">Amount</StyledTableCell>
+                        <StyledTableCell align="right">Validate (Validation Check)</StyledTableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {rows.map((row) => (
+                    <StyledTableRow key={row.name}>
+                        <StyledTableCell component="th" scope="row">{row.tracking_id}</StyledTableCell>
+                        <StyledTableCell align="right">{row.booking_date}</StyledTableCell>
+                        <StyledTableCell align="right">{row.customer_pin_code}</StyledTableCell>
+                        <StyledTableCell align="right">{row.amount}</StyledTableCell>
+                        <StyledTableCell align="right">{row.book_status}</StyledTableCell>
+                    </StyledTableRow>
+                    ))}
+                </TableBody>
+                <TableRow sx={{backgroundColor: 'gray'}}>
+                    <TableCell><b>Total Tracking - {bookedCount}</b></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell align="right"><b>Total Amount: {totalAmount}</b></TableCell>
+                    <TableCell align="right"><b>Booked: {bookedCount} Failed: {failedCount}</b></TableCell>
+                </TableRow>
+            </Table>
+        </TableContainer>
     );
 };
 
