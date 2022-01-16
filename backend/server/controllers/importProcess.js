@@ -42,6 +42,13 @@ export const getTrackingWorkData = async (request, response, next) => {
         'id',
         {}
       );
+    const totalData = await models.generalDatabaseFunction.getDatabySingleWhereColumn(
+      SCHEMA,
+      TABLE_DETAILS.importprocess.name,
+      'id',
+      processID
+    );
+    const total = totalData[0].total_tracking_ids;
     trackingData =
       await models.generalDatabaseFunction.getDatabySingleWhereColumn(
         SCHEMA,
@@ -49,7 +56,10 @@ export const getTrackingWorkData = async (request, response, next) => {
         'process_id',
         processID
       );
-    response.send(trackingData);
+    response.send({
+      trackingData: trackingData,
+      total: total
+    });
   } catch (error) {
     return response.status(400).send({
       message: error.message

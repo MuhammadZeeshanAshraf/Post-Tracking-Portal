@@ -41,6 +41,8 @@ export const importTrackingWorkSheet = async (
                 if (abortCheck) {
                     for (const sheet of trackingSheets) {
                         console.log('Currently Processing Sheet : ', sheet.name);
+                        updateProcessObj.total_tracking_ids = sheet.data.length;
+                        await models.generalDatabaseFunction.updateSingleRowWithReturn(SCHEMA, TABLE_DETAILS.importprocess.name, updateProcessObj, whereObj);
                         await processTrackingSheet(
                             sheet,
                             updateProcessObj,
