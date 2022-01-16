@@ -1,0 +1,29 @@
+version: "3.3"
+services:
+  ui:
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    build:
+      context: ./frontend
+    restart: always
+    ports:
+      - 5000:5000
+    volumes:
+      - ./frontend:/Portal/UI
+    command: sh -c "npm run start"
+
+
+  backend:
+    build:
+      context: ./backend
+    restart: always
+    volumes:
+      - ./backend:/Portal/backend
+    ports:
+      - 5001:5001
+    command: sh -c "npm run start_dev"
+
+  
+# local path : docker root path
+# PORT OUTSIDE THE docker CONTAINER :PORT INSIDE  docker THE CONTAINER

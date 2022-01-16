@@ -77,8 +77,8 @@ export const processTrackingSheet = async (
                     x++;
                 }
                 await Promise.all(recordPromises);
-                // models.generalDatabaseFunction.insertMultipleRows(SCHEMA,
-                //     TABLE_DETAILS.tracking.name, scrapData);
+                models.generalDatabaseFunction.insertMultipleRows(SCHEMA,
+                    TABLE_DETAILS.tracking.name, scrapData);
             }
 
             console.log(scrapData);

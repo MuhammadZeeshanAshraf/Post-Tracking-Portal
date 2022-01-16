@@ -1,16 +1,16 @@
-FROM public.ecr.aws/tunnelhub/oraclelinux:7-slim
-WORKDIR /usr/src/app
+FROM node:14
+
+WORKDIR /Portal/backend
 
 COPY package*.json ./
 
-RUN  yum -y install oracle-release-el7 oracle-nodejs-release-el7 && \
-    yum-config-manager --disable ol7_developer_EPEL && \
-    yum -y install oracle-instantclient19.3-basiclite nodejs && \
-    rm -rf /var/cache/yum && \
-    npm install
+RUN npm install
 
 COPY . .
 
-# Make port 80 available to the world outside this container
-EXPOSE 8080
-CMD ["npm", "run", "watch:dev"]
+EXPOSE 5000
+
+# Define environment variable
+ENV NODE_ENV=local-dev PORT=5000
+
+CMD [ "npm", "run", "prod" ]
