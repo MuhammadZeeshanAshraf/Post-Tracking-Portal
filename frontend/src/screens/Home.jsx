@@ -1,58 +1,27 @@
 import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
-import { TabContext, TabList, TabPanel } from '@material-ui/lab';
-import { Backdrop, Button, CircularProgress, Container, Stack } from '@mui/material';
+import { AppBar, Backdrop, Button, CircularProgress, Container, CssBaseline, Stack, Toolbar, Typography } from '@mui/material';
 import HomeDataTable from '../components/HomeDataTable';
-import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import styles from '../styles/commonStyle.css'; 
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import axios from 'axios';
 import io from 'socket.io-client';
-import {
-    AppBar,
-    Toolbar,
-    CssBaseline,
-    Typography,
-    makeStyles,
-} from "@material-ui/core";
 import Dropzone from 'react-dropzone';
 import { DropDownSection, FileDiv } from '../styles/Home';
 import CircularStatic from '../components/CircularStatic';
 import { colors } from "../commons/colors";
 import HistoryDataTable from '../components/HistoryDataTable';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme) => ({
-    navlinks: {
-      marginLeft: theme.spacing(10),
-      display: "flex",
-    },
    logo: {
       flexGrow: "1",
       cursor: "pointer",
       padding:'20px',
       color:colors.primary
-
     },
-    link: {
-      textDecoration: "none",
-      color: "white",
-      fontSize: "20px",
-      marginLeft: theme.spacing(20),
-      "&:hover": {
-        color: "yellow",
-        borderBottom: "1px solid    ",
-      },
-    },
-    toolbar:{
-
-        backgroundColor: "#ffffff",
-        color:"#000000",
-    },
-    indicator:{
-        backgroundColor:"blue"
-    }
-
   }));
   
 
@@ -73,7 +42,6 @@ const Home = () => {
         }
     }, [tempRow]);
 
-
     const handleClose = () => {
       setOpen(false);
     };
@@ -81,8 +49,7 @@ const Home = () => {
     const handleToggle = () => {
       setOpen(!open);
     };
-    const setMyTempRow = (row)=>{
-    }
+
     const cerateSocketConnection =() =>{
         const newSocket = io('http://localhost:4000');
         newSocket.on("getData", (response) => {
@@ -129,7 +96,7 @@ const Home = () => {
     return (
         <div>
             <TabContext value={value}>
-            <AppBar position="static"  className={classes.toolbar} >
+            <AppBar position="static" sx={{backgroundColor:"white"}} className={classes.toolbar} >
                 <CssBaseline />
                 <Toolbar>
                     <Typography  variant="h3" className={classes.logo}>
@@ -184,12 +151,12 @@ const Home = () => {
                         <Stack 
                          justifyContent={"center"}
                          alignItems={"center"}
-                         spacing={3}
+                         spacing={1}
                          >
                             <Stack direction={"row"}>
-                                <h5>Processing</h5>
+                                <h3 style={{marginLeft:'10px'}} >Processing</h3>
                                 <div style={{padding: '4px'}} >
-                                    <p>({rows.length} rows)</p>
+                                    <p>({totalRows} rows)</p>
                                 </div>
                             </Stack>
                             <CircularStatic progress={(rows.length/totalRows)*100}/>
