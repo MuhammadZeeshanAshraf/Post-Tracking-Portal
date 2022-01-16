@@ -31,7 +31,7 @@ const HomeDataTable = ({rows}) => {
     const [bookedCount, setBookedCount] = useState(0);
 
     useEffect(() => {
-        const bookedRows = rows.filter(row => row.validate == "Booked");
+        const bookedRows = rows.filter(row => row.book_status == "Booked");
         const tAmount = bookedRows.reduce((sum, obj) => sum + parseInt(obj.amount), 0);
         setTotalAmount(tAmount);
         setBookedCount(bookedRows.length);
@@ -44,6 +44,8 @@ const HomeDataTable = ({rows}) => {
                 <TableHead>
                     <TableRow>
                         <StyledTableCell>Tracking ID</StyledTableCell>
+                        <StyledTableCell align="right">Article Type</StyledTableCell>
+                        <StyledTableCell align="right">Booked At</StyledTableCell>
                         <StyledTableCell align="right">Date of Booking</StyledTableCell>
                         <StyledTableCell align="right">Customer PIN Code</StyledTableCell>
                         <StyledTableCell align="right">Amount</StyledTableCell>
@@ -54,6 +56,8 @@ const HomeDataTable = ({rows}) => {
                     {rows.map((row) => (
                     <StyledTableRow key={row.name}>
                         <StyledTableCell component="th" scope="row">{row.tracking_id}</StyledTableCell>
+                        <StyledTableCell align="right">{row.article_type}</StyledTableCell>
+                        <StyledTableCell align="right">{row.booked_at}</StyledTableCell>
                         <StyledTableCell align="right">{row.booking_date}</StyledTableCell>
                         <StyledTableCell align="right">{row.customer_pin_code}</StyledTableCell>
                         <StyledTableCell align="right">{row.amount}</StyledTableCell>
@@ -63,6 +67,8 @@ const HomeDataTable = ({rows}) => {
                 </TableBody>
                 <TableRow sx={{backgroundColor: 'gray'}}>
                     <TableCell><b>Total Tracking - {bookedCount}</b></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
                     <TableCell></TableCell>
                     <TableCell></TableCell>
                     <TableCell align="right"><b>Total Amount: {totalAmount}</b></TableCell>
