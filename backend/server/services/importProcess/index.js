@@ -1,14 +1,19 @@
 import path from 'path';
 import xlsx from 'node-xlsx';
-import { INTERNAL_FILES_PATH } from '../../constants';
-import { getTrackingSheet, prepareResponse, cleanFileDirectory } from '../utilsServices';
+import { INTERNAL_FILES_PATH, SCHEMA, TABLE_DETAILS } from '../../constants';
+import { getTrackingSheet, prepareResponse } from '../utilsServices';
 import { processTrackingSheet } from './processTrackingSheet';
 
 export const importTrackingWorkSheet = async (
+    processID,
     filePath,
-    errorList
+    errorList,
+    models
 ) => {
     try {
+        const scrapData = [];
+        const whereObj = { id: processID };
+        const updateProcessObj = Object.assign({}, TABLE_DETAILS.importprocess.ddl);
         console.log('Start Processing Post Tracking Worksheet');
 
         /**
@@ -38,14 +43,27 @@ export const importTrackingWorkSheet = async (
                         console.log('Currently Processing Sheet : ', sheet.name);
                         await processTrackingSheet(
                             sheet,
-                            errorList
+                            updateProcessObj,
+                            errorList,
+                            scrapData,
+                            processID,
+                            models
                         );
+                        updateProcessObj.not_book_ids = updateProcessObj.total_tracking_ids - updateProcessObj.book_ids;
+                        updateProcessObj.not_book_on_same_date = updateProcessObj.total_tracking_ids - updateProcessObj.book_on_same_date;
                     }
+                    console.log(whereObj);
+                    console.log(updateProcessObj);
+                    await models.generalDatabaseFunction.updateSingleRowWithReturn(SCHEMA, TABLE_DETAILS.importprocess.name, updateProcessObj, whereObj);
                 } else {
                     return 'Tarcking IDs Operation Abort';
                 }
             }
         }
+
+        console.log(scrapData);
+        // await models.generalDatabaseFunction.insertMultipleRows(SCHEMA,
+        //     TABLE_DETAILS.tracking.name, scrapData);
 
         const message = await prepareResponse(
             'Processing Post Tracking Worksheet',

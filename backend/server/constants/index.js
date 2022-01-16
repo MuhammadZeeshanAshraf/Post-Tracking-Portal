@@ -43,3 +43,32 @@ export const NUMERAL_ADJECTIVES = {
 export const NA = 'NA';
 export const NOT_BOOKED = 'Not Booked';
 export const BOOKED = 'Booked';
+export const SCHEMA = 'post_tracking_portal';
+export const BATCH_SIZE = 5000;
+
+export const TABLE_DETAILS = {
+    importprocess: {
+        name: 'importprocess',
+        ddl: {
+            total_tracking_ids: 0,
+            book_ids: 0,
+            not_book_ids: 0,
+            book_on_same_date: 0,
+            not_book_on_same_date: 0,
+            total_bill: 0
+
+        }
+    },
+    tracking: {
+        name: 'tracking',
+        ddl: {
+            process_id: '',
+            tracking_id: '',
+            booking_date: '',
+            customer_pin_code: '',
+            amount: '',
+            book_status: ''
+
+        }
+    }
+};
