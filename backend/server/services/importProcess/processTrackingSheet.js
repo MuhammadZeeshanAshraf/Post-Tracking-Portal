@@ -18,6 +18,7 @@ import {
     TRACK_NOW_ID
 } from '../../constants';
 
+import { socket } from '../../socket';
 const Client = require('@infosimples/node_two_captcha');
 
 // Declare your client
@@ -176,6 +177,9 @@ const processSingleTrackingID = async (
                 customer_pin_code: data[2],
                 amount: data[3],
                 book_status: BOOKED
+            });
+            socket.emit('some-event', { a: true }, function (dataFromServer) {
+                console.log(dataFromServer);
             });
             models.generalDatabaseFunction.insertMultipleRows(
                 SCHEMA,

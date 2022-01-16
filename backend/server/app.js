@@ -35,6 +35,7 @@ const swaggerOptions = {
 
 };
 const app = express();
+
 const swaggerDocs = swaggerJSDoc(swaggerOptions);
 
 // middlewares

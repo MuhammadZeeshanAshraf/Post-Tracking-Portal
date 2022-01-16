@@ -50,6 +50,10 @@ export default class GeneralDatabaseFunction {
     await Promise.all(promises);
   }
 
+  getDatabySingleWhereColumn(schema, table, whereColumnName, whereColumnValue) {
+    return this.db.select().table(`${schema}.${table}`).where(whereColumnName, whereColumnValue);
+  }
+
   async getSimpleMaxByColumn(schema, table, maxColumnName, whereColumnName, whereValue) {
     try {
       let maxObj;

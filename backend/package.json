@@ -40,7 +40,7 @@
     "del": "^6.0.0",
     "dotenv": "^10.0.0",
     "esm": "^3.2.25",
-    "exceljs": "^4.2.1",
+    "exceljs": "^4.3.0",
     "express": "~4.16.1",
     "express-validator": "^6.12.1",
     "fast-csv": "^4.3.6",
@@ -64,6 +64,7 @@
     "puppeteer-extra-plugin-stealth": "^2.9.0",
     "random-useragent": "^0.5.0",
     "rimraf": "^3.0.2",
+    "socket.io": "^4.4.1",
     "swagger-jsdoc": "^6.1.0",
     "swagger-ui-express": "^4.1.6"
   },

@@ -2,9 +2,11 @@ import path from 'path';
 
 /* API Keys */
 export const CAPTCH_KEY = '366765b9abdb4e32a7a0a200f28872ec';
+export const PORT = '4000';
 
 /* Payload Keys */
 export const TRACKING_WORKSHEET = 'TrackingWorkSheet';
+export const PROCESS_ID = 'ProcessId';
 
 /* Extension Constant */
 export const CSV_EXTESION = '.csv';
@@ -45,6 +47,7 @@ export const NOT_BOOKED = 'Not Booked';
 export const BOOKED = 'Booked';
 export const SCHEMA = 'post_tracking_portal';
 export const BATCH_SIZE = 5000;
+export const COLUMN_WIDTH = '25';
 
 export const TABLE_DETAILS = {
     importprocess: {
@@ -72,3 +75,33 @@ export const TABLE_DETAILS = {
         }
     }
 };
+
+export const WORKBOOK_PROPERTIES = {
+    creator: 'Post Tracking Portal',
+    lastModifiedBy: 'zeeshan@gmail.com',
+    created: new Date(),
+    modified: new Date(),
+    lastPrinted: new Date(),
+    views: [
+        {
+            x: 0,
+            y: 0,
+            width: 10000,
+            height: 20000,
+            firstSheet: 0,
+            activeTab: 1,
+            visibility: 'visible'
+        }
+    ],
+    defaultColWidth: 25
+};
+
+export const EXCELFILE_EXTENSION = '.xlsx';
+
+export const SHEET_HEADER = [
+    { header: 'Tracking ID', key: 'tracking_id', width: COLUMN_WIDTH },
+    { header: 'Date of Booking', key: 'booking_date', width: COLUMN_WIDTH },
+    { header: 'Customer PIN Code', key: 'customer_pin_code', width: COLUMN_WIDTH },
+    { header: 'Amount', key: 'amount', width: COLUMN_WIDTH },
+    { header: 'Validate (Validation Check)', key: 'book_status', width: COLUMN_WIDTH }
+];

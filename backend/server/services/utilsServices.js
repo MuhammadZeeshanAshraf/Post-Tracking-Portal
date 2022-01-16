@@ -1,7 +1,7 @@
 import path from 'path';
 import _ from 'lodash';
 import fs from 'fs';
-import { TRACKING_SHEET_HEADER } from '../constants';
+import { COLUMN_WIDTH, TRACKING_SHEET_HEADER } from '../constants';
 const csv = require('fast-csv');
 const del = require('del');
 const fetch = require('node-fetch');
@@ -168,5 +168,33 @@ export const cleanFileDirectory = async (filePath, errorList) => {
     } catch (error) {
         errorList.push('Tarcking IDs Operation Abort');
         return false;
+    }
+};
+
+export const styleWorkBookHeader = (workbook) => {
+    try {
+        workbook.eachSheet(function (worksheet, sheetId) {
+            if (worksheet.getRow(1)) {
+                worksheet.getRow(1).font = { color: { argb: 'FF44546A' }, size: 14, bold: true };
+                worksheet.getRow(1).border = {
+                    bottom: { style: 'thick', color: { argb: 'FF44546A' } }
+                };
+            }
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const getHeader = (attributeDataFilter) => {
+    try {
+        const columns = [];
+        attributeDataFilter.forEach(element => {
+            const header = { header: element.display_name, key: element.display_name, width: COLUMN_WIDTH };
+            columns.push(header);
+        });
+        return columns;
+    } catch (error) {
+        console.log(error);
     }
 };
