@@ -8,9 +8,9 @@ services:
       context: ./frontend
     restart: always
     ports:
-      - 5000:5000
+      - 3000:3000
     volumes:
-      - ./frontend:/Portal/UI
+      - ./frontend:/Portal/frontend
     command: sh -c "npm run start"
 
 
@@ -21,8 +21,8 @@ services:
     volumes:
       - ./backend:/Portal/backend
     ports:
-      - 5001:5001
-    command: sh -c "npm run start_dev"
+      - 5000:5000
+    command: sh -c "npm run watch:dev"
 
   
 # local path : docker root path
