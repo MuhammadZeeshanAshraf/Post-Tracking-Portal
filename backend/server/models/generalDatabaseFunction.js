@@ -54,6 +54,10 @@ export default class GeneralDatabaseFunction {
     return this.db.select().table(`${schema}.${table}`).where(whereColumnName, whereColumnValue);
   }
 
+  getAllData(schema, table) {
+    return this.db.select().table(`${schema}.${table}`);
+  }
+
   async getSimpleMaxByColumn(schema, table, maxColumnName, whereColumnName, whereValue) {
     try {
       let maxObj;

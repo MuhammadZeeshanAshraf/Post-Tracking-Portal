@@ -13,7 +13,8 @@ export const importTrackingWorkSheet = async (request, response, next) => {
       'InternalFiles',
       request.file.filename
     );
-    const processID = await processService.createProcess(models, errorList);
+    const { Name } = request.body;
+    const processID = await processService.createProcess(Name, models, errorList);
     if (typeof processID !== 'object' && typeof processID !== 'function') {
       const message = await importProcessService.importTrackingWorkSheet(
         processID,
@@ -59,6 +60,50 @@ export const getTrackingWorkData = async (request, response, next) => {
     response.send({
       trackingData: trackingData,
       total: total
+    });
+  } catch (error) {
+    return response.status(400).send({
+      message: error.message
+    });
+  }
+};
+
+export const getProcessHistory = async (request, response, next) => {
+  try {
+    const trackingData =
+      await models.generalDatabaseFunction.getAllData(
+        SCHEMA,
+        TABLE_DETAILS.importprocess.name
+      );
+    response.send(trackingData);
+  } catch (error) {
+    return response.status(400).send({
+      message: error.message
+    });
+  }
+};
+
+export const getProcessData = async (request, response, next) => {
+  try {
+    const { ProcessId } = request.body;
+    let trackingData = [];
+    const totalData = await models.generalDatabaseFunction.getDatabySingleWhereColumn(
+      SCHEMA,
+      TABLE_DETAILS.importprocess.name,
+      'id',
+      ProcessId
+    );
+    const total = totalData[0].total_tracking_ids;
+    trackingData =
+      await models.generalDatabaseFunction.getDatabySingleWhereColumn(
+        SCHEMA,
+        TABLE_DETAILS.tracking.name,
+        'process_id',
+        ProcessId
+      );
+    response.send({
+      total: total,
+      trackingData: trackingData
     });
   } catch (error) {
     return response.status(400).send({
