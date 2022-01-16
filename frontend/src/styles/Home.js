@@ -32,8 +32,8 @@ const  FileDiv = styled.div`
    }
 
     p{
-        margin-bottom:0px;
-        margin-right:10px;
+        // margin-bottom:0px;
+        // margin-right:10px;
     }
 
 `;

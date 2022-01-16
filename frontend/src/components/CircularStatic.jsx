@@ -38,5 +38,8 @@ CircularProgressWithLabel.propTypes = {
 };
 
 export default function CircularStatic({progress}) {
+  if(!progress){
+    progress = 0.2;
+  }
   return <CircularProgressWithLabel value={progress} />;
 }
