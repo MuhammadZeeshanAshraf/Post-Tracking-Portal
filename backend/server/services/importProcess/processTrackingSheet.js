@@ -1,4 +1,3 @@
-import { Solver } from '2captcha';
 import { evaluate } from 'mathjs';
 import puppeteer from 'puppeteer-extra';
 import AdblockerPlugin from 'puppeteer-extra-plugin-adblocker';
@@ -18,7 +17,6 @@ import {
     TRACK_NOW_ID
 } from '../../constants';
 
-// import { socket } from '../../socket';
 const Client = require('@infosimples/node_two_captcha');
 
 // Declare your client
@@ -30,10 +28,6 @@ const client = new Client(CAPTCH_KEY, {
 
 puppeteer.use(StealthPlugin());
 puppeteer.use(AdblockerPlugin({ blockTrackers: true }));
-// const solver = new Solver('366765b9abdb4e32a7a0a200f28872ec');
-// const { JSDOM } = require('jsdom');
-// const { window } = new JSDOM('');
-// const $ = require('jquery')(window);
 
 export const processTrackingSheet = async (
     sheet,
@@ -82,7 +76,7 @@ export const processTrackingSheet = async (
             }
 
             console.log(scrapData);
-            // await browser.close();
+            await browser.close();
         }
     } catch (error) {
         errorList.push(error.message);
@@ -176,7 +170,10 @@ const processSingleTrackingID = async (
                 booking_date: data[1],
                 customer_pin_code: data[2],
                 amount: data[3],
-                book_status: BOOKED
+                book_status: BOOKED,
+                type: data[4],
+                booked_at: data[0],
+                delivery_location: data[5]
             });
 
             models.generalDatabaseFunction.insertMultipleRows(
@@ -189,28 +186,12 @@ const processSingleTrackingID = async (
             records.push({
                 'Tracking ID': trackingID
             });
-            // scrapData.push({
-            //     process_id: processID,
-            //     tracking_id: trackingID,
-            //     booking_date: NA,
-            //     customer_pin_code: NA,
-            //     amount: NA,
-            //     book_status: NOT_BOOKED
-            // });
             return true;
         }
     } catch (error) {
         records.push({
             'Tracking ID': trackingID
         });
-        // scrapData.push({
-        //     process_id: processID,
-        //     tracking_id: trackingID,
-        //     booking_date: NA,
-        //     customer_pin_code: NA,
-        //     amount: NA,
-        //     book_status: NOT_BOOKED
-        // });
         errorList.push(error.message);
         // console.log(error);
         return true;

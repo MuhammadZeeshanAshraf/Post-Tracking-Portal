@@ -7,6 +7,7 @@ export const PORT = '5000';
 /* Payload Keys */
 export const TRACKING_WORKSHEET = 'TrackingWorkSheet';
 export const PROCESS_ID = 'ProcessId';
+export const NAME = 'Name';
 
 /* Extension Constant */
 export const CSV_EXTESION = '.csv';
@@ -53,6 +54,7 @@ export const TABLE_DETAILS = {
     importprocess: {
         name: 'importprocess',
         ddl: {
+            file_name: '',
             total_tracking_ids: 0,
             book_ids: 0,
             not_book_ids: 0,
@@ -66,9 +68,12 @@ export const TABLE_DETAILS = {
         name: 'tracking',
         ddl: {
             process_id: '',
+            type: '',
+            booked_at: '',
             tracking_id: '',
             booking_date: '',
             customer_pin_code: '',
+            delivery_location: '',
             amount: '',
             book_status: ''
 
@@ -100,8 +105,11 @@ export const EXCELFILE_EXTENSION = '.xlsx';
 
 export const SHEET_HEADER = [
     { header: 'Tracking ID', key: 'tracking_id', width: COLUMN_WIDTH },
+    { header: 'Article Type', key: 'type', width: COLUMN_WIDTH },
+    { header: 'Booked At', key: 'booked_at', width: COLUMN_WIDTH },
     { header: 'Date of Booking', key: 'booking_date', width: COLUMN_WIDTH },
-    { header: 'Customer PIN Code', key: 'customer_pin_code', width: COLUMN_WIDTH },
+    { header: 'Destination PIN Code', key: 'customer_pin_code', width: COLUMN_WIDTH },
+    { header: 'Delivery Location', key: 'delivery_location', width: COLUMN_WIDTH },
     { header: 'Amount', key: 'amount', width: COLUMN_WIDTH },
     { header: 'Validate (Validation Check)', key: 'book_status', width: COLUMN_WIDTH }
 ];
