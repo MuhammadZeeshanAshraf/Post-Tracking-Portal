@@ -313,7 +313,7 @@ const Home = () => {
           </Stack>
         </TabPanel>
         <TabPanel value="2">
-          <HistoryDataTable rows={rows} />
+          <HistoryDataTable rows={historyData} />
         </TabPanel>
       </TabContext>
       <Backdrop

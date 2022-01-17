@@ -32,25 +32,37 @@ const HistoryDataTable = ({rows}) => {
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
                 <TableHead>
                     <TableRow>
-                        <StyledTableCell>Sr#</StyledTableCell>
+                        <StyledTableCell>Upload Date</StyledTableCell>
                         <StyledTableCell>File Name</StyledTableCell>
-                        <StyledTableCell align='right'>Processed Date</StyledTableCell>
+                        <StyledTableCell align='right'>Total Articles</StyledTableCell>
+                        <StyledTableCell align='right'>Total Articles Booked</StyledTableCell>
+                        <StyledTableCell align='right'>Book On Same Date</StyledTableCell>
+                        <StyledTableCell align='right'>Book On Different Date</StyledTableCell>
+                        <StyledTableCell align='right'>Total Bill Amount</StyledTableCell>
+                        <StyledTableCell align='right'>No Record Found</StyledTableCell>
                         <StyledTableCell align='right'>Actions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</StyledTableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row, index) => (
+                    {rows.map((row) => (
                     <StyledTableRow key={row.name}>
-                        <StyledTableCell component="th" scope="row">{index+1}</StyledTableCell>
-                        <StyledTableCell>{row.customer_pin_code}</StyledTableCell>
-                        <StyledTableCell align='right'>{row.booking_date}</StyledTableCell>
+                        <StyledTableCell component="th" scope="row">{row.create_date.substr(0 ,10)}</StyledTableCell>
+                        <StyledTableCell>{row.file_name}</StyledTableCell>
+                        <StyledTableCell align='right'>{row.total_tracking_ids}</StyledTableCell>
+                        <StyledTableCell align='right'>{row.book_ids}</StyledTableCell>
+                        <StyledTableCell align='right'>{row.book_on_same_date}</StyledTableCell>
+                        <StyledTableCell align='right'>{row.not_book_on_same_date}</StyledTableCell>
+                        <StyledTableCell align='right'>{row.total_bill}</StyledTableCell>
+                        <StyledTableCell align='right'>{row.not_book_ids}</StyledTableCell>
                         <StyledTableCell>
                             <Stack direction='row'
                              justifyContent="flex-end"
                              alignItems="flex-end">
-                                <IconButton aria-label="delete" size="large">
-                                    <CloudDownloadSharpIcon color='primary' fontSize="inherit" />
-                                </IconButton>
+                                <a href="/home/muhammad/my_work/Post-Tracking-Portal/backend/server/InternalFiles/TrackingWorkSheet.xlsx" download>
+                                    <IconButton aria-label="delete" size="large">
+                                        <CloudDownloadSharpIcon color='primary' fontSize="inherit" />
+                                    </IconButton>
+                                </a>
                                 <IconButton aria-label="PreviewIcon" size="large">
                                     <PreviewIcon sx={{color:"green"}} fontSize="inherit" />
                                 </IconButton>
