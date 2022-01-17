@@ -24,6 +24,9 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { makeStyles } from "@mui/styles";
 import Avatar from '@mui/material/Avatar';
 import { deepOrange } from '@mui/material/colors';
+import DoneIcon from '@mui/icons-material/Done';
+import { config } from "../commons/config";
+import LogoutAvatar from "../components/LogoutAvatar";
 
 const useStyles = makeStyles((theme) => ({
   logo: {
@@ -45,6 +48,9 @@ const Home = () => {
   const [historyData, setHistoryData] = React.useState([]);
   const [tempRow, setTempRow] = React.useState(null);
   const [totalRows, setTotalRows] = React.useState(0);
+  const [completeProcess, setCompleteProcess] = React.useState(false);
+
+
 
   useEffect(() => {
     if (tempRow) {
@@ -61,7 +67,7 @@ const Home = () => {
   };
 
   const getFileData = () => {
-    axios.get("http://localhost:5000/post-tracking-portal/api/v1/getFileData", {
+    axios.get(config.server+"getFileData", {
         params: {
           fileId: '122212'
         }
@@ -77,7 +83,7 @@ const Home = () => {
     startLoading();
     axios
     .get(
-      "http://localhost:5000/post-tracking-portal/api/v1/getHistory",
+      config.server+"import-process/history",
     )
     .then((res) => {
         if(Array.isArray(res.data)){
@@ -86,6 +92,7 @@ const Home = () => {
         stopLoading();
     }).catch((error) => {
         console.log(error);
+        stopLoading();
       })
  }
 
@@ -98,15 +105,16 @@ const Home = () => {
       setProcessing(true);
       axios
         .post(
-          "http://localhost:5000/post-tracking-portal/api/v1/import-process",
+          config.server+"import-process",
           data,
           {}
         )
         .then((res) => {
           clearInterval(interval);
+          setCompleteProcess(true);
           axios
             .get(
-              "http://localhost:5000/post-tracking-portal/api/v1/import-process/data",
+              config.server+"import-process/data",
               {}
             )
             .then((res) => {
@@ -114,7 +122,7 @@ const Home = () => {
                if (Array.isArray(res.data.trackingData)) {
               if (res.data.trackingData.length > 0) {
                 setProcessing(true);
-                  setTotalRows(parseInt(res.data.total))
+                setTotalRows(parseInt(res.data.total))
                 setRows(res.data.trackingData)
               }
             }
@@ -123,7 +131,7 @@ const Home = () => {
       const interval = setInterval(() => {
         axios
           .get(
-            "http://localhost:5000/post-tracking-portal/api/v1/import-process/data",
+            config.server+"import-process/data",
             {}
           )
           .then((res) => {
@@ -164,19 +172,27 @@ const Home = () => {
           <CssBaseline />
           <Toolbar>
               <Stack
+              sx={{width:"100%",}}
                direction={"row"}
               >
                 <img
                     src={require("../img/logo.png")}
                     style={{ width: "500px",padding:"20px", flex:1 }}
                 />
-                <Avatar sx={{ bgcolor: deepOrange[500] }}>N</Avatar>
+               <Stack 
+                 direction="row"
+                 sx={{width:"100%", marginRight:"20px"}}
+                 justifyContent="flex-end"
+                 alignItems="center"
+                 >
+                    <LogoutAvatar/>
+                </Stack>
                 {/* <Typography variant="h3" className={classes.logo}>
                     TRACK N TRACE
                 </Typography> */}
               </Stack>
           </Toolbar>
-          <Box sx={{ borderBottom: 1, borderColor: "divider", p: 2, backgroundColor:"#e69acb" }}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider", p: 2, backgroundColor:"#cb9ae64d" }}>
             <Stack alignItems={"center"}>
               <TabList
                 textColor="primary"
@@ -254,19 +270,42 @@ const Home = () => {
                 alignItems={"center"}
                 spacing={1}
               >
-                <Stack direction={"row"}
-                 justifyContent={"center"}
-                 alignItems={"center"}
-                >
-                  <h3 style={{ marginLeft: "10px" }}>Processing</h3>
-                  <div style={{ padding: "4px" }}>
-                    <p>({totalRows} rows)</p>
-                  </div>
-                  <img
-                    src={require("../img/processing.gif")}
-                    style={{ width: "300px" }}
-                 />
-                </Stack>
+            {
+                completeProcess?
+                    <Stack
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                    >
+                        <Button sx={{marginBottom:"60px"}} variant="contained" color={"primary"}>Process New</Button>
+                        <Stack 
+                            direction={"row"}
+                            justifyContent={"center"}
+                            alignItems={"center"}
+                        >
+                             <img
+                                src={require("../img/done-icone.png")}
+                                style={{ width: "50px" }}
+                            />
+                            <h4> File is processed Successfully</h4>
+                        </Stack>
+                    </Stack>
+                    :
+                        <Stack 
+                        direction={"row"}
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                        >
+                        <h3 style={{ marginLeft: "10px" }}>Processing</h3>
+                        <div style={{ padding: "4px" }}>
+                            <p>({totalRows} rows)</p>
+                        </div>
+                        <img
+                            src={require("../img/processing.gif")}
+                            style={{ width: "300px" }}
+                        />
+                        </Stack>
+
+                }
                 <CircularStatic progress={(rows.length / totalRows) * 100} />
                 <HomeDataTable rows={rows} />
               </Stack>

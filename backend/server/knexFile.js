@@ -7,7 +7,7 @@ const knexConfigrations = {
   connection: {
     host: 'localhost',
     user: 'postgres',
-    password: 'root',
+    password: 'admin',
     database: 'postgres'
   }
 };

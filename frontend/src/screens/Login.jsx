@@ -38,17 +38,16 @@ const Login = () => {
       };
     
     const handleSubmit = () =>{
-        setValues({
-            ...values,
-            invalidUsername : false,
-            usernameError: '',
-            invalidPassword : false,
-            passwordError:'',
-        });
+        // setValues({
+        //     ...values,
+        //     invalidUsername : false,
+        //     usernameError: '',
+        //     invalidPassword : false,
+        //     passwordError:'',
+        // });
 
         console.log(values)
         if(values.username.length == 0 && values.password.length == 0){
-            console.log('3333333333333')
             setValues({
                 ...values,
                 invalidUsername : true,
@@ -80,6 +79,7 @@ const Login = () => {
         }
 
         // submit login
+        // window.open("http://localhost:3000/", "_self");
     }
 
 
@@ -99,10 +99,10 @@ const Login = () => {
                 }}
                 className="login-card" >
                 <form>
-                    <div className="heading-div d-flex flex-direction-column justify-content-center algin-items-center">
-                        <LockIcon className='lock-icon'/>
+                    <Stack direction={"row"} justifyContent={"center"} alignItems={"center"}>
+                        <LockIcon  className='lock-icon'/>
                         <h2>Sign In</h2>
-                    </div>
+                    </Stack>
                     <TextField 
                         className="input"
                         error={values.invalidUsername}
@@ -111,6 +111,7 @@ const Login = () => {
                         label="Username" 
                         variant="outlined"
                         value={values.username}
+                        required={true}
                         onChange={handleChange('username')}
                         startAdornment={
                             <InputAdornment position="start">
@@ -123,6 +124,7 @@ const Login = () => {
                             id="outlined-adornment-password"
                             error={values.invalidPassword}
                             helperText={values.passwordError}
+                            required={true}
                             type={values.showPassword ? 'text' : 'password'}
                             value={values.password}
                             onChange={handleChange('password')}
