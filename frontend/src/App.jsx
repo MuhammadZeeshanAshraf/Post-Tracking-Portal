@@ -1,11 +1,20 @@
-import React from 'react';
 import './App.css';
 import Home from './screens/Home';
 import Login from './screens/Login';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 
 const theme = createTheme({
+  overrides: {
+    MuiInputBase: {
+      input: {
+        '&:-webkit-autofill': {
+          transitionDelay: '9999s',
+          transitionProperty: 'background-color, color',
+        },
+      },
+    },
+  },
   palette: {
     primary: {
       main: '#4f1150',
@@ -17,23 +26,27 @@ const theme = createTheme({
 });
 
 function App() {
-  return (
-    <ThemeProvider theme={theme}>
-      <div>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Home/>} />
-          </Routes>
-        </BrowserRouter>
+  const [cookies, setCookie] = useCookies(['user']);
 
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<Login/>} />
-          </Routes>
-        </BrowserRouter>
-      </div>
+  console.log(cookies);
+
+
+  if(cookies && cookies.user && cookies.user.isLogin && new Date() <= new Date(cookies.user.expires)){
+    console.log(new Date() <= new Date(cookies.user.expires));
+    console.log(cookies.user.isLogin);
+    return (
+      <ThemeProvider theme={theme}>
+        <Home/>
+      </ThemeProvider>
+      );
+  }
+  else{
+    return(
+    <ThemeProvider theme={theme}>
+      <Login />
     </ThemeProvider>
-  );
+    );
+  }
 }
 
 export default App;

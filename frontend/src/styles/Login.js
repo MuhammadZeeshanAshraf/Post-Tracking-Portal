@@ -6,7 +6,7 @@ const LoginWrapper = styled.div`
     flex-direction:row;
     align-items:center;
     justify-content:center;  
-
+    background-color: ${colors.secondary};;
     .login-card{
         display:flex;
         flex-direction:column;
@@ -18,7 +18,9 @@ const LoginWrapper = styled.div`
         padding-right:50px;
         padding-top:20px;
         padding-bottom:30px;
+        color: ${colors.primary};
 
+        
         .heading-div{
             color: ${colors.primary};
             align-items: center;
