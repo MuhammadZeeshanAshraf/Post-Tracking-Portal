@@ -66,19 +66,6 @@ const Home = () => {
     setOpen(!open);
   };
 
-  const getFileData = () => {
-    axios.get(config.server+"getFileData", {
-        params: {
-          fileId: '122212'
-        }
-      })
-    .then((res) => {
-        if(Array.isArray(res.data)){
-            setHistoryData(res.data)
-        }
-    });
-  }
-
   const getHistory = () => {
     startLoading();
     axios

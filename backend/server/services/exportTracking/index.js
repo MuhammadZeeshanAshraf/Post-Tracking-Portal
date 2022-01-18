@@ -26,7 +26,9 @@ export const exportTrackingWorksheet = async (ProcessId, models, errorList) => {
                 worksheet.addRow(rowObject);
             }
             styleWorkBookHeader(workbook);
+            console.log('########')
             const exportPath = path.join(INTERNAL_FILES_PATH, (TRACKING_WORKSHEET + EXCELFILE_EXTENSION));
+            console.log(exportPath)
             await workbook.xlsx.writeFile(exportPath);
             return exportPath;
         } else {
