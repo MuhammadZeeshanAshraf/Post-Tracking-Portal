@@ -27,6 +27,6 @@ const router = express.Router();
  *       '200':
  *         description: "response object"
  */
-router.get('/', upload.single(TRACKING_WORKSHEET), validator.exportTracking, asyncHandler(exportTrackingController.exportTrackingWorkSheet));
+router.get('/', upload.single(TRACKING_WORKSHEET), /*validator.exportTracking ,*/ asyncHandler(exportTrackingController.exportTrackingWorkSheet));
 
 export default router;

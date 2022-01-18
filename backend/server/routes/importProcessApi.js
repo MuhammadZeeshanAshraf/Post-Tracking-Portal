@@ -33,6 +33,6 @@ router.get('/data', upload.single(TRACKING_WORKSHEET), asyncHandler(importProces
 
 router.get('/history', upload.single(TRACKING_WORKSHEET), asyncHandler(importProcessController.getProcessHistory));
 
-router.get('/data-by-id', upload.single(TRACKING_WORKSHEET), validator.getProcessData, asyncHandler(importProcessController.getProcessData));
+router.post('/data-by-id', upload.single(TRACKING_WORKSHEET), validator.getProcessData, asyncHandler(importProcessController.getProcessData));
 
 export default router;

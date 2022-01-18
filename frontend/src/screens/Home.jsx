@@ -66,19 +66,6 @@ const Home = () => {
     setOpen(!open);
   };
 
-  const getFileData = () => {
-    axios.get(config.server+"getFileData", {
-        params: {
-          fileId: '122212'
-        }
-      })
-    .then((res) => {
-        if(Array.isArray(res.data)){
-            setHistoryData(res.data)
-        }
-    });
-  }
-
   const getHistory = () => {
     startLoading();
     axios
@@ -313,7 +300,7 @@ const Home = () => {
           </Stack>
         </TabPanel>
         <TabPanel value="2">
-          <HistoryDataTable rows={rows} />
+          <HistoryDataTable rows={historyData} />
         </TabPanel>
       </TabContext>
       <Backdrop
