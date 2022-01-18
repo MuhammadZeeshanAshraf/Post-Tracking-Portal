@@ -5,13 +5,12 @@ import models from '../models';
 export const exportTrackingWorkSheet = async (request, response, next) => {
   try {
     const errorList = [];
-    // const { ProcessId } = request.body;
-    // console.log("processId",ProcessId)
-    const message = await exportTrackingService.exportTrackingWorksheet(1, models, errorList);
-    console.log("path",message)
-
-
-    response.download(message);
+    const { ProcessId } = request.query;
+    console.log('------------->', ProcessId);
+    const message = await exportTrackingService.exportTrackingWorksheet(ProcessId, models, errorList);
+    console.log('path', message);
+    response.contentType('application/xlsx');
+    response.status(200).sendFile(message);
   } catch (error) {
     return response.status(400).send({
       message: error.message
