@@ -37,9 +37,12 @@ CircularProgressWithLabel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-export default function CircularStatic({progress}) {
+export default function CircularStatic({progress,setCompleteProcess}) {
   if(!progress){
     progress = 0.2;
+  }
+  if(parseInt(progress) == 100){
+    setCompleteProcess(true);
   }
   return <CircularProgressWithLabel value={progress} />;
 }

@@ -36,6 +36,7 @@ const HistoryDataTable = ({rows}) => {
     const [showModal, setShowModal] = useState(false); 
     const [processData, setProcessData] = useState([]); 
     const [exportFile, setExportFile]  = useState();
+    const [loading, setLoading]  = useState(false);
 
     const getProcessData = async (id) => {
         // startLoading();
@@ -54,47 +55,28 @@ const HistoryDataTable = ({rows}) => {
             .catch(error => {
         })
     }
-    
-    function s2ab(s) {
-        var buf = new ArrayBuffer(s.length);
-        var view = new Uint8Array(buf);
-        for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
-        return buf;
-    }
 
     const getProcessFile = async (id) => {
-        // startLoading();
         console.log(id);
-        const data = new FormData();
-        data.append("ProcessId", id);
-        
+        const formData = new FormData();
+        formData.append("ProcessId", id);
         axios({
-            method: 'get',
-            url: config.server+"export-tracking-file",
-            header:{
-                contentType: 'application/octet-stream',
-                "Content-Disposition" : 'attachment; filename=proccess.xlsx'
-            }
-            // data: data,
+        method: "get",
+        url: config.server + "export-tracking-file",
+        responseType: "blob",
+        params: {
+            ProcessId:id
+        }
         })
-        .then( async (res) => {
-            // // console.log(res.data)
-            // // let blob = await fetch(conf  ig + res.data).then(r => r.blob())
-            // let blob = new Blob([res.data], { type: "Application/csv" });
-                        
-            // let link = document.createElement('a')
-            // link.href = window.URL.createObjectURL(blob)
-            // link.download = 'Process data.xlsx'
-            // link.click();
-            //     return true;
-                const blob = new Blob([res.data],{type: 'application/xlsx'});
-                const name = "abc.xlsx";
-                download(blob, name);
-            })
-            .catch(error => {
-                console.log(error);
+        .then(async (res) => {
+            const blob = new Blob([res.data], { type: "application/xlsx" });
+            const name = "abc.xlsx";
+            download(blob, name);
         })
-    }
+        .catch((error) => {
+            console.log(error);
+        });
+    };
 
     const handlePreview = async (id) =>{
         await getProcessData(id);
@@ -132,12 +114,10 @@ const HistoryDataTable = ({rows}) => {
                             <Stack direction='row'
                              justifyContent="flex-end"
                              alignItems="flex-end">
-                                <a href="http://localhost:5000/home/muhammad/my_work/Post-Tracking-Portal/backend/server/InternalFiles/TrackingWorkSheet.xlsx" download>
-                                    <IconButton aria-label="delete" size="large">
-                                        <CloudDownloadSharpIcon color='primary' fontSize="inherit" />
-                                    </IconButton>
-                                </a>
-                                <IconButton onClick={()=>getProcessFile(row.id)} aria-label="PreviewIcon" size="large">
+                                <IconButton onClick={()=>getProcessFile(row.id)} aria-label="delete" size="large">
+                                    <CloudDownloadSharpIcon color='primary' fontSize="inherit" />
+                                </IconButton>
+                                <IconButton onClick={()=>getProcessData(row.id)} aria-label="PreviewIcon" size="large">
                                     <PreviewIcon sx={{color:"green"}} fontSize="inherit" />
                                 </IconButton>
                             </Stack>

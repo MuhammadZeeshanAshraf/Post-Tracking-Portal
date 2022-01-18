@@ -27,6 +27,7 @@ import { deepOrange } from '@mui/material/colors';
 import DoneIcon from '@mui/icons-material/Done';
 import { config } from "../commons/config";
 import LogoutAvatar from "../components/LogoutAvatar";
+import Loader from "../components/Loader";
 
 const useStyles = makeStyles((theme) => ({
   logo: {
@@ -50,7 +51,9 @@ const Home = () => {
   const [totalRows, setTotalRows] = React.useState(0);
   const [completeProcess, setCompleteProcess] = React.useState(false);
 
-
+  const hadnleNewProcessClick = () =>{
+    window.location.reload();
+  }
 
   useEffect(() => {
     if (tempRow) {
@@ -98,7 +101,6 @@ const Home = () => {
         )
         .then((res) => {
           clearInterval(interval);
-          setCompleteProcess(true);
           axios
             .get(
               config.server+"import-process/data",
@@ -263,7 +265,7 @@ const Home = () => {
                         justifyContent={"center"}
                         alignItems={"center"}
                     >
-                        <Button sx={{marginBottom:"60px"}} variant="contained" color={"primary"}>Process New</Button>
+                        <Button onClick={hadnleNewProcessClick} sx={{marginBottom:"60px"}} variant="contained" color={"primary"}>Process New</Button>
                         <Stack 
                             direction={"row"}
                             justifyContent={"center"}
@@ -293,7 +295,7 @@ const Home = () => {
                         </Stack>
 
                 }
-                <CircularStatic progress={(rows.length / totalRows) * 100} />
+                <CircularStatic progress={(rows.length / totalRows) * 100} setCompleteProcess={setCompleteProcess}/>
                 <HomeDataTable rows={rows} />
               </Stack>
             )}
@@ -303,13 +305,7 @@ const Home = () => {
           <HistoryDataTable rows={historyData} />
         </TabPanel>
       </TabContext>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={open}
-        // onClick={handleClose}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
+     <Loader isLoading={open}/>
     </div>
   );
 };

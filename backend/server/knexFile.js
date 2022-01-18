@@ -6,7 +6,7 @@ const knexConfigrations = {
   client: 'pg',
   connection: {
     host: 'localhost',
-    user: 'postgres',
+    user: 'naeem',
     password: 'admin',
     database: 'postgres'
   }
