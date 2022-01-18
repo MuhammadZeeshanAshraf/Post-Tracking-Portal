@@ -1,15 +1,23 @@
 import React, { useState } from 'react';
 import { Logout } from '@mui/icons-material';
 import { Avatar, IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from '@mui/material';
+import { useCookies } from 'react-cookie';
 
 const LogoutAvatar = () => {
+    const [cookies, setCookie] = useCookies(['user']);
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
       };
     
-      const handleClose = () => {
+    const handleLogout = () => {
+        setCookie('user',{
+            ...cookies,
+            isLogin:false
+        });
+    }
+    const handleClose = () => {
         setAnchorEl(null);
     };
     return (
@@ -62,9 +70,9 @@ const LogoutAvatar = () => {
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-                <MenuItem>
+                <MenuItem onClick={handleLogout}>
                 <ListItemIcon>
-                    <Logout fontSize="small" />
+                    <Logout  fontSize="small" />
                 </ListItemIcon>
                 Logout
                 </MenuItem>

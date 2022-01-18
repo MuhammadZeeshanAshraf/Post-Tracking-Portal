@@ -1,47 +1,49 @@
-import { styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import IconButton from '@mui/material/IconButton';
-import PreviewIcon from '@mui/icons-material/Preview';
-import CloudDownloadSharpIcon from '@mui/icons-material/CloudDownloadSharp';
-import ViewDataModal from './ViewDataModal';
-import { useState } from 'react';
-import { config } from '../commons/config';
-import axios from 'axios';
-import download from 'downloadjs';
+import { styled } from "@mui/material/styles";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import IconButton from "@mui/material/IconButton";
+import PreviewIcon from "@mui/icons-material/Preview";
+import CloudDownloadSharpIcon from "@mui/icons-material/CloudDownloadSharp";
+import ViewDataModal from "./ViewDataModal";
+import { useState } from "react";
+import { config } from "../commons/config";
+import axios from "axios";
+import download from "downloadjs";
+import Loader from "./Loader";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.common.black,
-      color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
-    },
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
-    },
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
 }));
 
 const HistoryDataTable = ({rows}) => {
     const [showModal, setShowModal] = useState(false); 
     const [processData, setProcessData] = useState([]); 
+    const [fileName, setFileName] = useState(''); 
     const [exportFile, setExportFile]  = useState();
     const [loading, setLoading]  = useState(false);
 
-    const getProcessData = async (id) => {
-        // startLoading();
-        const data = new FormData();
-        data.append("ProcessId", id);
+  const getProcessData = async (id) => {
+    setLoading(true);
+    const data = new FormData();
+    data.append("ProcessId", id);
 
         axios({
             method: 'post',
@@ -50,16 +52,16 @@ const HistoryDataTable = ({rows}) => {
         })
         .then(res => {
                 setProcessData(res.data.trackingData);
+                setLoading(false);
                 return true;
             })
             .catch(error => {
-        })
+                setLoading(false);
+        });
     }
 
     const getProcessFile = async (id) => {
-        console.log(id);
-        const formData = new FormData();
-        formData.append("ProcessId", id);
+        setLoading(true);
         axios({
         method: "get",
         url: config.server + "export-tracking-file",
@@ -70,20 +72,24 @@ const HistoryDataTable = ({rows}) => {
         })
         .then(async (res) => {
             const blob = new Blob([res.data], { type: "application/xlsx" });
-            const name = "abc.xlsx";
+            const name = "Tracking Sheet.xlsx";
+            setLoading(false);
             download(blob, name);
         })
         .catch((error) => {
+            setLoading(false);
             console.log(error);
         });
     };
 
-    const handlePreview = async (id) =>{
+    const handlePreview = async (id, fileName) => {
+        setFileName(fileName);
         await getProcessData(id);
         setShowModal(!showModal);
-    }
+     };
 
     return (
+        <>
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
                 <TableHead>
@@ -117,7 +123,7 @@ const HistoryDataTable = ({rows}) => {
                                 <IconButton onClick={()=>getProcessFile(row.id)} aria-label="delete" size="large">
                                     <CloudDownloadSharpIcon color='primary' fontSize="inherit" />
                                 </IconButton>
-                                <IconButton onClick={()=>getProcessData(row.id)} aria-label="PreviewIcon" size="large">
+                                <IconButton onClick={()=>handlePreview(row.id, row.file_name)} aria-label="PreviewIcon" size="large">
                                     <PreviewIcon sx={{color:"green"}} fontSize="inherit" />
                                 </IconButton>
                             </Stack>
@@ -126,8 +132,10 @@ const HistoryDataTable = ({rows}) => {
                     ))}
                 </TableBody>
               </Table>
-              <ViewDataModal showModal={showModal} setShowModal={setShowModal} processData={processData} />
+              <ViewDataModal showModal={showModal} setShowModal={setShowModal} processData={processData} fileName={fileName} />
         </TableContainer>
+        <Loader isLoading={loading}/>
+        </>
     );
 };
 

@@ -21,7 +21,7 @@ const style = {
 };
 
 
-const ViewDataModal = ({showModal, setShowModal ,processData}) => {
+const ViewDataModal = ({showModal, setShowModal ,processData, fileName}) => {
   const handleClose = () => setShowModal(!showModal);
 
     return (
@@ -40,7 +40,7 @@ const ViewDataModal = ({showModal, setShowModal ,processData}) => {
             <Fade in={showModal}>
               <Box sx={style}>
                 <Typography id="transition-modal-title" variant="h6" component="h2">
-                  Text in a modal
+                  <b>{fileName}</b>
                 </Typography>
                 <Typography id="transition-modal-description" sx={{ mt: 2 }}>
                   <HomeDataTable rows={processData} />

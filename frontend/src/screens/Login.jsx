@@ -1,85 +1,68 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { LoginWrapper } from '../styles/Login';
 import TextField from '@mui/material/TextField';
-import { Button, colors, IconButton, InputAdornment, OutlinedInput, Stack, Box, FormControl, InputLabel } from '@mui/material';
+import { Button, colors, IconButton, InputAdornment, OutlinedInput, Stack, Box, FormControl, InputLabel, Typography } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import LockIcon from '@mui/icons-material/Lock';
 import BackgroundImage from '../img/loginBackgroundImage.jpg'; 
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { useCookies } from 'react-cookie';
 
 
 const Login = () => {
 
-    const [values, setValues] = React.useState({
-        username: '',
-        password: '',
-        showPassword :false,
-        invalidPassword: false,
-        invalidUsername: false,
-        usernameError: '',
-        passwordError: '',
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [invalidPassword, setInvalidPassword] = useState(false);
+    const [invalidUsername, setInvalidUsername] = useState(false);
+    const [usernameError, setUsernameError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [error, setError] = useState(false);
+    const [cookies, setCookie] = useCookies(['user']);
 
-    });
-
-    const handleChange = (prop) => (event) => {
-        setValues({ ...values, [prop]: event.target.value });
+    const handleChangeUsername = (prop) => (event) => {
+        // setU({ ...values, [prop]: event.target.value });
+        setUsername(event.target.value);
+    };
+    const handleChangePassword = (prop) => (event) => {
+        setPassword(event.target.value);
     };
     
     const handleClickShowPassword = () => {
-        setValues({
-            ...values,
-            showPassword: !values.showPassword,
-        });
+        setShowPassword(!showPassword)
     };
 
-    const handleMouseDownPassword = (event) => {
-        event.preventDefault();
-      };
-    
     const handleSubmit = () =>{
-        // setValues({
-        //     ...values,
-        //     invalidUsername : false,
-        //     usernameError: '',
-        //     invalidPassword : false,
-        //     passwordError:'',
-        // });
+        setInvalidPassword(false);
+        setInvalidUsername(false);
+        setPasswordError('');
+        setUsernameError('');
+        
+        if(password.length > 0 && username.length >0){
+            if(password === "trackNtrace123" && username === "admin"){
+                let date = new Date();
+                date.setTime(date.getTime() + (14*24*60*60*1000));
+                let expires = date.toUTCString();
+                setCookie('user',{
+                    username,
+                    password,
+                    expires,
+                    isLogin:true
+                });
 
-        console.log(values)
-        if(values.username.length == 0 && values.password.length == 0){
-            setValues({
-                ...values,
-                invalidUsername : true,
-                usernameError: 'username cannot be empty',
-                invalidPassword : true,
-                passwordError: 'password cannot be empty',
-            });
-            console.log(values)
-        } else if(values.username.length == 0){
-            setValues({
-                ...values,
-                invalidUsername : true,
-                usernameError: 'username cannot be empty',
-            });
-        } else if(values.password.length == 0){
-            setValues({
-                ...values,
-                invalidPassword : true,
-                passwordError: 'password cannot be empty',
-            });
+            } else{
+                setError(true);
+            }
+
+        } else if(username.length === 0){
+                setUsernameError('username is required field');
+                setInvalidUsername(true);
+        } else if(password.length === 0){
+                setPasswordError('password is required field');
+                setInvalidPassword(true);
         }
-
-        if(values.password.length == 0){
-            setValues({
-                ...values,
-                invalidPassword : true,
-                passwordError: 'password cannot be empty',
-            });
-        }
-
-        // submit login
-        // window.open("http://localhost:3000/", "_self");
     }
 
 
@@ -91,28 +74,36 @@ const Login = () => {
         }}>
             <Box 
                 sx={{
-                    width:'400px',
+                    width:'20%',
                     height: '80%',
-                    // bgcolor: 'white',
+                    bgcolor: 'white',
                     color: 'secondary.contrastText',
                     p: 2,
                 }}
                 className="login-card" >
                 <form>
-                    <Stack direction={"row"} justifyContent={"center"} alignItems={"center"}>
-                        <LockIcon  className='lock-icon'/>
+                    <Stack direction={"row"} color={"primary"} sx={{marginBottom:'30px', marginTop:'20px'}} justifyContent={"center"} alignItems={"center"}>
+                        <LockIcon sx={{marginRight:'10px'}} className='lock-icon'/>
                         <h2>Sign In</h2>
                     </Stack>
+                    {
+                        error?
+                        <Typography color={"red"} sx={{marginLeft:'10px'}} variant="caption" display="block" gutterBottom>
+                        Invalid username or password
+                      </Typography>
+                        :
+                        <></>
+                    }
                     <TextField 
                         className="input"
-                        error={values.invalidUsername}
-                        helperText={values.usernameError}
+                        error={invalidUsername}
+                        helperText={usernameError}
                         id="outlined-basic" 
                         label="Username" 
                         variant="outlined"
-                        value={values.username}
+                        value={username}
                         required={true}
-                        onChange={handleChange('username')}
+                        onChange={handleChangeUsername('username')}
                         startAdornment={
                             <InputAdornment position="start">
                             <AccountCircle />
@@ -122,21 +113,21 @@ const Login = () => {
                         <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                         <OutlinedInput
                             id="outlined-adornment-password"
-                            error={values.invalidPassword}
-                            helperText={values.passwordError}
+                            error={invalidPassword}
+                            helperText={passwordError}
                             required={true}
-                            type={values.showPassword ? 'text' : 'password'}
-                            value={values.password}
-                            onChange={handleChange('password')}
+                            type={showPassword ? 'text' : 'password'}
+                            value={password}
+                            onChange={handleChangePassword('password')}
                             endAdornment={
                             <InputAdornment position="end">
                                 <IconButton
                                 aria-label="toggle password visibility"
                                 onClick={handleClickShowPassword}
-                                onMouseDown={handleMouseDownPassword}
+                                // onMouseDown={handleMouseDownPassword}
                                 edge="end"
                                 >
-                                {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                                {showPassword ? <VisibilityOff /> : <Visibility />}
                                 </IconButton>
                             </InputAdornment>
                             }
