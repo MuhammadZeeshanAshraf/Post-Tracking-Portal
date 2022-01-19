@@ -46,7 +46,7 @@ export const NUMERAL_ADJECTIVES = {
 export const NA = 'NA';
 export const NOT_BOOKED = 'Not Booked';
 export const BOOKED = 'Booked';
-export const SCHEMA = 'post_tracking_portal';
+export const SCHEMA = 'gqowoizl_logistics';
 export const BATCH_SIZE = 5000;
 export const COLUMN_WIDTH = '25';
 
