@@ -75,7 +75,7 @@ export const getProcessHistory = async (request, response, next) => {
         SCHEMA,
         TABLE_DETAILS.importprocess.name
       );
-    response.send(trackingData);
+    response.send(trackingData.reverse());
   } catch (error) {
     return response.status(400).send({
       message: error.message
