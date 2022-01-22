@@ -60,7 +60,7 @@ export const importTrackingWorkSheet = async (
             INTERNAL_FILES_PATH
         );
         console.log(message);
-        return message;
+        return errorList;
     } catch (error) {
         errorList.push(error.message);
         console.log(error);

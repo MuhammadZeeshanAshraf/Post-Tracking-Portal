@@ -105,7 +105,7 @@ export const EXCELFILE_EXTENSION = '.xlsx';
 
 export const SHEET_HEADER = [
     { header: 'Tracking ID', key: 'tracking_id', width: COLUMN_WIDTH },
-    { header: 'Article Type', key: 'type', width: COLUMN_WIDTH },
+    { header: 'Article Type', key: 'TYPE', width: COLUMN_WIDTH },
     { header: 'Booked At', key: 'booked_at', width: COLUMN_WIDTH },
     { header: 'Date of Booking', key: 'booking_date', width: COLUMN_WIDTH },
     { header: 'Destination PIN Code', key: 'customer_pin_code', width: COLUMN_WIDTH },

@@ -47,7 +47,12 @@ export const processTrackingSheet = async (
                 headless: true,
                 ignoreHTTPSErrors: true,
                 defaultViewport: null,
-                args: ['--start-maximized']
+                executablePath: process.env.CHROME_BIN || null,
+                args: ['--no-sandbox', '--headless', '--disable-gpu', '--disable-dev-shm-usage']
+                // args: ['--start-maximized', '--disable-setuid-sandbox',
+                //     '--no-sandbox',
+                //     '--disable-gpu',
+                //     '--disable-dev-shm-usage']
             });
             updateProcessObj.total_tracking_ids = records.length;
 
