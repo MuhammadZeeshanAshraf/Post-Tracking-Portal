@@ -1,3 +1,4 @@
+import React from 'react';
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -16,6 +17,7 @@ import { config } from "../commons/config";
 import axios from "axios";
 import download from "downloadjs";
 import Loader from "./Loader";
+import { Box, TablePagination } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -34,6 +36,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const HistoryDataTable = ({rows}) => {
+
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [showModal, setShowModal] = useState(false); 
     const [processData, setProcessData] = useState([]); 
     const [fileName, setFileName] = useState(''); 
@@ -88,52 +93,72 @@ const HistoryDataTable = ({rows}) => {
         setShowModal(!showModal);
      };
 
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 5));
+        setPage(0);
+    };
+
     return (
         <>
-        <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                <TableHead>
-                    <TableRow>
-                        <StyledTableCell>Upload Date</StyledTableCell>
-                        <StyledTableCell>File Name</StyledTableCell>
-                        <StyledTableCell align='right'>Total Articles</StyledTableCell>
-                        <StyledTableCell align='right'>Total Articles Booked</StyledTableCell>
-                        <StyledTableCell align='right'>Book On Same Date</StyledTableCell>
-                        <StyledTableCell align='right'>Book On Different Date</StyledTableCell>
-                        <StyledTableCell align='right'>Total Bill Amount</StyledTableCell>
-                        <StyledTableCell align='right'>No Record Found</StyledTableCell>
-                        <StyledTableCell align='right'>Actions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</StyledTableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row) => (
-                    <StyledTableRow key={row.name}>
-                        <StyledTableCell component="th" scope="row">{row.create_date.substr(0 ,10)}</StyledTableCell>
-                        <StyledTableCell>{row.file_name}</StyledTableCell>
-                        <StyledTableCell align='right'>{row.total_tracking_ids}</StyledTableCell>
-                        <StyledTableCell align='right'>{row.book_ids}</StyledTableCell>
-                        <StyledTableCell align='right'>{row.book_on_same_date}</StyledTableCell>
-                        <StyledTableCell align='right'>{row.not_book_on_same_date}</StyledTableCell>
-                        <StyledTableCell align='right'>{row.total_bill}</StyledTableCell>
-                        <StyledTableCell align='right'>{row.not_book_ids}</StyledTableCell>
-                        <StyledTableCell>
-                            <Stack direction='row'
-                             justifyContent="flex-end"
-                             alignItems="flex-end">
-                                <IconButton onClick={()=>getProcessFile(row.id)} aria-label="delete" size="large">
-                                    <CloudDownloadSharpIcon color='primary' fontSize="inherit" />
-                                </IconButton>
-                                <IconButton onClick={()=>handlePreview(row.id, row.file_name)} aria-label="PreviewIcon" size="large">
-                                    <PreviewIcon sx={{color:"green"}} fontSize="inherit" />
-                                </IconButton>
-                            </Stack>
-                        </StyledTableCell>
-                    </StyledTableRow>
-                    ))}
-                </TableBody>
-              </Table>
-              <ViewDataModal showModal={showModal} setShowModal={setShowModal} processData={processData} fileName={fileName} />
-        </TableContainer>
+        <Box>
+            <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                    <TableHead>
+                        <TableRow>
+                            <StyledTableCell>Upload Date</StyledTableCell>
+                            <StyledTableCell>File Name</StyledTableCell>
+                            <StyledTableCell align='right'>Total Articles</StyledTableCell>
+                            <StyledTableCell align='right'>Total Articles Booked</StyledTableCell>
+                            <StyledTableCell align='right'>Book On Same Date</StyledTableCell>
+                            <StyledTableCell align='right'>Book On Different Date</StyledTableCell>
+                            <StyledTableCell align='right'>Total Bill Amount</StyledTableCell>
+                            <StyledTableCell align='right'>No Record Found</StyledTableCell>
+                            <StyledTableCell align='right'>Actions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</StyledTableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                        <StyledTableRow key={row.name}>
+                            <StyledTableCell component="th" scope="row">{row.create_date.substr(0 ,10)}</StyledTableCell>
+                            <StyledTableCell>{row.file_name}</StyledTableCell>
+                            <StyledTableCell align='right'>{row.total_tracking_ids}</StyledTableCell>
+                            <StyledTableCell align='right'>{row.book_ids}</StyledTableCell>
+                            <StyledTableCell align='right'>{row.book_on_same_date}</StyledTableCell>
+                            <StyledTableCell align='right'>{row.not_book_on_same_date}</StyledTableCell>
+                            <StyledTableCell align='right'>{row.total_bill}</StyledTableCell>
+                            <StyledTableCell align='right'>{row.not_book_ids}</StyledTableCell>
+                            <StyledTableCell>
+                                <Stack direction='row'
+                                justifyContent="flex-end"
+                                alignItems="flex-end">
+                                    <IconButton onClick={()=>getProcessFile(row.id)} aria-label="delete" size="large">
+                                        <CloudDownloadSharpIcon color='primary' fontSize="inherit" />
+                                    </IconButton>
+                                    <IconButton onClick={()=>handlePreview(row.id, row.file_name)} aria-label="PreviewIcon" size="large">
+                                        <PreviewIcon sx={{color:"green"}} fontSize="inherit" />
+                                    </IconButton>
+                                </Stack>
+                            </StyledTableCell>
+                        </StyledTableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+                <ViewDataModal showModal={showModal} setShowModal={setShowModal} processData={processData} fileName={fileName} />
+            </TableContainer>
+            <TablePagination
+            rowsPerPageOptions={[5]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+        </Box>
         <Loader isLoading={loading}/>
         </>
     );
