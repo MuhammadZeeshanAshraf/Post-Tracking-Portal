@@ -7,6 +7,7 @@
 import app from './server/app';
 import Debug from 'debug';
 import http from 'http';
+import fs from 'fs';
 
 const debug = Debug('configuration-migrator:server');
 
@@ -21,7 +22,10 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-const server = http.createServer(app);
+const server = http.createServer({
+  key: fs.readFileSync('key.pem'),
+  cert: fs.readFileSync('certificate.pem')
+}, app);
 
 /**
  * Listen on provided port, on all network interfaces.
