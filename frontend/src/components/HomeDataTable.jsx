@@ -28,7 +28,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const HomeDataTable = ({rows}) => {
 
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [rowsPerPage, setRowsPerPage] = React.useState(200);
     const [failedCount, setFailedCount] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
     const [bookedCount, setBookedCount] = useState(0);
@@ -46,7 +46,7 @@ const HomeDataTable = ({rows}) => {
     };
 
     const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 5));
+        setRowsPerPage(parseInt(event.target.value, 200));
         setPage(0);
     };
 
@@ -90,7 +90,7 @@ const HomeDataTable = ({rows}) => {
                 </Table>
             </TableContainer>
             <TablePagination
-            rowsPerPageOptions={[5]}
+            rowsPerPageOptions={[200]}
             component="div"
             count={rows.length}
             rowsPerPage={rowsPerPage}

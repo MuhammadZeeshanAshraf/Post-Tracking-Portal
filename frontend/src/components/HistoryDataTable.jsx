@@ -38,7 +38,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const HistoryDataTable = ({rows}) => {
 
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [rowsPerPage, setRowsPerPage] = React.useState(200);
     const [showModal, setShowModal] = useState(false); 
     const [processData, setProcessData] = useState([]); 
     const [fileName, setFileName] = useState(''); 
@@ -98,7 +98,7 @@ const HistoryDataTable = ({rows}) => {
     };
 
     const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 5));
+        setRowsPerPage(parseInt(event.target.value, 200));
         setPage(0);
     };
 
@@ -150,7 +150,7 @@ const HistoryDataTable = ({rows}) => {
                 <ViewDataModal showModal={showModal} setShowModal={setShowModal} processData={processData} fileName={fileName} />
             </TableContainer>
             <TablePagination
-            rowsPerPageOptions={[5]}
+            rowsPerPageOptions={[200]}
             component="div"
             count={rows.length}
             rowsPerPage={rowsPerPage}

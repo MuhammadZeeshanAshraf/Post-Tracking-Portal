@@ -35,7 +35,8 @@ export const processTrackingSheet = async (
     errorList,
     scrapData,
     processID,
-    models
+    models,
+    whereObj
 ) => {
     try {
         if (typeof sheet.data[0] === 'undefined') {
@@ -78,6 +79,7 @@ export const processTrackingSheet = async (
                 await Promise.all(recordPromises);
                 models.generalDatabaseFunction.insertMultipleRows(SCHEMA,
                     TABLE_DETAILS.tracking.name, scrapData);
+                models.generalDatabaseFunction.updateSingleRowWithReturn(SCHEMA, TABLE_DETAILS.importprocess.name, updateProcessObj, whereObj);
             }
 
             console.log(scrapData);
