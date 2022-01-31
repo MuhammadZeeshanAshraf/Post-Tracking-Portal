@@ -12,14 +12,25 @@ dotenv.config();
 //   }
 // };
 
+// const knexConfigrations = {
+//   client: 'mysql2',
+//   connection: {
+//     host: '194.233.89.214',
+//     port: 3306,
+//     user: 'gqowoizl_logistics',
+//     password: '4*zx7#r?ESaI',
+//     database: 'gqowoizl_logistics'
+//   }
+// };
+
 const knexConfigrations = {
   client: 'mysql2',
   connection: {
     host: '194.233.89.214',
     port: 3306,
-    user: 'gqowoizl_logistics',
+    user: 'examin_logistic',
     password: '4*zx7#r?ESaI',
-    database: 'gqowoizl_logistics'
+    database: 'examin_logistic'
   }
 };
 

@@ -69,7 +69,7 @@ const HomeDataTable = ({rows}) => {
                         {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                         <StyledTableRow key={row.name}>
                             <StyledTableCell component="th" scope="row">{row.tracking_id}</StyledTableCell>
-                            <StyledTableCell align="right">{row.type}</StyledTableCell>
+                            <StyledTableCell align="right">{row.TYPE}</StyledTableCell>
                             <StyledTableCell align="right">{row.booked_at}</StyledTableCell>
                             <StyledTableCell align="right">{row.booking_date}</StyledTableCell>
                             <StyledTableCell align="right">{row.customer_pin_code}</StyledTableCell>

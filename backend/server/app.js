@@ -36,6 +36,9 @@ const swaggerOptions = {
 };
 const app = express();
 
+app.use(express.static(path.join(__dirname, '..', 'build')));
+app.use(express.static('public'));
+
 const swaggerDocs = swaggerJSDoc(swaggerOptions);
 
 // middlewares
@@ -51,24 +54,22 @@ app.use(
   })
 );
 
-app.use(function (req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
-  );
-  next();
-});
-
 app.get('/', (req, res) => {
-  res.send('Post Tracking Portal Backend ');
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 // app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
 
 app.use('/post-tracking-portal/api/v1', router);
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+
+app.use(function (req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  next();
+});
 
 app.use((req, res, next) => {
   const error = new Error('Not found');

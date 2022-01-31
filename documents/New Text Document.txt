@@ -1,0 +1,7 @@
+headless: true,
+                  args: ['--no-sandbox','--disable-setuid-sandbox']
+
+heroku login
+heroku create
+git push heroku HEAD:master
+heroku buildpacks:add jontewks/puppeteer
