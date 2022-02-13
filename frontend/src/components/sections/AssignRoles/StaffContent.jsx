@@ -5,55 +5,61 @@ import { Modal } from 'react-bootstrap';
 import { useState } from 'react';
 import axios from 'axios';
 import { sweetAlertError, sweetAlertSuccess } from '../../utility/common';
+import Switch from '../../common/Switch';
+import RoleSelect from '../../common/RoleSelect';
 
-const RoleAddEditContent = () => {
+const StaffContent = () => {
     const [openRoleModal ,setOpenRoleModal] = useState(false);
-    const [rolesList ,setRolesList] = useState(null);
+    const [staffList ,setStaffList] = useState(null);
+    const [roles ,setRoles] = useState([]);
     const [roleName ,setRoleName] = useState("");
-    const [permissionLevel ,setPermissionLevel] = useState(1);
+    const [roleVal ,setRoleVal] = useState(1);
     const [roleId ,setRoleId] = useState(null);
 
-    const getRoles = async () =>{
-        axios.get('/role')
+    const getStaff  =  async ()=>{
+        axios.get('/user')
         .then(function (response) {
-            setRolesList(response.data);
+            console.log(response)
+            setStaffList(response.data);
         })
         .catch(function (error) {
-            setRolesList([]);
+            // handle error
+            setStaffList([]);
             sweetAlertError("Oops","Error conncting with server");
         })
     }
+    
+    const getRoles = () =>{
+        axios.get('/role')
+        .then(function (response) {
+            console.log(response);
+            setRoles(response.data);
+        })
+        .catch(function (error) {
+            // handle error
+            console.log("Error in getting roles data");
+        })
+    }
+    
     useEffect(()=>{
-        getRoles();
+        const fetchData = async () => {
+            await getStaff();
+            await getRoles();
+         }
+       
+         fetchData();
     }, []);
 
-    const deleteRole = (id)=>{
-        axios.post('role/delete', {
-            id: id,
-          })
-          .then( async (response) => {
-            setOpenRoleModal(false);
-            if(response.data.roleId){
-                sweetAlertSuccess("Role deleted Successfully");
-                await getRoles();
-            } else if(response.data.message){
-                sweetAlertError("Oops", "Error in deleting role, please try again");
-            }
-          })
-          .catch(function (error) {
-            sweetAlertError("Oops", "Error connecting with server, please try agian");
-        });
-    }
 
     const openAddEditRoleModal = (data)=>{
         console.log(data)
         if(data){
             setRoleName(data.role);
-            setPermissionLevel(data.permission_level);
+            setRoleVal(data.permission_level);
             setRoleId(data.id);
         } else{
             setRoleName("");
-            setPermissionLevel(1);
+            setRoleVal(1);
             setRoleId(null);
         }
         setOpenRoleModal(true);
@@ -61,24 +67,25 @@ const RoleAddEditContent = () => {
 
     const handleSubmit = (event)=>{
         event.preventDefault();
+        
         let endPOint = 'role/add';
         let action = "Add";
+
         let data = {
             role: roleName,
-            permission_level: permissionLevel
-        }
+            permission_level: roleVal
+          }
         
-        if(roleId){ //editcase
+          if(roleId){ //editcase
             data["id"] = roleId;
             endPOint = 'role/update';
             action = "Edit"
         } 
         axios.post(endPOint, data )
-          .then(async (response)=> {
+          .then(function (response) {
             setOpenRoleModal(false);
             if(response.data.roleId){
                 sweetAlertSuccess(`Role ${action} Successfully`)
-                await getRoles();
             } else if(response.data.message){
                 sweetAlertError("Oops", "Error in saving role, please try again");
             }
@@ -97,42 +104,61 @@ const RoleAddEditContent = () => {
                 <div className="col-12">
                     <div className="ms-panel">
                         <div className="ms-panel-header">
-                            <h4>Roles List</h4>
-                              
-                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3">
-                            <h1 class="h2"></h1>
-                            <div class="mr-3">
-                                <button className="btn btn-success" onClick={openAddEditRoleModal}> Add New Role </button>
+                            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+                                <h1 class="h2">Staff Page</h1>
+                                <div class="btn-toolbar mb-2 mb-md-0">
+                                <div class="mr-3">
+                                    <button className="btn btn-success" onClick={openAddEditRoleModal}> Add New Role </button>
+                                </div>
+                                    {/* <div class="btn-group mr-2">
+                                        <button class="btn btn-danger" type="button"
+                                                onclick="onPublishUnpublish('publish')">Publish
+                                        </button>
+                                        <button class="btn btn-danger" type="button"
+                                                onclick="onPublishUnpublish('unpublish')">Unpublish
+                                        </button>
+                                    </div> */}
+                                </div>
                             </div>
-                        </div>
                         </div>
                         <div className="ms-panel-body">
                             <div className="table-responsive">
                                 <table className="table table-hover thead-primary">
                                     <thead>
                                         <tr>
-                                            <th scope="col">Id</th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Active</th>
                                             <th scope="col">Role</th>
-                                            <th scope="col">Permission Level</th>
-                                            <th scope="col">Created At</th>
-                                            <th scope="col">Updated At</th>
-                                            <th scope="col">Actions</th>
+                                            <th scope="col">Email</th>
+                                            <th scope="col">Primary Number</th>
+                                            <th scope="col">Alternative Number</th>
+                                            <th scope="col">Date of Birth</th>
+                                            <th scope="col">Father Name</th>
+                                            <th scope="col">Mother Name</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {
-                                            rolesList && rolesList.length > 0?
-                                                rolesList.map((item, i) => (
+                                            staffList && staffList.length > 0?
+                                                staffList.map((item, i) => (
                                                     <tr key={i}>
-                                                        <th scope="row">{item.id}</th>
-                                                        <td>{item.role}</td>
-                                                        <td>{item.permission_level}</td>
-                                                        <td>{item.created_at}</td>
-                                                        <td>{item.updated_at}</td>
+                                                        <th scope="row">{item.name}</th>
                                                         <td>
-                                                            <Link onClick={()=>openAddEditRoleModal(item)} to="#"><i className="fas fa-pencil-alt text-success" /></Link>
-                                                            <Link onClick={()=>deleteRole(item.id)} to="#"><i className="far fa-trash-alt ms-text-danger" /></Link>
+                                                        <Switch
+                                                            isOn={item.active}
+                                                            id={item.id}
+                                                            onColor="#fff"
+                                                        />
                                                         </td>
+                                                        <td>
+                                                            <RoleSelect id={item.id} role={item.role_id} roles={roles} />
+                                                        </td>
+                                                        <td>{item.email}</td>
+                                                        <td>{item.primary_phone}</td>
+                                                        <td>{item.alternative_number}</td>
+                                                        <td>{item.dob}</td>
+                                                        <td>{item.father_name}</td>
+                                                        <td>{item.mother_name}</td>
                                                     </tr>
                                                 ))
                                                 :
@@ -141,13 +167,13 @@ const RoleAddEditContent = () => {
                                     </tbody>
                                 </table>
                                 {
-                                    !rolesList?
+                                    !staffList?
                                     <div className='d-flex justify-content-center'>Loading data...</div>
                                     :
                                     <></>
                                 }
                                 {
-                                      rolesList && rolesList.length == 0?
+                                      staffList && staffList.length == 0?
                                       <div className='d-flex justify-content-center'>No record found</div>
                                       :
                                       <></>
@@ -170,7 +196,7 @@ const RoleAddEditContent = () => {
                     <input  value={roleName} onChange={(e)=>setRoleName(e.target.value)} required type="text" placeholder="Role Name" className="form-control" name="role" />
                 </div>
                 <div className="ms-form-group has-icon">
-                    <select onChange={e => setPermissionLevel(e.target.value)} value={permissionLevel} className="form-control" name="permission_level">
+                    <select onChange={e => setRoleVal(e.target.value)} value={roleVal} className="form-control" name="permission_level">
                         <option value="1">Permission Level 1</option>
                         <option value="2">Permission Level 2</option>
                         <option value="3">Permission Level 3</option>
@@ -184,4 +210,4 @@ const RoleAddEditContent = () => {
     );
 };
 
-export default RoleAddEditContent;
+export default StaffContent;

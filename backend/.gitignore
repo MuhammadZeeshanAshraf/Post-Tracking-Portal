@@ -6,4 +6,5 @@
 /backend/server/InternalFiles/TrackingWorkSheet.xlsx
 /backend.zip
 /frontend.zip
-/frontend/build
+node_modules
+/node_modules

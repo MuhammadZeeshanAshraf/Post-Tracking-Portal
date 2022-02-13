@@ -10,6 +10,7 @@ const AddEditRole = () => {
         <Sidenavigation />
         <main className="body-content">
             <Topnavigation />
+            sweetAlertError("Oops", "Error in saving role, please try again");
             <RoleAddEditContent/>
         </main>
         <Quickbar />

@@ -1,4 +1,6 @@
 import Swal from 'sweetalert2'
+import toastr from 'toastr';
+import 'toastr/build/toastr.min.css'
 
  export function sweetAlertError(title, text) {
      console.log(title);
@@ -20,4 +22,38 @@ export function sweetAlertSuccess(title){
         showConfirmButton: false,
         timer: 1500
     });
+}
+
+toastr.options =
+{
+    "closeButton": false,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": true,
+    "positionClass": "toast-top-center",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "2000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+}
+
+export function successToast(title, message){
+    toastr.remove();
+    toastr.success(title, message);
+}
+
+export function errorToast(title, message){
+    toastr.remove();
+    toastr.error(title, message);
+}
+
+export function warningToast(title, message){
+    toastr.remove();
+    toastr.warning(title, message);
 }

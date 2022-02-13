@@ -57,6 +57,8 @@ import Preloader from './components/layouts/Preloader';
 // import Comingsoon from './components/pages/Comingsoon';
 // import Defaultlogin from './components/pages/Defaultlogin';
 import Registration from './components/pages/Registration';
+import Otp from './components/pages/Otp';
+
 // import Error from './components/pages/Error';
 // import Faq from './components/pages/Faq';
 // import Invoice from './components/pages/Invoice';
@@ -70,6 +72,7 @@ import Registration from './components/pages/Registration';
 import Login from './components/pages/Login';
 import Dashboard from './components/pages/Dashboard';
 import AddEditRole from './components/pages/AddEditRole';
+import Staff from './components/pages/Staff';
 
 
 function App() {
@@ -92,7 +95,14 @@ function App() {
       <Route path="/addEditRole" component={AddEditRole} />
         <Route path="/addEditRole" component={AddEditRole} />
       </Switch>
-      
+      <Switch>
+      <Route path="/staff" component={Staff} />
+        <Route path="/staff" component={Staff} />
+      </Switch>
+      <Switch>
+      <Route path="/otp" component={Otp} />
+        <Route path="/otp" component={Otp} />
+      </Switch>
     </Router>
   );
 }

@@ -46,7 +46,7 @@ export const NUMERAL_ADJECTIVES = {
 export const NA = 'NA';
 export const NOT_BOOKED = 'Not Booked';
 export const BOOKED = 'Booked';
-export const SCHEMA = 'gqowoizl_logistics';
+export const SCHEMA = 'examin_logistic';
 export const BATCH_SIZE = 5000;
 export const COLUMN_WIDTH = '25';
 
@@ -105,7 +105,7 @@ export const EXCELFILE_EXTENSION = '.xlsx';
 
 export const SHEET_HEADER = [
     { header: 'Tracking ID', key: 'tracking_id', width: COLUMN_WIDTH },
-    { header: 'Article Type', key: 'type', width: COLUMN_WIDTH },
+    { header: 'Article Type', key: 'TYPE', width: COLUMN_WIDTH },
     { header: 'Booked At', key: 'booked_at', width: COLUMN_WIDTH },
     { header: 'Date of Booking', key: 'booking_date', width: COLUMN_WIDTH },
     { header: 'Destination PIN Code', key: 'customer_pin_code', width: COLUMN_WIDTH },

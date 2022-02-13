@@ -35,7 +35,8 @@ export const processTrackingSheet = async (
     errorList,
     scrapData,
     processID,
-    models
+    models,
+    whereObj
 ) => {
     try {
         if (typeof sheet.data[0] === 'undefined') {
@@ -45,17 +46,16 @@ export const processTrackingSheet = async (
             const records = sheet.data;
             const browser = await puppeteer.launch({
                 headless: true,
-                ignoreHTTPSErrors: true,
-                defaultViewport: null,
-                args: ['--start-maximized']
+                timeout: 0,
+                args: ['--no-sandbox', '--disable-setuid-sandbox']
             });
             updateProcessObj.total_tracking_ids = records.length;
 
             while (records.length > 0) {
-                const recordsBatch = records.splice(0, 1);
+                const recordsBatch = records.splice(0, 10);
                 const recordPromises = [];
                 for (const record of recordsBatch) {
-                    console.log(x, '==>', record['Tracking ID']);
+                    // console.log(x, '==>', record['Tracking ID']);
                     recordPromises.push(
                         processSingleTrackingID(
                             record['Tracking ID'],
@@ -73,9 +73,12 @@ export const processTrackingSheet = async (
                 await Promise.all(recordPromises);
                 models.generalDatabaseFunction.insertMultipleRows(SCHEMA,
                     TABLE_DETAILS.tracking.name, scrapData);
+                updateProcessObj.not_book_ids = updateProcessObj.total_tracking_ids - updateProcessObj.book_ids;
+                updateProcessObj.not_book_on_same_date = updateProcessObj.total_tracking_ids - updateProcessObj.book_on_same_date;
+                await models.generalDatabaseFunction.updateSingleRowWithReturn(SCHEMA, TABLE_DETAILS.importprocess.name, updateProcessObj, whereObj);
             }
 
-            console.log(scrapData);
+            // console.log(scrapData);
             await browser.close();
         }
     } catch (error) {
@@ -106,17 +109,17 @@ const processSingleTrackingID = async (
 
         const element = await page.waitForSelector(CAPTCHA_FORMULA);
         const captchaQuestion = await element.evaluate((el) => el.textContent);
-        console.log(captchaQuestion);
+        // console.log(captchaQuestion);
         // await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
         const image = await page.waitForSelector(CAPTCHA_IMAGE_ID, {
             timeout: 12000
         });
         const src = await image.evaluate((el) => el.src);
-        console.log(src);
+        // console.log(src);
         const catchResponse = await client.decode({
             url: src
         });
-        console.log('catchResponse :- ', catchResponse.text);
+        // console.log('catchResponse :- ', catchResponse.text);
 
         let answer = '';
         if (captchaQuestion === 'Evaluate the Expression') {
@@ -132,15 +135,15 @@ const processSingleTrackingID = async (
             const words = captchaQuestion.split(' ');
             const numberWord = NUMERAL_ADJECTIVES[words[2]];
             const arr = catchResponse.text.split('');
-            console.log(arr);
+            // console.log(arr);
             answer = arr[numberWord - 1];
         }
         answer = answer.toString();
-        console.log('Answer', answer);
+        // console.log('Answer', answer);
         await page.type(CAPTCHA_ANSWER, answer);
 
         await page.click(TRACK_NOW_ID);
-        await page.waitForNavigation({ waitUntil: 'domcontentloaded', timeout: 0 });
+        await page.waitForNavigation({ waitUntil: 'domcontentloaded', timeout: 12000 });
 
         const data = await page.$$eval('table tr td', (tds) =>
             tds.map((td) => {
@@ -148,11 +151,11 @@ const processSingleTrackingID = async (
             })
         );
 
-        console.log(data.length);
+        // console.log(data.length);
         if (data.length > 3) {
             updateProcessObj.total_bill =
                 updateProcessObj.total_bill + parseFloat(data[3]);
-            console.log(updateProcessObj.total_bill);
+            // console.log(updateProcessObj.total_bill);
             let today = new Date();
             const dd = String(today.getDate()).padStart(2, '0');
             const mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -176,11 +179,11 @@ const processSingleTrackingID = async (
                 delivery_location: data[5]
             });
 
-            models.generalDatabaseFunction.insertMultipleRows(
-                SCHEMA,
-                TABLE_DETAILS.tracking.name,
-                scrapData
-            );
+            // models.generalDatabaseFunction.insertMultipleRows(
+            //     SCHEMA,
+            //     TABLE_DETAILS.tracking.name,
+            //     scrapData
+            // );
             return true;
         } else {
             records.push({

@@ -21,11 +21,11 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:3000',
+        url: 'https://exam360.co.in/',
         description: 'Development server'
       }
     ],
-    host: 'localhost:3000',
+    host: 'https://exam360.co.in/',
     basePath: '/post-tracking-portal/api/v1'
   },
   tags: {
@@ -35,6 +35,9 @@ const swaggerOptions = {
 
 };
 const app = express();
+
+app.use(express.static(path.join(__dirname, '..', 'build')));
+app.use(express.static('public'));
 
 const swaggerDocs = swaggerJSDoc(swaggerOptions);
 
@@ -51,10 +54,16 @@ app.use(
   })
 );
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+// app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
+
 app.use('/post-tracking-portal/api/v1', router);
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');

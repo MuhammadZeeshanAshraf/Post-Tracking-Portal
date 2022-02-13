@@ -43,7 +43,8 @@ export const importTrackingWorkSheet = async (
                         errorList,
                         scrapData,
                         processID,
-                        models
+                        models,
+                        whereObj
                     );
                     updateProcessObj.not_book_ids = updateProcessObj.total_tracking_ids - updateProcessObj.book_ids;
                     updateProcessObj.not_book_on_same_date = updateProcessObj.total_tracking_ids - updateProcessObj.book_on_same_date;
@@ -60,7 +61,7 @@ export const importTrackingWorkSheet = async (
             INTERNAL_FILES_PATH
         );
         console.log(message);
-        return message;
+        return errorList;
     } catch (error) {
         errorList.push(error.message);
         console.log(error);

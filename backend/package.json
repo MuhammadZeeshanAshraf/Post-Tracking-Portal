@@ -20,10 +20,13 @@
       "*.spec.js"
     ]
   },
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
-    "start": "node -r esm ./server/bin/www",
-    "dev": "cross-env NODE_ENV=development DEBUG=configuration-migrator:* node -r esm ./server/bin/www",
-    "prod": "cross-env NODE_ENV=production node -r esm ./server/bin/www",
+    "start": "node -r esm sever",
+    "dev": "cross-env NODE_ENV=development DEBUG=configuration-migrator:* node -r esm sever",
+    "prod": "cross-env NODE_ENV=production node -r esm sever",
     "watch:dev": "nodemon",
     "lint": "eslint"
   },
