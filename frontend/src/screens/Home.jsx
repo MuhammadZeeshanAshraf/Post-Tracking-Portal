@@ -47,7 +47,7 @@ const Home = () => {
   const [processing, setProcessing] = React.useState(false);
   const [rows, setRows] = React.useState([]);
   const [historyData, setHistoryData] = React.useState([]);
-  const [tempRow, setTempRow] = React.useState(null);
+  // const [tempRow, setTempRow] = React.useState(null);
   const [totalRows, setTotalRows] = React.useState(0);
   const [completeProcess, setCompleteProcess] = React.useState(false);
 
@@ -55,11 +55,11 @@ const Home = () => {
     window.location.reload();
   }
 
-  useEffect(() => {
-    if (tempRow) {
-      setRows([...rows, tempRow]);
-    }
-  }, [tempRow]);
+  // useEffect(() => {
+  //   if (tempRow) {
+  //     setRows([...rows, tempRow]);
+  //   }
+  // }, [tempRow]);
 
   const stopLoading = () => {
     setOpen(false);

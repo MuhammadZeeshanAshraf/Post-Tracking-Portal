@@ -3,6 +3,7 @@ import Home from './screens/Home';
 import Login from './screens/Login';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { useCookies } from 'react-cookie';
+import TextEditor from './components/TextEditor';
 
 const theme = createTheme({
   overrides: {
@@ -43,7 +44,8 @@ function App() {
   else{
     return(
     <ThemeProvider theme={theme}>
-      <Login />
+      {/* <Login /> */}
+      <TextEditor />
     </ThemeProvider>
     );
   }
