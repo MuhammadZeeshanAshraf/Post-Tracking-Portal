@@ -29,6 +29,7 @@
     "react-bootstrap": "^1.6.1",
     "react-chartjs-2": "^2.11.2",
     "react-data-components": "^1.2.0",
+    "react-data-table-component": "^7.4.7",
     "react-datepicker": "^3.8.0",
     "react-dom": "^16.14.0",
     "react-jquery-datatables": "^1.0.0",
@@ -43,6 +44,7 @@
     "react-tooltip": "^4.2.21",
     "recharts": "^1.8.5",
     "smartwizard": "^5.1.1",
+    "styled-components": "^5.3.3",
     "sweetalert-react": "^0.4.11",
     "sweetalert2": "^9.17.2",
     "sweetalert2-react": "^0.8.3",
@@ -55,7 +57,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-	  "deploy": "aws s3 sync build/ s3://server-2022"
+    "deploy": "aws s3 sync build/ s3://server-2022"
   },
   "eslintConfig": {
     "extends": "react-app"
