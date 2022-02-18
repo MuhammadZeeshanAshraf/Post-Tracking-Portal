@@ -78,6 +78,7 @@ import UploadedRecords from './components/pages/UploadedRecords';
 import ShipmentWiseRecord from './components/pages/ShipmentWiseRecord';
 import TrackingIssues from './components/pages/TrackingIssues';
 import PlatformNotFound from './components/pages/PlatformNotFound';
+import ComingSoon from './components/pages/ComingSoon';
 
 
 function App() {
@@ -122,6 +123,9 @@ function App() {
       </Switch>
       <Switch>
         <Route path="/userLoginRecords" component={UserLoginRecords} />
+      </Switch>
+      <Switch>
+        <Route path="/comingSoon" component={ComingSoon} />
       </Switch>
     </Router>
   );

@@ -5396,7 +5396,7 @@ table.dataTable thead .sorting_desc_disabled:after{
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url('../img/costic/coming-soon.jpg');
+  background-image: url('../img/costic/comingSoon.png');
   background-size: cover;
   background-position: center center;
 }
