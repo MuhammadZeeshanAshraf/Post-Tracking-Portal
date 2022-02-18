@@ -73,6 +73,7 @@ import Login from './components/pages/Login';
 import Dashboard from './components/pages/Dashboard';
 import AddEditRole from './components/pages/AddEditRole';
 import Staff from './components/pages/Staff';
+import UploadFile from './components/pages/UploadFile';
 
 
 function App() {
@@ -102,6 +103,10 @@ function App() {
       <Switch>
       <Route path="/otp" component={Otp} />
         <Route path="/otp" component={Otp} />
+      </Switch>
+      <Switch>
+       <Route path="/uploadFile" component={UploadFile} />
+       <Route path="/uploadFile" component={UploadFile} />
       </Switch>
     </Router>
   );
