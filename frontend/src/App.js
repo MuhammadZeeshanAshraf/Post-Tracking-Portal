@@ -110,22 +110,17 @@ function App() {
       </Switch>
       <Switch>
         <Route path="/uploadedRecords" component={UploadedRecords} />
-        <Route path="/uploadedRecords" component={UploadedRecords} />
       </Switch>
       <Switch>
-        <Route path="/shipmentWiseRecord" component={ShipmentWiseRecord} />
         <Route path="/shipmentWiseRecord" component={ShipmentWiseRecord} />
       </Switch>
       <Switch>
         <Route path="/trackingIssues" component={TrackingIssues} />
-        <Route path="/trackingIssues" component={TrackingIssues} />
       </Switch>
       <Switch>
         <Route path="/platformNotFound" component={PlatformNotFound} />
-        <Route path="/platformNotFound" component={PlatformNotFound} />
       </Switch>
       <Switch>
-        <Route path="/userLoginRecords" component={UserLoginRecords} />
         <Route path="/userLoginRecords" component={UserLoginRecords} />
       </Switch>
     </Router>
