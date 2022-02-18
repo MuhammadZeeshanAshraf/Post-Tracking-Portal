@@ -77,6 +77,7 @@ import UserLoginRecords from './components/pages/UserLoginRecords';
 import UploadedRecords from './components/pages/UploadedRecords';
 import ShipmentWiseRecord from './components/pages/ShipmentWiseRecord';
 import TrackingIssues from './components/pages/TrackingIssues';
+import PlatformNotFound from './components/pages/PlatformNotFound';
 
 
 function App() {
@@ -118,6 +119,10 @@ function App() {
       <Switch>
         <Route path="/trackingIssues" component={TrackingIssues} />
         <Route path="/trackingIssues" component={TrackingIssues} />
+      </Switch>
+      <Switch>
+        <Route path="/platformNotFound" component={PlatformNotFound} />
+        <Route path="/platformNotFound" component={PlatformNotFound} />
       </Switch>
       <Switch>
         <Route path="/userLoginRecords" component={UserLoginRecords} />
