@@ -57,7 +57,7 @@ class Sidenavigation extends Component {
                             <Link to="#" className="has-chevron"> <span><i className="fa fa-archive fs-16" />Records </span>
                             </Link>
                             <ul id="record" className="collapse" aria-labelledby="record" data-parent="#side-nav-accordion">
-                                <li> <Link to="/menu-catalogue" >Uploaded Records</Link>
+                                <li> <Link to="/uploadedRecords" >Uploaded Records</Link>
                                 </li>
                                 <li> <Link to="/menu-list" >Shipment wise Records</Link>
                                 </li>

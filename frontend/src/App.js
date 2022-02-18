@@ -74,6 +74,7 @@ import Dashboard from './components/pages/Dashboard';
 import AddEditRole from './components/pages/AddEditRole';
 import Staff from './components/pages/Staff';
 import UserLoginRecords from './components/pages/UserLoginRecords';
+import UploadedRecords from './components/pages/UploadedRecords';
 
 
 function App() {
@@ -81,31 +82,35 @@ function App() {
     <Router basename={'/'}>
       <Preloader/>
       <Switch>
-      <Route path="/register" component={Registration} />
+        <Route path="/register" component={Registration} />
         <Route path="/dashboard" component={Dashboard} />
       </Switch>
       <Switch>
-      <Route path="/register" component={Registration} />
+        <Route path="/register" component={Registration} />
         <Route path="/default-register" component={Registration} />
       </Switch>
       <Switch>
-      <Route path="/login" component={Login} />
+        <Route path="/login" component={Login} />
         <Route path="/default-register" component={Login} />
       </Switch>
       <Switch>
-      <Route path="/addEditRole" component={AddEditRole} />
+        <Route path="/addEditRole" component={AddEditRole} />
         <Route path="/addEditRole" component={AddEditRole} />
       </Switch>
       <Switch>
-      <Route path="/staff" component={Staff} />
+        <Route path="/staff" component={Staff} />
         <Route path="/staff" component={Staff} />
       </Switch>
       <Switch>
-      <Route path="/otp" component={Otp} />
+        <Route path="/otp" component={Otp} />
         <Route path="/otp" component={Otp} />
       </Switch>
       <Switch>
-      <Route path="/userLoginRecords" component={UserLoginRecords} />
+        <Route path="/uploadedRecords" component={UploadedRecords} />
+        <Route path="/uploadedRecords" component={UploadedRecords} />
+      </Switch>
+      <Switch>
+        <Route path="/userLoginRecords" component={UserLoginRecords} />
         <Route path="/userLoginRecords" component={UserLoginRecords} />
       </Switch>
     </Router>
