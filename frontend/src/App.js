@@ -75,6 +75,7 @@ import AddEditRole from './components/pages/AddEditRole';
 import Staff from './components/pages/Staff';
 import UserLoginRecords from './components/pages/UserLoginRecords';
 import UploadedRecords from './components/pages/UploadedRecords';
+import ShipmentWiseRecord from './components/pages/ShipmentWiseRecord';
 
 
 function App() {
@@ -108,6 +109,10 @@ function App() {
       <Switch>
         <Route path="/uploadedRecords" component={UploadedRecords} />
         <Route path="/uploadedRecords" component={UploadedRecords} />
+      </Switch>
+      <Switch>
+        <Route path="/shipmentWiseRecord" component={ShipmentWiseRecord} />
+        <Route path="/shipmentWiseRecord" component={ShipmentWiseRecord} />
       </Switch>
       <Switch>
         <Route path="/userLoginRecords" component={UserLoginRecords} />

@@ -59,7 +59,7 @@ class Sidenavigation extends Component {
                             <ul id="record" className="collapse" aria-labelledby="record" data-parent="#side-nav-accordion">
                                 <li> <Link to="/uploadedRecords" >Uploaded Records</Link>
                                 </li>
-                                <li> <Link to="/menu-list" >Shipment wise Records</Link>
+                                <li> <Link to="/shipmentWiseRecord" >Shipment Wise Records</Link>
                                 </li>
                                 <li> <Link to="/menu-grid" >Tracking Issues</Link>
                                 </li>
