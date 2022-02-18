@@ -61,7 +61,7 @@ class Sidenavigation extends Component {
                                 </li>
                                 <li> <Link to="/shipmentWiseRecord" >Shipment Wise Records</Link>
                                 </li>
-                                <li> <Link to="/menu-grid" >Tracking Issues</Link>
+                                <li> <Link to="/trackingIssues" >Tracking Issues</Link>
                                 </li>
                                 <li> <Link to="/add-product" >Platform Not found</Link>
                                 </li >

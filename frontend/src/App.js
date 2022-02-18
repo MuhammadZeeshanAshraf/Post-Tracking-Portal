@@ -76,6 +76,7 @@ import Staff from './components/pages/Staff';
 import UserLoginRecords from './components/pages/UserLoginRecords';
 import UploadedRecords from './components/pages/UploadedRecords';
 import ShipmentWiseRecord from './components/pages/ShipmentWiseRecord';
+import TrackingIssues from './components/pages/TrackingIssues';
 
 
 function App() {
@@ -113,6 +114,10 @@ function App() {
       <Switch>
         <Route path="/shipmentWiseRecord" component={ShipmentWiseRecord} />
         <Route path="/shipmentWiseRecord" component={ShipmentWiseRecord} />
+      </Switch>
+      <Switch>
+        <Route path="/trackingIssues" component={TrackingIssues} />
+        <Route path="/trackingIssues" component={TrackingIssues} />
       </Switch>
       <Switch>
         <Route path="/userLoginRecords" component={UserLoginRecords} />
