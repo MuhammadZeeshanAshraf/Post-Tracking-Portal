@@ -44,23 +44,31 @@ const HomeContent = () => {
                 <div className="chartsMain">
                     <div  className="chartRow d-flex">
                         <div className="chartContent color1">
-                            <h5>{staticsData.order_shipped}</h5>
-                            <h5>Order Shipped(Uploaded)</h5>
+                            <strong>{staticsData.order_shipped}</strong>
+                            <h5>Order Shipped</h5>
                         </div>
                         <div className="chartContent color2">
-                            <h5>{staticsData.order_booked}</h5>
+                            <strong>{staticsData.order_booked}</strong>
                             <h5>Order Booked</h5>
                         </div>
                         <div className="chartContent color3">
-                            <h5>{staticsData.booked_amount}</h5>
-                            <h5>Booked Amount(Total)</h5>
+                            <strong>{staticsData.booked_amount}</strong>
+                            <h5>Booked Amount</h5>
                         </div>
-                        
                     </div>
+
                     <div  className="chartRow d-flex">
                         <div className="chartContent color4">
-                            <h5>{staticsData.order_booked}</h5>
-                            <h5>Total Orders</h5>
+                            <strong>{staticsData.shipping_alert}</strong>
+                            <h5>Shipment Alert</h5>
+                        </div>
+                        <div className="chartContent color5">
+                            <strong>{staticsData.all_customer_numbers}</strong>
+                            <h5>All Customer Numbers</h5>
+                        </div>
+                        <div className="chartContent color6">
+                            <strong>{staticsData.totall_number_missing}</strong>
+                            <h5>Total Number Missing</h5>
                         </div>
                     </div>
                 </div>

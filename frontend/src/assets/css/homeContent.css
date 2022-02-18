@@ -1,10 +1,9 @@
 
 .chartContent{
   flex:1;
-  height: 200px;
+  height: 150px;
   margin: 20px;
   border-radius: 5px;
-  /* background-color: crimson; */
   display:flex;
   justify-content: center;
   align-items: center;
@@ -12,25 +11,46 @@
 }
 
 .color1{
-  background-color: cyan;
+    background-color: #321fdb;
+    /* background-color: cyan; */
   /* background: linear-gradient(to bottom, #ccff99 0%, #ff9966 100%); */
 }
 
 .color2{
-  background-color: indianred;
+    background-color: #3399ff;
+    /* background-color: indianred; */
   /* background: linear-gradient(to top left, #33ccff 0%, #ffff99 100%); */
 }
 
 .color3{
-  background-color: lightskyblue;
+    background-color: #f9b115;
+    /* background-color: lightskyblue; */
   /* background: linear-gradient(to top left, #66ff66 0%, #ffccff 100%); */
 }
 
 .color4{
-  background-color: lime;
+    background-color: #e55353;
+    /* background-color: lime; */
+  /* background: linear-gradient(to top left, #3399ff 0%, #ffccff 100%); */
+}
+
+.color5{
+    background-color:  lime;
+    /* background-color:  greenyellow; */
+  /* background: linear-gradient(to top left, #3399ff 0%, #ffccff 100%); */
+}
+
+.color6{
+    background-color: gray;
+    /* background-color: gray; */
   /* background: linear-gradient(to top left, #3399ff 0%, #ffccff 100%); */
 }
 
 .chartContent h5{
+  color:white
+}
+
+.chartContent strong{
+  font-size: 40px;
   color:white
 }
