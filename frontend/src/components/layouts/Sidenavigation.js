@@ -85,7 +85,7 @@ class Sidenavigation extends Component {
                             <ul id="ourStaff" className="collapse" aria-labelledby="ourStaff" data-parent="#side-nav-accordion">
                                 <li> <Link to="/menu-catalogue" >Staff Page</Link>
                                 </li>
-                                <li> <Link to="/menu-list" >User Login Records</Link>
+                                <li> <Link to="/userLoginRecords" >User Login Records</Link>
                                 </li>
                                 <li> <Link to="/menu-grid" >User Documents Uploaded Records</Link>
                                 </li>
