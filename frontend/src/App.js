@@ -80,7 +80,9 @@ import ShipmentWiseRecord from './components/pages/ShipmentWiseRecord';
 import TrackingIssues from './components/pages/TrackingIssues';
 import PlatformNotFound from './components/pages/PlatformNotFound';
 import ComingSoon from './components/pages/ComingSoon';
+import ClearStorage from './components/pages/ClearStorage';
 import UploadFile from './components/pages/UploadFile';
+import Customer from './components/pages/Customer';
 
 
 function App() {
@@ -107,10 +109,12 @@ function App() {
       </Switch>
       <Switch>
         <Route path="/otp" component={Otp} />
-        <Route path="/otp" component={Otp} />
       </Switch>
       <Switch>
         <Route path="/processTrackings" component={UploadFile} />
+      </Switch>
+      <Switch>
+        <Route path="/uploadedRecords" component={UploadedRecords} />
       </Switch>
       <Switch>
         <Route path="/shipmentWiseRecord" component={ShipmentWiseRecord} />
@@ -122,7 +126,13 @@ function App() {
         <Route path="/platformNotFound" component={PlatformNotFound} />
       </Switch>
       <Switch>
+        <Route path="/customer" component={Customer} />
+      </Switch>
+      <Switch>
         <Route path="/userLoginRecords" component={UserLoginRecords} />
+      </Switch>
+      <Switch>
+        <Route path="/clearStorage" component={ClearStorage} />
       </Switch>
       <Switch>
         <Route path="/userDocumentRecords" component={UserDocumentRecords} />
