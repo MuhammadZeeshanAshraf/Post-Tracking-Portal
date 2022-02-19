@@ -14,7 +14,7 @@ class ContentTable extends Component {
     }
      
     componentDidMount() {
-        axios.get('/table/user-logging')
+        axios.get('/table/user-document-logging')
         .then(function (response) {
             $('#invalidTracingTable').DataTable({
                 data: response.data.data,
@@ -22,10 +22,11 @@ class ContentTable extends Component {
                 pageLength: 10,
                 columns: [
                     { data:"user_id", title: "Id" },
-                    { data:"name", title: "Name" },
-                    { data:"ip_address", title: "IP Address" },
-                    { data:"login_at", title: "Login At" },
-                    { data:"logout_at", title: "Logout At" },
+                    { data:"user_name", title: "Name" },
+                    { data:"process_id", title: "Process Id" },
+                    { data:"perform_at", title: "Perform At" },
+                    { data:"description", title: "description" },
+                    { data:"action", title: "Action" },
                 ],
             });
         })
@@ -44,7 +45,7 @@ class ContentTable extends Component {
                     <div className="col-md-12">
                         <div className="ms-panel">
                             <div className="ms-panel-header">
-                                <h6>User Login Records</h6>
+                                <h6>User Document Records</h6>
                             </div>
                             <div className="ms-panel-body">
                                 <div className="table-responsive">

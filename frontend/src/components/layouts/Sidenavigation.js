@@ -52,6 +52,9 @@ class Sidenavigation extends Component {
                         <li className="menu-item">
                             <Link to="/dashboard"> <span><i className="material-icons fs-16" >dashboard</i>Dashboard </span></Link>
                         </li>
+                        <li className="menu-item">
+                            <Link to="/uploadFile"> <span><i className="fa fa-tasks fs-16" ></i>Process Trackings</span></Link>
+                        </li>
                         {/* Records */}
                         <li className="menu-item">
                             <Link to="#" className="has-chevron"> <span><i className="fa fa-archive fs-16" />Records </span>
@@ -83,11 +86,13 @@ class Sidenavigation extends Component {
                             <Link to="#" className="has-chevron"> <span><i className="material-icons fs-16" >group</i>Our Staff </span>
                             </Link>
                             <ul id="ourStaff" className="collapse" aria-labelledby="ourStaff" data-parent="#side-nav-accordion">
-                                <li> <Link to="/menu-catalogue" >Staff Page</Link>
+                                <li> <Link to="/staff" >Staff</Link>
+                                </li>
+                                <li> <Link to="/roles" >Roles</Link>
                                 </li>
                                 <li> <Link to="/userLoginRecords" >User Login Records</Link>
                                 </li>
-                                <li> <Link to="/menu-grid" >User Documents Uploaded Records</Link>
+                                <li> <Link to="/userDocumentRecords" >User Documents Uploaded Records</Link>
                                 </li>
                             </ul >
                         </li >

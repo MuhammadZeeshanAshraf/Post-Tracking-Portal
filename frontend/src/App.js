@@ -74,6 +74,7 @@ import Dashboard from './components/pages/Dashboard';
 import AddEditRole from './components/pages/AddEditRole';
 import Staff from './components/pages/Staff';
 import UserLoginRecords from './components/pages/UserLoginRecords';
+import UserDocumentRecords from './components/pages/UserDocumentRecords';
 
 
 function App() {
@@ -93,8 +94,8 @@ function App() {
         <Route path="/default-register" component={Login} />
       </Switch>
       <Switch>
-      <Route path="/addEditRole" component={AddEditRole} />
-        <Route path="/addEditRole" component={AddEditRole} />
+      <Route path="/roles" component={AddEditRole} />
+        <Route path="/roles" component={AddEditRole} />
       </Switch>
       <Switch>
       <Route path="/staff" component={Staff} />
@@ -108,6 +109,11 @@ function App() {
       <Route path="/userLoginRecords" component={UserLoginRecords} />
         <Route path="/userLoginRecords" component={UserLoginRecords} />
       </Switch>
+      <Switch>
+      <Route path="/userDocumentRecords" component={UserDocumentRecords} />
+        <Route path="/userDocumentRecords" component={UserDocumentRecords} />
+      </Switch>
+      
     </Router>
   );
 }

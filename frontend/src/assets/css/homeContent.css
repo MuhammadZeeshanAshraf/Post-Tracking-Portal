@@ -1,8 +1,17 @@
+/* .barChartDiv{
+  height:10vh;
+}
+.pieChartDiv{
+  height:10vh;
+} */
 
+.chartsMain{
+  padding:30px;
+}
 .chartContent{
   flex:1;
   height: 150px;
-  margin: 20px;
+  margin: 5px;
   border-radius: 5px;
   display:flex;
   justify-content: center;
