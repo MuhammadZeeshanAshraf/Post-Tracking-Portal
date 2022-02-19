@@ -5392,7 +5392,11 @@ table.dataTable thead .sorting_desc_disabled:after{
 }
 
 /* Coming Soon */
-.ms-coming-soon{
+.ms-coming-soon img{
+  margin-top: -500px;
+  width: 100%;
+}
+/* .ms-coming-soon{
   display: flex;
   justify-content: center;
   align-items: center;
@@ -5491,7 +5495,7 @@ a.ms-g-plus,
 }
 .ms-dark-theme .ms-coming-soon input.form-control::-ms-input-placeholder{
   color: #495057;
-}
+} */
 
 /* User Profile */
 
@@ -6864,6 +6868,10 @@ table td .progress{
 
 @media(max-width: 1024px){
 
+  .ms-coming-soon img{
+    margin-top: -400px;
+  }
+  
   .ms-card.ms-card-fh{
     height: auto;
   }
@@ -6912,6 +6920,11 @@ table td .progress{
 }
 
 @media(max-width: 768px){
+
+  .ms-coming-soon img{
+    margin-top: -300px;
+  }
+
   .display-4{
     font-size: 2rem;
   }
@@ -7031,6 +7044,10 @@ table td .progress{
 
 }
 @media(max-width: 540px){
+
+  .ms-coming-soon img{
+    margin-top: -200px;
+  }
 
   .ms-form-wizard ul[role="tablist"] li a{
     padding: 10px;
