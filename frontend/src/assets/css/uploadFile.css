@@ -1,0 +1,47 @@
+h1,h2,h3, h4,h5,h6{
+    color:#3c4b64;
+}
+.uploadfileMain{
+    align-items: center!important;
+    width: 70%;
+    height: 350px;
+    border-radius: 5px;
+    border: 5px dashed #95a1a9;
+    margin: 20px;
+    flex-direction: column;
+}
+.uploadfileMain > *{
+    color:#95a1a9;
+}
+
+.uploadImage{
+    width:200px;
+    height:150px;
+}
+
+.editorHeader{
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+.editorHeader > *{
+    flex: 1;
+    margin-left: 20px;
+}
+.editor {
+    align-items: center!important;
+    width: 60%;
+    border-radius: 5px;
+    border: 2px solid #95a1a9;
+    margin: 20px;
+    padding:15px;
+    flex-direction: column;
+}
+.editorRow{
+    justify-content: center;
+    align-items: center;
+}
+
+.editorInput{
+    padding:2px;
+    margin:5px;
+}
+

@@ -80,6 +80,7 @@ import ShipmentWiseRecord from './components/pages/ShipmentWiseRecord';
 import TrackingIssues from './components/pages/TrackingIssues';
 import PlatformNotFound from './components/pages/PlatformNotFound';
 import ComingSoon from './components/pages/ComingSoon';
+import UploadFile from './components/pages/UploadFile';
 
 
 function App() {
@@ -102,7 +103,6 @@ function App() {
         <Route path="/addEditRole" component={AddEditRole} />
       </Switch>
       <Switch>
-        <Route path="/staff" component={Staff} />
         <Route path="/staff" component={Staff} />
       </Switch>
       <Switch>
@@ -129,6 +129,9 @@ function App() {
       </Switch>
       <Switch>
         <Route path="/comingSoon" component={ComingSoon} />
+      </Switch>
+      <Switch>
+       <Route path="/uploadFile" component={UploadFile} />
       </Switch>
     </Router>
   );
