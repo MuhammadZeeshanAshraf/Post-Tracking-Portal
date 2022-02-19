@@ -100,7 +100,7 @@ function App() {
         <Route path="/default-register" component={Login} />
       </Switch>
       <Switch>
-        <Route path="/addEditRole" component={AddEditRole} />
+        <Route path="/roles" component={AddEditRole} />
       </Switch>
       <Switch>
         <Route path="/staff" component={Staff} />
@@ -110,7 +110,7 @@ function App() {
         <Route path="/otp" component={Otp} />
       </Switch>
       <Switch>
-        <Route path="/uploadedRecords" component={UploadedRecords} />
+        <Route path="/processTrackings" component={UploadFile} />
       </Switch>
       <Switch>
         <Route path="/shipmentWiseRecord" component={ShipmentWiseRecord} />
