@@ -74,6 +74,9 @@ class Sidenavigation extends Component {
                             <Link to="/comingSoon"> <span><i className="material-icons md-24" >redeem</i>Category</span>
                             </Link>
                         </li >
+                         <li className="menu-item">
+                            <Link to="/customer"> <span><i className="material-icons md-24" >redeem</i>Customer</span></Link>
+                        </li >
                         <li className="menu-item">
                             <Link to="/comingSoon"> <span><i className="fas fa-clipboard-list fs-16" />Order</span>
                             </Link>

@@ -82,6 +82,7 @@ import PlatformNotFound from './components/pages/PlatformNotFound';
 import ComingSoon from './components/pages/ComingSoon';
 import ClearStorage from './components/pages/ClearStorage';
 import UploadFile from './components/pages/UploadFile';
+import Customer from './components/pages/Customer';
 
 
 function App() {
@@ -123,6 +124,9 @@ function App() {
       </Switch>
       <Switch>
         <Route path="/platformNotFound" component={PlatformNotFound} />
+      </Switch>
+      <Switch>
+        <Route path="/customer" component={Customer} />
       </Switch>
       <Switch>
         <Route path="/userLoginRecords" component={UserLoginRecords} />
