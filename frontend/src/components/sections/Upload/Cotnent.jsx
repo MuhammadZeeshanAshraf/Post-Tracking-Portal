@@ -196,22 +196,52 @@ const UploadContent = () => {
         }
     }, [editorData]);
 
+    
     const processFile = async () => {
           setFileIsProcessing(true);
-          const interval = setInterval(() => {
+          if (file) {
+            const data = new FormData();
+            data.append("TrackingWorkSheet", file[0]);
+            data.append("key", fileName);
+      
             axios
-              .get("import-process/data",
+              .post(
+                "import-process",
+                data,
                 {}
               )
               .then((res) => {
-                if (Array.isArray(res.data.trackingData)) {
-                  if (res.data.trackingData.length > 0) {
-                    // setTotalRows(parseInt(res.data.total))
-                    setProcessedRows(res.data.trackingData)
+                clearInterval(interval);
+                axios
+                  .get(
+                    "import-process/data",
+                    {}
+                  )
+                  .then((res) => {
+                    console.log(res.data);
+                     if (Array.isArray(res.data.trackingData)) {
+                    if (res.data.trackingData.length > 0) {
+                        setProcessedRows(res.data.trackingData)
+                    }
                   }
-                }
+                  });
               });
-          }, 20000);
+            const interval = setInterval(() => {
+              axios
+                .get(
+                  "import-process/data",
+                  {}
+                )
+                .then((res) => {
+                 console.log('OK========>',res.data);
+                     if (Array.isArray(res.data.trackingData)) {
+                    if (res.data.trackingData.length > 0) {
+                        setProcessedRows(res.data.trackingData)
+                    }
+                  }
+                });
+            }, 20000);
+          }
     }
     
     const openAddEditRoleModal = (data)=>{

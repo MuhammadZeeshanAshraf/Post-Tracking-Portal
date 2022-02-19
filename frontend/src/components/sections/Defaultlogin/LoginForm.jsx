@@ -4,6 +4,8 @@ import React from 'react';
 import { Modal } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
+import { useHistory } from 'react-router-dom';
+
 
 const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -14,18 +16,22 @@ const validationSchema = Yup.object().shape({
         .required('Password is required'),
 });
   
-const register = (values)=>{
-    axios.post('/user/register', values)
-    .then(function (response) {
-        if(response == "OK"){
-            
-        }
-    })
-    .catch(function (error) {
-      console.log(error);
-  });
-}
+
 const LoginForm = () => {
+    const history = useHistory();
+
+    const register = (values)=>{
+        history.push('/dashboard')
+        axios.post('/user/register', values)
+        .then(function (response) {
+            if(response == "OK"){
+                
+            }
+        })
+        .catch(function (error) {
+          console.log(error);
+      });
+    }
     return (
         <Formik
          validationSchema={validationSchema}
