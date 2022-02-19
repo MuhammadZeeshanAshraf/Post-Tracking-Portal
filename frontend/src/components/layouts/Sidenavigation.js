@@ -3,11 +3,15 @@ import { Link } from 'react-router-dom'
 import $ from 'jquery';
 import Scrollbar from 'react-perfect-scrollbar'
 import 'react-perfect-scrollbar/dist/css/styles.css';
-
-import logo from '../../assets/img/costic/costic-logo-216x62.png';
+import logo from '../../assets/img/costic/logo.png';
 
 class Sidenavigation extends Component {
 
+    adddarkmode = (e) => {
+        var elem = e.target,
+        parentTask = elem.closest('.ms-body');
+        $(parentTask).toggleClass('ms-dark-theme');
+    }
     removeoverlay = () => {
         $('.ms-body').toggleClass('ms-aside-left-open');
         $('#ms-side-nav').toggleClass('ms-aside-open');
@@ -75,7 +79,7 @@ class Sidenavigation extends Component {
                             </Link>
                         </li >
                          <li className="menu-item">
-                            <Link to="/customer"> <span><i className="material-icons md-24" >redeem</i>Customer</span></Link>
+                            <Link to="/customer"> <span><i className="fas fa-user md-24"/>Customer</span></Link>
                         </li >
                         <li className="menu-item">
                             <Link to="/comingSoon"> <span><i className="fas fa-clipboard-list fs-16" />Order</span>
@@ -105,6 +109,12 @@ class Sidenavigation extends Component {
                             </Link>
                             <ul id="setting" className="collapse" aria-labelledby="setting" data-parent="#side-nav-accordion">
                                 <li> <Link to="/clearStorage" >Clear Storage</Link></li>
+                                <li>
+                                    <span className="ml-4"> Dark Mode </span>
+                                    <label className="ms-switch">
+                                        <input type="checkbox" id="dark-mode" onClick={this.adddarkmode} /> <span className="ms-switch-slider round" />
+                                    </label>
+                                </li>
                             </ul >
                         </li >
 
