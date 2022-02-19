@@ -92,8 +92,12 @@ class Sidenavigation extends Component {
                             </ul >
                         </li >
                         <li className="menu-item">
-                            <Link to="/orders"> <span><i className="material-icons fs-20" >settings</i>Settings</span>
+                            <Link to="#" className="has-chevron">
+                                <span><i className="material-icons fs-20" >settings</i>Settings</span>
                             </Link>
+                            <ul id="setting" className="collapse" aria-labelledby="setting" data-parent="#side-nav-accordion">
+                                <li> <Link to="/clearStorage" >Clear Storage</Link></li>
+                            </ul >
                         </li >
 
                         {/* /Apps */}
