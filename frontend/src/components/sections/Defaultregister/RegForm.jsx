@@ -3,6 +3,7 @@ import { Formik } from 'formik';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
+import { useHistory } from 'react-router-dom';
 
 const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -41,11 +42,13 @@ const register = (values)=>{
   });
 }
 const RegForm = () => {
+    const history = useHistory();
     return (
         <Formik
          validationSchema={validationSchema}
          onSubmit={(values) => {
             register(values);
+            history.push('/otp')
           }}
          initialValues={{
            name: '',

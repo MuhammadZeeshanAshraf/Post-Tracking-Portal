@@ -90,16 +90,13 @@ function App() {
     <Router basename={'/'}>
       <Preloader/>
       <Switch>
-        <Route path="/register" component={Registration} />
         <Route path="/dashboard" component={Dashboard} />
       </Switch>
       <Switch>
         <Route path="/register" component={Registration} />
-        <Route path="/default-register" component={Registration} />
       </Switch>
       <Switch>
         <Route path="/login" component={Login} />
-        <Route path="/default-register" component={Login} />
       </Switch>
       <Switch>
         <Route path="/roles" component={AddEditRole} />

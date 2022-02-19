@@ -94,17 +94,17 @@ class Quickbar extends Component {
             <aside id="ms-quick-bar" className="ms-quick-bar fixed ms-d-block-lg" ref="quickbarbtn">
                 <Tab.Container>
                     <Nav variant="tab" className="ms-quick-bar-list nav-tabs" ref="addmsconfigure">
-                        <OverlayTrigger placement="left" overlay={todotip}>
+                        {/* <OverlayTrigger placement="left" overlay={todotip}>
                             <Nav.Item className="ms-quick-bar-item ms-has-qa" onClick={this.quickbarbtn}onChange={this.handleOnChange}>
                                 <Nav.Link eventKey="qa-todo" ref="removequicktab"><i className="flaticon-list" /></Nav.Link>
                             </Nav.Item>
-                        </OverlayTrigger>
+                        </OverlayTrigger> */}
                         <OverlayTrigger placement="left" overlay={reminderstip}>
                             <Nav.Item className="ms-quick-bar-item ms-has-qa" onClick={this.quickbarbtn}onChange={this.handleOnChange} >
                                 <Nav.Link eventKey="qa-reminder" ref="removequicktab1"><i className="flaticon-bell" /></Nav.Link>
                             </Nav.Item>
                         </OverlayTrigger>
-                        <OverlayTrigger placement="left" overlay={notestip}>
+                        {/* <OverlayTrigger placement="left" overlay={notestip}>
                             <Nav.Item className="ms-quick-bar-item ms-has-qa" onClick={this.quickbarbtn}onChange={this.handleOnChange}>
                                 <Nav.Link eventKey="qa-notes" ref="removequicktab2"><i className="flaticon-pencil" /></Nav.Link>
                             </Nav.Item>
@@ -114,6 +114,7 @@ class Quickbar extends Component {
                                 <Nav.Link eventKey="qa-invite" ref="removequicktab3"><i className="flaticon-share-1" /></Nav.Link>
                             </Nav.Item>
                         </OverlayTrigger>
+                         */}
                         <OverlayTrigger placement="left" overlay={settingstip}>
                             <Nav.Item className="ms-quick-bar-item ms-has-qa" onClick={this.quickbarbtn}onChange={this.handleOnChange}>
                                 <Nav.Link eventKey="qa-settings" ref="removequicktab4"><i className="flaticon-gear" /></Nav.Link>

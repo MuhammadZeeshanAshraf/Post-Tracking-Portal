@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { Component, ReactDOM } from 'react';
 import Button from 'react-bootstrap/Button';
 import "../../../assets/css/optinput.css";
+import { withRouter } from 'react-router-dom';
 
 
 class Otpinput extends React.Component {
@@ -23,13 +24,15 @@ class Otpinput extends React.Component {
     event.preventDefault();
     let data = this.state;
     data = data.otp1 + data.otp2 + data.otp3 + data.otp4 + data.otp5; 
+    this.props.history.push("/login");
     console.log(data);
     axios.get('/otp', {
         otp: data,
       })
       .then(function (response) {
         if(response.data){
-            // successToast("Success" ,"Successfully updated the status")
+
+          // successToast("Success" ,"Successfully updated the status")
         } else{
             // errorToast("Oops", "Error in updating the user status");
         }
@@ -129,5 +132,4 @@ class Otpinput extends React.Component {
   }
 }
 
-
-export default Otpinput;
+export default withRouter(Otpinput);;

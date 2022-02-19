@@ -2,7 +2,7 @@
   "name": "costic",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://metropolitanhost.com/themes/themeforest/react/costic",
+  "homepage": "https://metropolitanhost.com/register",
   "main": "lib/index",
   "types": "lib/index",
   "dependencies": {
@@ -32,8 +32,8 @@
     "react-data-table-component": "^7.4.7",
     "react-datepicker": "^3.8.0",
     "react-dom": "^16.14.0",
-    "react-dropzone": "^11.4.0",
     "react-google-charts": "^4.0.0",
+    "react-dropzone": "^11.4.0",
     "react-jquery-datatables": "^1.0.0",
     "react-jqueryui-datepicker": "^1.0.3",
     "react-jvectormap": "0.0.16",
