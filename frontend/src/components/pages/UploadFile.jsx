@@ -1,5 +1,4 @@
 import React from 'react';
-import Quickbar from '../layouts/Quickbar';
 import Sidenavigation from '../layouts/Sidenavigation';
 import Topnavigation from '../layouts/Topnavigation';
 import UploadContent from '../sections/Upload/Cotnent';
@@ -12,7 +11,6 @@ function UploadFile(props) {
             <Topnavigation />
             <UploadContent/>
         </main>
-        <Quickbar />
     </div>
     );
 }

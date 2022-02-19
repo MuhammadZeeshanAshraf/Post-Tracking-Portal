@@ -652,9 +652,9 @@ pre{
 .horizontal-layout .body-content{
   padding-left: 0;
 }
-.ms-has-quickbar .body-content{
+/* .ms-has-quickbar .body-content{
   padding-right: 60px;
-}
+} */
 .ms-aside-open .body-content{
   padding-left: 255px;
 }
