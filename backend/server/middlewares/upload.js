@@ -13,10 +13,14 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     const splitFile = file.originalname.split('.');
     const fileExtension = splitFile[splitFile.length - 1];
-    cb(null, file.fieldname + '.' + fileExtension);
+    if (file.fieldname === 'TrackingWorkSheet') {
+      cb(null, file.fieldname + '.' + fileExtension);
+    } else {
+      cb(null, file.fieldname + '_' + Date.now() + '.' + fileExtension);
+    }
   },
   onError: function (err, next) {
-    console.log('error from multer : ', err);
+    // console.log('error from multer : ', err);
     next(err);
   }
 });

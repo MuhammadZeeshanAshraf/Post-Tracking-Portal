@@ -1,3 +1,4 @@
+/* eslint-disable space-before-function-paren */
 import { BATCH_SIZE } from '../constants';
 
 export default class GeneralDatabaseFunction {
@@ -25,29 +26,66 @@ export default class GeneralDatabaseFunction {
 
   async insertSingleRowWithReturn(schema, table, mapObj, returnColumnName) {
     try {
-      return this.db(`${schema}.${table}`).returning(returnColumnName).insert(mapObj);
+      const result = this.db(`${schema}.${table}`).returning(returnColumnName).insert(mapObj);
+      return result;
     } catch (error) {
-      console.log(error);
+      // console.log('OOKKOKO========>', error);
+
+      return error.message;
+    }
+  }
+
+  async insertSingleRow(schema, table, mapObj) {
+    try {
+      return this.db(`${schema}.${table}`).insert(mapObj);
+    } catch (error) {
+      // console.log(error);
     }
   }
 
   async updateSingleRowWithReturn(schema, table, mapObj, whereObj) {
     try {
-      console.log(this.db(`${schema}.${table}`).where(whereObj).update(mapObj).toString());
+      // console.log(this.db(`${schema}.${table}`).where(whereObj).update(mapObj).toString());
       return this.db(`${schema}.${table}`).where(whereObj).update(mapObj);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+    }
+  }
+
+  async deleteData(schema, table, whereObj) {
+    try {
+      // console.log(this.db(`${schema}.${table}`).where(whereObj).del().toString());
+      return this.db(`${schema}.${table}`).where(whereObj).del();
+    } catch (error) {
+      // console.log(error);
+    }
+  }
+
+  async deleteDataWhereIn(schema, table, whereColumnName, whereColumnValue) {
+    try {
+      // console.log(this.db(`${schema}.${table}`).whereIn(whereColumnName, whereColumnValue).del().toString());
+      return this.db(`${schema}.${table}`).whereIn(whereColumnName, whereColumnValue).del();
+    } catch (error) {
+      // console.log(error);
     }
   }
 
   async insertMultipleRows(schema, table, data) {
-    console.log('Rows :-', data.length);
-    const promises = [];
-    while (data.length > 0) {
-      const dataBatch = data.splice(0, BATCH_SIZE);
-      promises.push(this.db(`${schema}.${table}`).insert(dataBatch));
+    try {
+      // console.log('Rows :-', data.length);
+      const promises = [];
+      while (data.length > 0) {
+        const dataBatch = data.splice(0, BATCH_SIZE);
+        promises.push(this.db(`${schema}.${table}`).insert(dataBatch));
+      }
+      await Promise.all(promises);
+    } catch (error) {
+      // console.log(error);
     }
-    await Promise.all(promises);
+  }
+
+  async insertValueByArray(schema, table, data) {
+    return this.db(`${schema}.${table}`).insert(data);
   }
 
   getDatabySingleWhereColumn(schema, table, whereColumnName, whereColumnValue) {
@@ -56,6 +94,18 @@ export default class GeneralDatabaseFunction {
 
   getAllData(schema, table) {
     return this.db.select().table(`${schema}.${table}`);
+  }
+
+  getDataByWhere(schema, table, whereObj) {
+    return this.db.select().table(`${schema}.${table}`).where(whereObj);
+  }
+
+  getAllDataOrderBy(schema, table, orderCol) {
+    return this.db.select().table(`${schema}.${table}`).orderBy(orderCol, 'desc', 'first');
+  }
+
+  getAllDataOrderByWithSelectiveColumns(schema, table, orderCol, selectColumns) {
+    return this.db.select(selectColumns).table(`${schema}.${table}`).orderBy(orderCol, 'desc', 'first');
   }
 
   async getSimpleMaxByColumn(schema, table, maxColumnName, whereColumnName, whereValue) {
@@ -73,7 +123,7 @@ export default class GeneralDatabaseFunction {
         return maxID;
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   }
 
@@ -87,7 +137,50 @@ export default class GeneralDatabaseFunction {
         return maxID;
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
+  }
+
+  async search(schema, table, searchCriteria) {
+    try {
+      return this.db(`${schema}.${table}`)
+        .where((qb) => {
+          for (const [key, value] of Object.entries(searchCriteria)) {
+            qb.where(`${key}`, 'like', `%${value}%`);
+          }
+        });
+    } catch (error) {
+      // console.log(error);
+    }
+  }
+
+  getAfterDate(schema, table, afterDate) {
+    const query = `select *
+                  from ${schema}.${table} i 
+                  where i.create_date > timestamp '${afterDate}'`;
+    return this.db.raw(query);
+  }
+
+  getDatabyWhereIn(schema, table, whereColumnName, whereColumnValue) {
+    return this.db.select().table(`${schema}.${table}`).whereIn(whereColumnName, whereColumnValue);
+  }
+
+  getBeforeDate(schema, table, afterDate, columnName) {
+    const query = `select *
+                  from ${schema}.${table} i 
+                  where i.${columnName} < timestamp '${afterDate}'`;
+    return this.db.raw(query);
+  }
+
+  getBetweenDate(schema, table, start, end) {
+    const query = `select *
+                  from ${schema}.${table} i 
+                  where i.create_date > timestamp '${start}'
+                  and  i.create_date < timestamp '${end}'`;
+    return this.db.raw(query);
+  }
+
+  getCount(schema, table, whereObj, whereColumnName) {
+    return this.db.select().table(`${schema}.${table}`).count({ count: whereColumnName }).where(whereObj);
   }
 }

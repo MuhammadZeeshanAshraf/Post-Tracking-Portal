@@ -1,21 +1,29 @@
 {
   "files": {
-    "main.css": "/static/css/main.f0be7440.css",
-    "main.js": "/static/js/main.25faa7a0.js",
-    "static/js/787.fc1cd032.chunk.js": "/static/js/787.fc1cd032.chunk.js",
-    "static/media/processing.gif": "/static/media/processing.98b79be500600d98e512.gif",
-    "static/media/loginBackgroundImage.jpg": "/static/media/loginBackgroundImage.1cef58fe588b687ba4d4.jpg",
-    "static/media/logo.png": "/static/media/logo.7f13c94082621c6b5478.png",
-    "static/media/process-icon.png": "/static/media/process-icon.753bf4f54f9fddfe1c01.png",
-    "static/media/upload.png": "/static/media/upload.e39ed71bd2f54f5268b4.png",
-    "static/media/done-icone.png": "/static/media/done-icone.b04de4d0e454ac0a8528.png",
-    "index.html": "/index.html",
-    "main.f0be7440.css.map": "/static/css/main.f0be7440.css.map",
-    "main.25faa7a0.js.map": "/static/js/main.25faa7a0.js.map",
-    "787.fc1cd032.chunk.js.map": "/static/js/787.fc1cd032.chunk.js.map"
+    "main.css": "/themes/themeforest/react/costic/static/css/main.3e966068.chunk.css",
+    "main.js": "/themes/themeforest/react/costic/static/js/main.d813d472.chunk.js",
+    "main.js.map": "/themes/themeforest/react/costic/static/js/main.d813d472.chunk.js.map",
+    "runtime-main.js": "/themes/themeforest/react/costic/static/js/runtime-main.3d1f3e5f.js",
+    "runtime-main.js.map": "/themes/themeforest/react/costic/static/js/runtime-main.3d1f3e5f.js.map",
+    "static/css/2.a1846812.chunk.css": "/themes/themeforest/react/costic/static/css/2.a1846812.chunk.css",
+    "static/js/2.21778f68.chunk.js": "/themes/themeforest/react/costic/static/js/2.21778f68.chunk.js",
+    "static/js/2.21778f68.chunk.js.map": "/themes/themeforest/react/costic/static/js/2.21778f68.chunk.js.map",
+    "index.html": "/themes/themeforest/react/costic/index.html",
+    "precache-manifest.3e38fb9dc8d097c9fa66067789d8c2ca.js": "/themes/themeforest/react/costic/precache-manifest.3e38fb9dc8d097c9fa66067789d8c2ca.js",
+    "service-worker.js": "/themes/themeforest/react/costic/service-worker.js",
+    "static/css/2.a1846812.chunk.css.map": "/themes/themeforest/react/costic/static/css/2.a1846812.chunk.css.map",
+    "static/css/main.3e966068.chunk.css.map": "/themes/themeforest/react/costic/static/css/main.3e966068.chunk.css.map",
+    "static/js/2.21778f68.chunk.js.LICENSE.txt": "/themes/themeforest/react/costic/static/js/2.21778f68.chunk.js.LICENSE.txt",
+    "static/media/flaticon.css": "/themes/themeforest/react/costic/static/media/Flaticon.fb5ae081.woff2",
+    "static/media/cryptocoins.css": "/themes/themeforest/react/costic/static/media/cryptocoins.b458578c.woff2",
+    "static/media/style.css": "/themes/themeforest/react/costic/static/media/default-login.ae01d897.jpg",
+    "static/media/all.min.css": "/themes/themeforest/react/costic/static/media/fa-solid-900.ea363ed4.eot"
   },
   "entrypoints": [
-    "static/css/main.f0be7440.css",
-    "static/js/main.25faa7a0.js"
+    "static/js/runtime-main.3d1f3e5f.js",
+    "static/css/2.a1846812.chunk.css",
+    "static/js/2.21778f68.chunk.js",
+    "static/css/main.3e966068.chunk.css",
+    "static/js/main.d813d472.chunk.js"
   ]
 }

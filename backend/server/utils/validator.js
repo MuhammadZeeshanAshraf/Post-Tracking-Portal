@@ -5,7 +5,7 @@ export const checkFileExistanceInRequest = (fileName, request) => {
     try {
         return getFileFromRequest(fileName, request);
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return false;
     }
 };
@@ -20,7 +20,7 @@ export const checkFileExtension = (fileName, extension, request) => {
             return false;
         }
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return false;
     }
 };
@@ -37,7 +37,7 @@ export const checkFileExistanceAndExtension = (filename, extension, request, pre
             return Promise.reject(new TypeError(Messages.isNecessary(filename, preffix || 'creating process')));
         }
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return Promise.reject(new Error(error));
     }
 };
@@ -54,7 +54,7 @@ const getFileFromRequest = (fileName, request) => {
         }
         return file;
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return false;
     }
 };
@@ -65,7 +65,7 @@ export const checkForSupportedValue = (value, supportedSupportedValue) => {
             return Promise.reject(new TypeError(Messages.inNotSupport(value, supportedSupportedValue)));
         }
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return false;
     }
 };
