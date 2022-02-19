@@ -74,12 +74,14 @@ import Dashboard from './components/pages/Dashboard';
 import AddEditRole from './components/pages/AddEditRole';
 import Staff from './components/pages/Staff';
 import UserLoginRecords from './components/pages/UserLoginRecords';
+import UserDocumentRecords from './components/pages/UserDocumentRecords';
 import UploadedRecords from './components/pages/UploadedRecords';
 import ShipmentWiseRecord from './components/pages/ShipmentWiseRecord';
 import TrackingIssues from './components/pages/TrackingIssues';
 import PlatformNotFound from './components/pages/PlatformNotFound';
 import ComingSoon from './components/pages/ComingSoon';
 import ClearStorage from './components/pages/ClearStorage';
+import UploadFile from './components/pages/UploadFile';
 
 
 function App() {
@@ -99,16 +101,16 @@ function App() {
         <Route path="/default-register" component={Login} />
       </Switch>
       <Switch>
-        <Route path="/addEditRole" component={AddEditRole} />
-        <Route path="/addEditRole" component={AddEditRole} />
+        <Route path="/roles" component={AddEditRole} />
       </Switch>
       <Switch>
-        <Route path="/staff" component={Staff} />
         <Route path="/staff" component={Staff} />
       </Switch>
       <Switch>
         <Route path="/otp" component={Otp} />
-        <Route path="/otp" component={Otp} />
+      </Switch>
+      <Switch>
+        <Route path="/processTrackings" component={UploadFile} />
       </Switch>
       <Switch>
         <Route path="/uploadedRecords" component={UploadedRecords} />
@@ -129,7 +131,13 @@ function App() {
         <Route path="/clearStorage" component={ClearStorage} />
       </Switch>
       <Switch>
+        <Route path="/userDocumentRecords" component={UserDocumentRecords} />
+      </Switch>
+      <Switch>
         <Route path="/comingSoon" component={ComingSoon} />
+      </Switch>
+      <Switch>
+       <Route path="/uploadFile" component={UploadFile} />
       </Switch>
     </Router>
   );

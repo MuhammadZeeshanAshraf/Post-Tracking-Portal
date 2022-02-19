@@ -20,7 +20,7 @@ const StaffContent = () => {
         axios.get('/user')
         .then(function (response) {
             console.log(response)
-            setStaffList(response.data.data);
+            setStaffList(response.data);
         })
         .catch(function (error) {
             // handle error
@@ -104,7 +104,7 @@ const StaffContent = () => {
                     <div className="ms-panel">
                         <div className="ms-panel-header">
                             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-                                <h5 class="h5">Staff Page</h5>
+                                <h1 class="h2">Staff Page</h1>
                                 <div class="btn-toolbar mb-2 mb-md-0">
                                 <div class="mr-3">
                                     <button className="btn btn-success" onClick={openAddEditRoleModal}> Add New Role </button>
