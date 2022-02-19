@@ -8,3 +8,7 @@
 /frontend.zip
 node_modules
 /node_modules
+server.zip
+/server.zip
+/server/InternalFiles/errorLogs.csv
+/server/InternalFiles/TrackingWorkSheet.xlsx

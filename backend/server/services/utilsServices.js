@@ -11,7 +11,7 @@ export const writeCSVFromJsonArray = (reportPath, errorList) => {
         csv
             .writeToPath(reportPath, errorList, { headers: true, quoteColumns: true })
             .on('error', (err) => {
-                console.log(err);
+                // console.log(err);
                 reject(err);
             })
             .on('finish', resolve('Done Writing'));
@@ -33,7 +33,7 @@ export const prepareResponse = async (
             errorLogFilePath: reportPath
         };
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 };
 
@@ -53,7 +53,7 @@ export const getTrackingSheet = async (
         return trackingSheets;
     } catch (error) {
         errorList.push(error.message);
-        console.log(error);
+        // console.log(error);
     }
 };
 
@@ -69,13 +69,14 @@ const trackingSheetValidation = (
         if (headerCheck) {
             trackingSheets.push({
                 name: sheet.name,
-                data: records
+                data: records,
+                header: headers
             });
         }
         return headerCheck;
     } catch (error) {
         errorList.push(error.message);
-        console.log(error);
+        // console.log(error);
     }
 };
 
@@ -87,29 +88,26 @@ export const getSheetDetails = (sheet, errorList) => {
         return { headers, records };
     } catch (error) {
         errorList.push(error.message);
-        console.log(error);
+        // console.log(error);
     }
 };
 
 export const convertSheetRowsIntoOjects = (headers, rows, errorList) => {
     try {
         const resultObjects = [];
-        let x = 2;
         for (const row of rows) {
             if (Array.isArray(row) && row.length > 0) {
                 const result = {};
                 for (let i = 0; i < headers.length; i++) {
                     result[headers[i]] = row[i];
                 }
-                result.rowNumber = x;
                 resultObjects.push(result);
-                x++;
             }
         }
         return resultObjects;
     } catch (error) {
         errorList.push(error.message);
-        console.log(error);
+        // console.log(error);
     }
 };
 
@@ -123,7 +121,7 @@ export const validateHeader = (headers, exceptHeader, errorList) => {
         }
     } catch (error) {
         errorList.push(error.message);
-        console.log(error);
+        // console.log(error);
     }
 };
 
@@ -136,17 +134,17 @@ export const saveImageToDisk = async (url, filename, errorList) => {
             })
             .catch((err) => {
                 errorList.push(err.message);
-                console.log(err);
+                // console.log(err);
             });
     } catch (error) {
         errorList.push(error.message);
-        console.log(error);
+        // console.log(error);
     }
 };
 
 export const cleanFileDirectory = async (filePath, errorList) => {
     try {
-        console.log('Deleting File Path :- ', filePath);
+        // console.log('Deleting File Path :- ', filePath);
         if (fs.existsSync(filePath)) {
             try {
                 await del(filePath);
@@ -182,7 +180,7 @@ export const styleWorkBookHeader = (workbook) => {
             }
         });
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 };
 
@@ -195,6 +193,60 @@ export const getHeader = (attributeDataFilter) => {
         });
         return columns;
     } catch (error) {
-        console.log(error);
+        // console.log(error);
+    }
+};
+
+export const isNumeric = (str) => {
+    if (typeof str === 'number') {
+        return true;
+    } else {
+        if (typeof str !== 'string') return false;
+        return !isNaN(str) &&
+            !isNaN(parseFloat(str));
+    }
+};
+
+export const doesNumberContainSameDigits = (num) => {
+    const first = num % 10;
+    while (num) {
+        if (num % 10 !== first) return false;
+        num = Math.floor(num / 10);
+    }
+    return true;
+};
+
+export const doesNumberContainSequence = (num) => {
+    const numbers = '0123456789';
+    const numbersRev = '9876543210';
+    return numbers.indexOf(String(num)) === -1 && numbersRev.indexOf(String(num)) === -1;
+};
+
+export const getDateCategory = (
+    startDate, endDate
+) => {
+    try {
+        let category = 0;
+        if (typeof startDate !== 'undefined' && typeof endDate === 'undefined') {
+            category = 1;
+            return category;
+        }
+        if (typeof startDate === 'undefined' && typeof endDate !== 'undefined') {
+            category = 2;
+            return category;
+        }
+
+        if (typeof startDate !== 'undefined' && typeof endDate !== 'undefined') {
+            category = 3;
+            return category;
+        }
+        if (typeof startDate === 'undefined' && typeof endDate === 'undefined') {
+            category = 0;
+            return category;
+        }
+
+        return category;
+    } catch (error) {
+        // // console.log(error);
     }
 };
