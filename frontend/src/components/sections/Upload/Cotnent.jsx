@@ -2,14 +2,13 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import RoleSelect from '../../common/RoleSelect';
-import { sweetAlertError, sweetAlertSuccess } from '../../utility/common';
+import { sweetAlertError, sweetAlertSuccess, errorToast } from '../../utility/common';
 import Breadcrumb from './Breadcrumb';
 import '../../../assets/css/uploadFile.css';
 import uploadIcon from '../../../assets/img/uplaod_file.png';
 import Dropzone from 'react-dropzone';
 import { Link } from 'react-router-dom';
 import { Tab, Nav } from "react-bootstrap";
-import $ from 'jquery';
 
 const generateDefaultEditorRow = (rows)=>{
     let list = [];
@@ -33,12 +32,52 @@ const UploadContent = () => {
     const [roleId ,setRoleId] = useState(null);
     const [fileName, setFileName] = React.useState(null);
     const [file, setFile] = React.useState(null);
-    const [editorData, setEditorData] = React.useState(generateDefaultEditorRow(10))
+    const [editorData, setEditorData] = React.useState(generateDefaultEditorRow(5))
     const [fileOutlook, setFileOutlook] = React.useState(null);
-    const [fileProcess, setFileProcess] = React.useState(false);
+    const [fileIsProcessing, setFileIsProcessing] = React.useState(false);
     const [focusLast, setFocusLast] = React.useState(false);
     const [nextFocus, setNextFocus] = React.useState(null);
+    const [processedRows, setProcessedRows] = React.useState([
+        {
+            tracking_id:"wserfewsdfsdaf",
+            type:"Booked",
+            booked_at:"2020-23-23",
+            booked_date:"dsfsdfsdsdf",
+            customer_pin_code:"sasdfds",
+            amount:"32",
+            book_status:"sdfasd",
 
+        },
+        {
+            tracking_id:"wserfewsdfsdaf",
+            type:"Booked",
+            booked_at:"2020-23-23",
+            booked_date:"dsfsdfsdsdf",
+            customer_pin_code:"sasdfds",
+            amount:"32",
+            book_status:"sdfasd",
+
+        },
+        {
+            tracking_id:"wserfewsdfsdaf",
+            type:"Booked",
+            booked_at:"2020-23-23",
+            booked_date:"dsfsdfsdsdf",
+            customer_pin_code:"sasdfds",
+            amount:"32",
+            book_status:"sdfasd",
+
+        },{
+            tracking_id:"wserfewsdfsdaf",
+            type:"Booked",
+            booked_at:"2020-23-23",
+            booked_date:"dsfsdfsdsdf",
+            customer_pin_code:"sasdfds",
+            amount:"32",
+            book_status:"sdfasd",
+
+        }
+    ]);
         
     const handleEditorInputChange = (e, index) => {
         const { name, value } = e.target;
@@ -109,46 +148,39 @@ const UploadContent = () => {
     const onFileDrop = (uploadFile) => {
         setFileName(uploadFile[0].name);
         setFile(uploadFile);
-      };
-    const processFile  =  async ()=>{
-        setFileProcess(true);
-    }
+    };
     
-    const uplopadFile  =  async ()=>{
-        setFileOutlook({totalTrackingIds:10, duplicateTackingIds: 5, emtyTrackingIds:3 });
-
-        // if (file) {
-        //     const data = new FormData();
-        //     data.append("TrackingWorkSheet", file[0]);
-        //     data.append("key", fileName);
-        //     axios
-        //     .post("import-process", data)
-        //     .then(resp => {
-        //         console.log(resp);
-
-        //     }).catch(ex=>{
-        //         console.log(ex);
-        //     });
+    const uplopadFile  =  async (isEditor)=>{
+        var data = null;
+        var list  = []
+        if(isEditor){
+            editorData.map(row=>{
+                if(row.trackId && row.trackId.length >0){
+                    list.push({TrackingID: row.trackId, ContactNumber: row.number});
+                }
+            })
+            data = list;
+        } else if(file)
+        if (file) {
+            data = new FormData();
+            data.append("TrackingWorkSheet", file[0]);
+            data.append("Name", fileName);
+        }
+        if(data && data !== null){
+            console.log(data)
+            axios
+            .post("import-process/validation", data)
+            .then(resp => {
+                console.log(resp)
+                if(resp.status === 200){
+                    setFileOutlook({totalTrackingIds:50, duplicateTackingIds: 5, emtyTrackingIds:3 });
+                }
+            }).catch(ex=>{
+                errorToast("Error", "Error occured while fetching data, please try again");
+                console.log(ex);
+            });
+        }
     }
-    const getRoles = () =>{
-        axios.get('/role')
-        .then(function (response) {
-            console.log(response);
-            setRoles(response.data);
-        })
-        .catch(function (error) {
-            // handle error
-            console.log("Error in getting roles data");
-        })
-    }
-    
-    useEffect(()=>{
-        const fetchData = async () => {
-            await getRoles();
-         }
-       
-         fetchData();
-    }, []);
 
     useEffect(()=>{
         if(focusLast){
@@ -164,6 +196,23 @@ const UploadContent = () => {
         }
     }, [editorData]);
 
+    const processFile = async () => {
+          setFileIsProcessing(true);
+          const interval = setInterval(() => {
+            axios
+              .get("import-process/data",
+                {}
+              )
+              .then((res) => {
+                if (Array.isArray(res.data.trackingData)) {
+                  if (res.data.trackingData.length > 0) {
+                    // setTotalRows(parseInt(res.data.total))
+                    setProcessedRows(res.data.trackingData)
+                  }
+                }
+              });
+          }, 20000);
+    }
     
     const openAddEditRoleModal = (data)=>{
         console.log(data)
@@ -178,51 +227,8 @@ const UploadContent = () => {
         }
         setOpenRoleModal(true);
     }
-    const ProgressBar = (progress)=>{
-        return(
-        <div className="col-md-6">
-            <div className="progress-rounded">
-                <div className="progress-value">{progress}%</div>
-                <svg>
-                    <circle className="progress-cicle bg-info" cx={65} cy={65} r={57} strokeWidth={16} fill="none" aria-valuenow="38.8" aria-orientation="vertical" aria-valuemin={0} aria-valuemax={100} role="slider">
-                    </circle>
-                </svg>
-            </div>
-        </div>
-        );
-    }
-    const handleSubmit = (event)=>{
-        event.preventDefault();
-        
-        let endPOint = 'role/add';
-        let action = "Add";
-
-        let data = {
-            role: roleName,
-            permission_level: roleVal
-          }
-        
-          if(roleId){ //editcase
-            data["id"] = roleId;
-            endPOint = 'role/update';
-            action = "Edit"
-        } 
-        axios.post(endPOint, data )
-          .then(function (response) {
-            setOpenRoleModal(false);
-            if(response.data.roleId){
-                sweetAlertSuccess(`Role ${action} Successfully`)
-            } else if(response.data.message){
-                sweetAlertError("Oops", "Error in saving role, please try again");
-            }
-          })
-          .catch(function (error) {
-            sweetAlertError("Oops", "Error connecting with server, please try agian");
-        });
-    }
 
     return (
-        <>
         <div className="ms-content-wrapper">
             <div className="row">
                 <div className="col-md-12">
@@ -247,20 +253,21 @@ const UploadContent = () => {
                                 </div>
                             </div>
                             <div className="ms-panel-body ">
-                            {
-                                fileOutlook?
+                            {    
+                            fileOutlook?
+                            <>
                                 <div className="d-flex flex-column justify-content-center">
-                                     <div className='d-flex justify-content-center align-items-center'>
-                                        <h5>File Name : {fileName}</h5>
+                                    <div className='d-flex align-items-center justify-content-center mt-3 mb-5'>
+                                        <h4 className="h5 text-secondary">Selected File <i  className="fa fa-arrow-circle-right text-info" />&nbsp;&nbsp;&nbsp;{fileName}</h4>
                                     </div>
-                                    <div className="row">
+                                    <div className="row d-flex justify-content-center">
                                         <div className="col-xl-3 col-lg-6 col-md-6">
                                             <div className="ms-card ms-widget has-graph-full-width ms-infographics-widget">
                                                 {/* <span className="ms-chart-label bg-black"><i className="material-icons">arrow_upward</i> 3.2%</span> */}
                                                 <div className="ms-card-body media">
-                                                    <div className="media-body">
-                                                        <span className="black-text"><strong>Total Tracking Ids</strong></span>
-                                                        <h2>{fileOutlook.totalTrackingIds}</h2>
+                                                    <div className="media-body d-flex flex-column align-items-center justify-content-center">
+                                                        <span className="black-text text-primary"><strong>Total Tracking Ids</strong></span>
+                                                        <h2 className='text-secondary'>{fileOutlook.totalTrackingIds}</h2>
                                                     </div>
                                                 </div>
                                                 {/* <LineChart data={this.state.data1} options={options} /> */}
@@ -270,9 +277,9 @@ const UploadContent = () => {
                                             <div className="ms-card ms-widget has-graph-full-width ms-infographics-widget">
                                                 {/* <span className="ms-chart-label bg-red"><i className="material-icons">arrow_downward</i> 4.5%</span> */}
                                                 <div className="ms-card-body media">
-                                                    <div className="media-body">
-                                                        <span className="black-text"><strong>Dubplicate Tracking Ids</strong></span>
-                                                        <h2>{fileOutlook.duplicateTackingIds}</h2>
+                                                    <div className="media-body d-flex flex-column align-items-center justify-content-center">
+                                                        <span className="black-text text-primary"><strong>Dubplicate Tracking Ids</strong></span>
+                                                        <h2 className='text-secondary'>{fileOutlook.duplicateTackingIds}</h2>
                                                     </div>
                                                 </div>
                                                 {/* <LineChart data={this.state.data2} options={options} /> */}
@@ -282,20 +289,75 @@ const UploadContent = () => {
                                             <div className="ms-card ms-widget has-graph-full-width ms-infographics-widget">
                                                 {/* <span className="ms-chart-label bg-red"><i className="material-icons">arrow_downward</i> 4.5%</span> */}
                                                 <div className="ms-card-body media">
-                                                    <div className="media-body">
-                                                        <span className="black-text"><strong>Emty Tracking Ids</strong></span>
-                                                        <h2>{fileOutlook.emtyTrackingIds}</h2>
+                                                    <div className="media-body d-flex flex-column align-items-center justify-content-center">
+                                                        <span className="black-text text-primary"><strong>Emty Tracking Ids</strong></span>
+                                                        <h2 className='text-secondary'>{fileOutlook.emtyTrackingIds}</h2>
                                                     </div>
                                                 </div>
                                                 {/* <LineChart data={this.state.data2} options={options} /> */}
                                             </div>
                                         </div>
                                     </div>
-                                <div>
-                                    <button type="button" onClick={()=>{setFileOutlook(null);setFileProcess(true);}}  className="m-5 btn btn-success has-icon"><i className="flaticon-start" />Process Files</button>
-                                    <button type="button" onClick={()=>{setFileOutlook(false); setFileName("");setFile(null);}}  className="m-5 btn btn-outline-secondary has-icon"><i className="flaticon-start" />New Files</button>
+                                    {
+                                        !fileIsProcessing &&
+                                        <div className='d-flex mt-5 justify-content-center'>
+                                            <button type="button" onClick={processFile}  className="m-2 btn btn-success has-icon"><i className="flaticon-start" />Process File</button>
+                                            <button type="button" onClick={()=>{setFileOutlook(false); setFileName("");setFile(null);}}  className="m-2 btn btn-outline-secondary has-icon">Upload New</button>
+                                        </div>
+                                    }
+                                
+                            </div>
+                            {
+                                fileIsProcessing?
+                                <div className="d-flex justify-content-center flex-column align-items-center mt-5">
+                                    <div className="col-md-6">
+                                        <div className="progress-rounded">
+                                            <div className="progress-value">{parseInt((processedRows.length/ parseInt(fileOutlook.totalTrackingIds))*100)}%</div>
+                                            <svg>
+                                                <circle className="progress-cicle bg-info" cx={65} cy={65} r={57} strokeWidth={16} fill="none" aria-valuenow="38.8" aria-orientation="vertical" aria-valuemin={0} aria-valuemax={100} role="slider">
+                                                </circle>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                        <div className="table-responsive">
+                                        <table className="table table-hover thead-primary">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Tracking Id</th>
+                                                    <th scope="col">Artical Type</th>
+                                                    <th scope="col">Booked At</th>
+                                                    <th scope="col">Date of Booking</th>
+                                                    <th scope="col">Primary Number</th>
+                                                    <th scope="col">Customer PIN Code</th>
+                                                    <th scope="col">Amount</th>
+                                                    <th scope="col">Validate (Validation Check)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {
+                                                    processedRows && processedRows.length > 0?
+                                                        processedRows.map((item, i) => (
+                                                            <tr key={i}>
+                                                                <td>{item.name}</td>
+                                                                <td>{item.type}</td>
+                                                                <td>{item.booked_at}</td>
+                                                                <td>{item.booking_date}</td>
+                                                                <td>{item.customer_pin_code}</td>
+                                                                <td>{item.amount}</td>
+                                                                <td>{item.book_status}</td>
+                                                            </tr>
+                                                        ))
+                                                        :
+                                                        <></>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                            </div>  
+                                :
+                                <></>
+                                }
+                            </>  
                             :
                             <Tab.Container defaultActiveKey="tab13">
                                     <Nav variant="tabs" className="nav nav-tabs d-flex nav-justified mb-4">
@@ -303,20 +365,22 @@ const UploadContent = () => {
                                             <Nav.Link eventKey="tab13">Upload File</Nav.Link>
                                         </Nav.Item>
                                         <Nav.Item>
-                                            <Nav.Link eventKey="tab14">Manual Editor</Nav.Link>
+                                            <Nav.Link eventKey="tab14">Editor</Nav.Link>
                                         </Nav.Item>
                                     </Nav>
                                     <Tab.Content>
                                         <Tab.Pane eventKey="tab13">
-                                            {
+                                            <div>
+                                            {   
                                                 fileName && fileName.length > 0?
-                                                <div className='d-flex justify-content-center align-items-center'>
-                                                    <h5>File Name : {fileName}</h5>
-                                                    <button type="button" onClick={uplopadFile}  className="m-5 btn btn-success has-icon"><i className="flaticon-start" />Process Files</button>
+                                                <div className='d-flex align-items-center justify-content-center'>
+                                                    <h4 className="h5 text-secondary">Selected File <i  className="fa fa-arrow-circle-right text-info" />&nbsp;&nbsp;&nbsp;{fileName}</h4>
+                                                    <button type="button" onClick={()=>uplopadFile(false)}  className="m-5 btn btn-outline-success has-icon">Validate Trackings</button>
                                                 </div>
                                                 :
                                                 <></>
                                             }
+                                            </div>
                                             <Dropzone onDrop={acceptedFiles => onFileDrop(acceptedFiles)}>
                                                 {({getRootProps, getInputProps}) => (
                                                     <section>
@@ -336,9 +400,7 @@ const UploadContent = () => {
                                             </Dropzone>    
                                         </Tab.Pane>
                                         <Tab.Pane eventKey="tab14">
-                                        <div className='d-flex justify-content-center align-items-center'>
-                                            <button type="button" onClick={uplopadFile}  className="m-5 btn btn-success has-icon"><i className="flaticon-start" />Upload</button>
-                                        </div>
+                            
                                         <div className='d-flex flex-direction-column justify-content-center'>
                                             <div></div>
                                             <div className="editor">
@@ -376,71 +438,14 @@ const UploadContent = () => {
                                                     })
                                                 }
                                             </div>
-                                        </div>           
+                                        </div>     
+                                        <div className='d-flex justify-content-center '>
+                                            <button style={{width:"20%"}} type="button" onClick={()=>uplopadFile(true)}  
+                                            className="m-5 btn btn-success has-icon">Validate Trackings</button>
+                                        </div>      
                                         </Tab.Pane>
                                     </Tab.Content>
                                 </Tab.Container>    
-                            }
-                            {
-                                fileProcess?
-                                    <>
-                                    <ProgressBar progress={10}/>
-                                        <div className="table-responsive">
-                                        <table className="table table-hover thead-primary">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">Name</th>
-                                                    <th scope="col">Active</th>
-                                                    <th scope="col">Role</th>
-                                                    <th scope="col">Email</th>
-                                                    <th scope="col">Primary Number</th>
-                                                    <th scope="col">Alternative Number</th>
-                                                    <th scope="col">Date of Birth</th>
-                                                    <th scope="col">Father Name</th>
-                                                    <th scope="col">Mother Name</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {
-                                                    staffList && staffList.length > 0?
-                                                        staffList.map((item, i) => (
-                                                            <tr key={i}>
-                                                                <th scope="row">{item.name}</th>
-                                                                <td>
-                                                            
-                                                                </td>
-                                                                <td>
-                                                                    <RoleSelect id={item.id} role={item.role_id} roles={roles} />
-                                                                </td>
-                                                                <td>{item.email}</td>
-                                                                <td>{item.primary_phone}</td>
-                                                                <td>{item.alternative_number}</td>
-                                                                <td>{item.dob}</td>
-                                                                <td>{item.father_name}</td>
-                                                                <td>{item.mother_name}</td>
-                                                            </tr>
-                                                        ))
-                                                        :
-                                                        <></>
-                                                }
-                                            </tbody>
-                                        </table>
-                                        {
-                                            !staffList?
-                                            <div className='d-flex justify-content-center'>Loading data...</div>
-                                            :
-                                            <></>
-                                        }
-                                        {
-                                            staffList && staffList.length == 0?
-                                            <div className='d-flex justify-content-center'>No record found</div>
-                                            :
-                                            <></>
-                                        }
-                                    </div>
-                                    </>
-                                    :
-                                <></> 
                             }
                             </div>
                         </div>
@@ -448,28 +453,6 @@ const UploadContent = () => {
                 </div>
             </div>
         </div>
-    <Modal className="modal-min" show={openRoleModal} onHide={()=>setOpenRoleModal(false)} aria-labelledby="contained-modal-title-vcenter" centered>
-        <Modal.Body className="text-center">
-            <button type="button" className="close" onClick={()=>setOpenRoleModal(false)}><span aria-hidden="true">×</span></button>
-            <i className="flaticon-user d-block" />
-            <h1> {roleId ? "Edit" : "Add" } Role</h1>
-            <form id="formAddEditRole" onSubmit={handleSubmit}>
-                <input type="hidden" name="id" value={roleId} />
-                <div className="ms-form-group has-icon">
-                    <input  value={roleName} onChange={(e)=>setRoleName(e.target.value)} required type="text" placeholder="Role Name" className="form-control" name="role" />
-                </div>
-                <div className="ms-form-group has-icon">
-                    <select onChange={e => setRoleVal(e.target.value)} value={roleVal} className="form-control" name="permission_level">
-                        <option value="1">Permission Level 1</option>
-                        <option value="2">Permission Level 2</option>
-                        <option value="3">Permission Level 3</option>
-                    </select>
-                </div>
-                <button type="submit"  className="btn btn-primary shadow-none">Save</button>
-            </form>
-        </Modal.Body>
-    </Modal>
-</>
     );
 };
 
