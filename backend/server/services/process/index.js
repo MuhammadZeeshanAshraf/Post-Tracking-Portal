@@ -3,7 +3,7 @@ import { prepareResponse } from '../utilsServices';
 
 export const createProcess = async (fileName, models, errorList) => {
     try {
-        console.log('Creating Process');
+        // console.log('Creating Process');
         const ProcessID = await getProcessID(fileName, models, errorList);
         if (!ProcessID) {
             return prepareResponse(
@@ -12,7 +12,7 @@ export const createProcess = async (fileName, models, errorList) => {
                 INTERNAL_FILES_PATH
             );
         }
-        console.log('Process ID :- ', ProcessID);
+        // console.log('Process ID :- ', ProcessID);
         return ProcessID;
     } catch (error) {
         errorList.push(error.message);
@@ -32,7 +32,7 @@ const getProcessID = async (fileName, models, errorList) => {
             return ProcessID[0];
         }
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         errorList.push({ error: 'Some Problem occur while creating Process ID' });
         return false;
     }
