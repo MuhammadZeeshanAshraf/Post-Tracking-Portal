@@ -60,26 +60,26 @@ class Sidenavigation extends Component {
                             <Link to="#" className="has-chevron"> <span><i className="fa fa-archive fs-16" />Records </span>
                             </Link>
                             <ul id="record" className="collapse" aria-labelledby="record" data-parent="#side-nav-accordion">
-                                <li> <Link to="/menu-catalogue" >Uploaded Records</Link>
+                                <li> <Link to="/uploadedRecords" >Uploaded Records</Link>
                                 </li>
-                                <li> <Link to="/menu-list" >Shipment wise Records</Link>
+                                <li> <Link to="/shipmentWiseRecord" >Shipment Wise Records</Link>
                                 </li>
-                                <li> <Link to="/menu-grid" >Tracking Issues</Link>
+                                <li> <Link to="/trackingIssues" >Tracking Issues</Link>
                                 </li>
-                                <li> <Link to="/add-product" >Platform Not found</Link>
+                                <li> <Link to="/platformNotFound" >Platform Not found</Link>
                                 </li >
                             </ul >
                         </li >
                          <li className="menu-item">
-                            <Link to="/orders"> <span><i className="material-icons md-24" >redeem</i>Category</span>
+                            <Link to="/comingSoon"> <span><i className="material-icons md-24" >redeem</i>Category</span>
                             </Link>
                         </li >
                         <li className="menu-item">
-                            <Link to="/orders"> <span><i className="fas fa-clipboard-list fs-16" />Order</span>
+                            <Link to="/comingSoon"> <span><i className="fas fa-clipboard-list fs-16" />Order</span>
                             </Link>
                         </li >
                         <li className="menu-item">
-                            <Link to="/orders"> <span><i className="material-icons md-36" >redeem</i>Coupun</span>
+                            <Link to="/comingSoon"> <span><i className="material-icons md-36" >redeem</i>Coupun</span>
                             </Link>
                         </li >
                         <li className="menu-item">

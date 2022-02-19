@@ -7,8 +7,8 @@ class Breadcrumb extends Component {
             <nav aria-label="breadcrumb">
                 <ol className="breadcrumb pl-0">
                     <li className="breadcrumb-item"><Link to="#"><i className="material-icons">home</i> Home</Link></li>
-                    <li class="breadcrumb-item">Our Staff</li>
-                    <li className="breadcrumb-item active" aria-current="page">User Login Records</li>
+                    <li class="breadcrumb-item">Records</li>
+                    <li className="breadcrumb-item active" aria-current="page">Uploaded Records</li>
                 </ol>
             </nav>
         );

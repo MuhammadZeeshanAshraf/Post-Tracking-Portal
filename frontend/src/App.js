@@ -75,6 +75,11 @@ import AddEditRole from './components/pages/AddEditRole';
 import Staff from './components/pages/Staff';
 import UserLoginRecords from './components/pages/UserLoginRecords';
 import UserDocumentRecords from './components/pages/UserDocumentRecords';
+import UploadedRecords from './components/pages/UploadedRecords';
+import ShipmentWiseRecord from './components/pages/ShipmentWiseRecord';
+import TrackingIssues from './components/pages/TrackingIssues';
+import PlatformNotFound from './components/pages/PlatformNotFound';
+import ComingSoon from './components/pages/ComingSoon';
 
 
 function App() {
@@ -82,38 +87,49 @@ function App() {
     <Router basename={'/'}>
       <Preloader/>
       <Switch>
-      <Route path="/register" component={Registration} />
+        <Route path="/register" component={Registration} />
         <Route path="/dashboard" component={Dashboard} />
       </Switch>
       <Switch>
-      <Route path="/register" component={Registration} />
+        <Route path="/register" component={Registration} />
         <Route path="/default-register" component={Registration} />
       </Switch>
       <Switch>
-      <Route path="/login" component={Login} />
+        <Route path="/login" component={Login} />
         <Route path="/default-register" component={Login} />
       </Switch>
       <Switch>
-      <Route path="/roles" component={AddEditRole} />
-        <Route path="/roles" component={AddEditRole} />
+        <Route path="/addEditRole" component={AddEditRole} />
       </Switch>
       <Switch>
-      <Route path="/staff" component={Staff} />
+        <Route path="/staff" component={Staff} />
         <Route path="/staff" component={Staff} />
       </Switch>
       <Switch>
-      <Route path="/otp" component={Otp} />
+        <Route path="/otp" component={Otp} />
         <Route path="/otp" component={Otp} />
       </Switch>
       <Switch>
-      <Route path="/userLoginRecords" component={UserLoginRecords} />
+        <Route path="/uploadedRecords" component={UploadedRecords} />
+      </Switch>
+      <Switch>
+        <Route path="/shipmentWiseRecord" component={ShipmentWiseRecord} />
+      </Switch>
+      <Switch>
+        <Route path="/trackingIssues" component={TrackingIssues} />
+      </Switch>
+      <Switch>
+        <Route path="/platformNotFound" component={PlatformNotFound} />
+      </Switch>
+      <Switch>
         <Route path="/userLoginRecords" component={UserLoginRecords} />
       </Switch>
       <Switch>
-      <Route path="/userDocumentRecords" component={UserDocumentRecords} />
         <Route path="/userDocumentRecords" component={UserDocumentRecords} />
       </Switch>
-      
+      <Switch>
+        <Route path="/comingSoon" component={ComingSoon} />
+      </Switch>
     </Router>
   );
 }
