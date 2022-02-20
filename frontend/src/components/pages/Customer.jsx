@@ -1,5 +1,4 @@
 import React from 'react';
-import Quickbar from '../layouts/Quickbar';
 import Sidenavigation from '../layouts/Sidenavigation';
 import Topnavigation from '../layouts/Topnavigation';
 import Content from '../sections/Customer/Content';
@@ -12,7 +11,6 @@ const Customer = () => {
         <Topnavigation />
         <Content/>
     </main>
-    <Quickbar />
 </div>
 );
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import Quickbar from '../layouts/Quickbar';
 import Sidenavigation from '../layouts/Sidenavigation';
 import Topnavigation from '../layouts/Topnavigation';
 import RoleAddEditContent from '../sections/Roles/RoleAddEditContent';
@@ -12,7 +11,6 @@ const AddEditRole = () => {
             <Topnavigation />
             <RoleAddEditContent/>
         </main>
-        <Quickbar />
     </div>
     );
 };

@@ -4,7 +4,7 @@ import $ from 'jquery';
 import { Dropdown, NavLink } from 'react-bootstrap';
 import Scrollbar from 'react-perfect-scrollbar'
 import 'react-perfect-scrollbar/dist/css/styles.css';
-
+import peopleLogo from '../../assets/img/costic/customer-6.jpg'
 import costiclogo from '../../assets/img/costic/costic-logo-84x41.png'
 
 class Topnavigation extends Component {
@@ -77,7 +77,7 @@ class Topnavigation extends Component {
                             </Dropdown.Menu>
 
                         </Dropdown>
-                    </li>
+                    </li> */}
                     <li className="ms-nav-item dropdown">
                         <Dropdown className="custom-dropdown">
                             <Dropdown.Toggle as={NavLink} className="text-disabled ms-has-notification p-0"><i className="flaticon-bell" /></Dropdown.Toggle>
@@ -113,11 +113,11 @@ class Topnavigation extends Component {
                                 </div>
                             </Dropdown.Menu>
                         </Dropdown>
-                    </li> */}
+                    </li>
                     <li className="ms-nav-item ms-nav-user dropdown">
                         <Dropdown className="custom-dropdown">
                             <Dropdown.Toggle as={NavLink} id="userDropdown" className="p-0">
-                                <img className="ms-user-img ms-img-round" src="assets/img/costic/customer-6.jpg" alt="people" />
+                                <img className="ms-user-img ms-img-round" src={peopleLogo} alt="people" />
                             </Dropdown.Toggle>
                             <Dropdown.Menu className="dropdown-menu dropdown-menu-right user-dropdown" aria-labelledby="userDropdown">
                                 <div className="dropdown-menu-header">
@@ -127,16 +127,16 @@ class Topnavigation extends Component {
                                 <div className="ms-dropdown-list">
                                     <Link className="media fs-14 p-2" to="/user-profiles"> <span><i className="flaticon-user mr-2" /> Profile</span>
                                     </Link>
-                                    <Link className="media fs-14 p-2" to="/email"> <span><i className="flaticon-mail mr-2" /> Inbox</span> <span className="badge badge-pill badge-info">3</span>
+                                    {/* <Link className="media fs-14 p-2" to="/email"> <span><i className="flaticon-mail mr-2" /> Inbox</span> <span className="badge badge-pill badge-info">3</span>
                                     </Link>
                                     <Link className="media fs-14 p-2" to="/user-profiles"> <span><i className="flaticon-gear mr-2" /> Account Settings</span>
-                                    </Link>
+                                    </Link> */}
                                 </div>
-                                <div className="dropdown-divider" />
-                                <div className="dropdown-menu-footer">
+                                {/* <div className="dropdown-divider" /> */}
+                                {/* <div className="dropdown-menu-footer">
                                     <Link className="media fs-14 p-2" to="/lockscreen"> <span><i className="flaticon-security mr-2" /> Lock</span>
                                     </Link>
-                                </div>
+                                </div> */}
                                 <div className="dropdown-menu-footer">
                                     <Link className="media fs-14 p-2" to="/default-login"> <span><i className="flaticon-shut-down mr-2" /> Logout</span>
                                     </Link>

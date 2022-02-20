@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Sidenavigation from '../layouts/Sidenavigation';
 import Topnavigation from '../layouts/Topnavigation';
 import HomeContent from '../sections/Dashboard/HomeContent';
-import Quickbar from '../layouts/Quickbar';
 
 class Dashboard extends Component {
     render() {
@@ -13,7 +12,6 @@ class Dashboard extends Component {
                     <Topnavigation />
                     <HomeContent/>
                 </main>
-                <Quickbar />
             </div>
         );
     }

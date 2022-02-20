@@ -1,5 +1,4 @@
 import React from 'react';
-import Quickbar from '../layouts/Quickbar';
 import Sidenavigation from '../layouts/Sidenavigation';
 import Topnavigation from '../layouts/Topnavigation';
 import StaffContent from '../sections/AssignRoles/StaffContent';
@@ -12,7 +11,6 @@ const Staff = () => {
         <Topnavigation />
         <StaffContent/>
     </main>
-    <Quickbar />
 </div>
 );
 

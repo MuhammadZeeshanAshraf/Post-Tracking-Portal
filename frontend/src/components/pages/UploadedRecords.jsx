@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Sidenavigation from '../layouts/Sidenavigation';
 import Topnavigation from '../layouts/Topnavigation';
-import Quickbar from '../layouts/Quickbar';
 import Content from '../sections/UploadedRecords/Content';
 
 class UploadedRecords extends Component {
@@ -13,7 +12,6 @@ class UploadedRecords extends Component {
                     <Topnavigation />
                     <Content/>
                 </main>
-                <Quickbar />
             </div>
         );
     }

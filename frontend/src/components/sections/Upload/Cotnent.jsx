@@ -157,7 +157,7 @@ const UploadContent = () => {
             setNextFocus(null);
         }
     }, [editorData]);
-    
+
     const processFile = async () => {
           setFileIsProcessing(true);
           if (file) {
