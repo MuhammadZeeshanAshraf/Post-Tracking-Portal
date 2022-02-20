@@ -2,8 +2,9 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import RoleSelect from '../../common/RoleSelect';
-import { sweetAlertError, sweetAlertSuccess, errorToast } from '../../utility/common';
+import { sweetAlertError, sweetAlertSuccess, errorToast, successToast } from '../../utility/common';
 import Breadcrumb from './Breadcrumb';
+import CircleProgress from './CircleProgress';
 import '../../../assets/css/uploadFile.css';
 import uploadIcon from '../../../assets/img/uplaod_file.png';
 import Dropzone from 'react-dropzone';
@@ -37,47 +38,7 @@ const UploadContent = () => {
     const [fileIsProcessing, setFileIsProcessing] = React.useState(false);
     const [focusLast, setFocusLast] = React.useState(false);
     const [nextFocus, setNextFocus] = React.useState(null);
-    const [processedRows, setProcessedRows] = React.useState([
-        {
-            tracking_id:"wserfewsdfsdaf",
-            type:"Booked",
-            booked_at:"2020-23-23",
-            booked_date:"dsfsdfsdsdf",
-            customer_pin_code:"sasdfds",
-            amount:"32",
-            book_status:"sdfasd",
-
-        },
-        {
-            tracking_id:"wserfewsdfsdaf",
-            type:"Booked",
-            booked_at:"2020-23-23",
-            booked_date:"dsfsdfsdsdf",
-            customer_pin_code:"sasdfds",
-            amount:"32",
-            book_status:"sdfasd",
-
-        },
-        {
-            tracking_id:"wserfewsdfsdaf",
-            type:"Booked",
-            booked_at:"2020-23-23",
-            booked_date:"dsfsdfsdsdf",
-            customer_pin_code:"sasdfds",
-            amount:"32",
-            book_status:"sdfasd",
-
-        },{
-            tracking_id:"wserfewsdfsdaf",
-            type:"Booked",
-            booked_at:"2020-23-23",
-            booked_date:"dsfsdfsdsdf",
-            customer_pin_code:"sasdfds",
-            amount:"32",
-            book_status:"sdfasd",
-
-        }
-    ]);
+    const [processedRows, setProcessedRows] = React.useState([]);
         
     const handleEditorInputChange = (e, index) => {
         const { name, value } = e.target;
@@ -173,7 +134,8 @@ const UploadContent = () => {
             .then(resp => {
                 console.log(resp)
                 if(resp.status === 200){
-                    setFileOutlook({totalTrackingIds:50, duplicateTackingIds: 5, emtyTrackingIds:3 });
+                    successToast("Sucessfyully Validated", "File is validated successfully")
+                    setFileOutlook(resp.data);
                 }
             }).catch(ex=>{
                 errorToast("Error", "Error occured while fetching data, please try again");
@@ -195,15 +157,15 @@ const UploadContent = () => {
             setNextFocus(null);
         }
     }, [editorData]);
-
     
     const processFile = async () => {
           setFileIsProcessing(true);
           if (file) {
             const data = new FormData();
             data.append("TrackingWorkSheet", file[0]);
-            data.append("key", fileName);
-      
+            data.append("Name", fileName);
+            data.append("UserId", "1");
+            data.append("UserName", "Usman");
             axios
               .post(
                 "import-process",
@@ -218,6 +180,7 @@ const UploadContent = () => {
                     {}
                   )
                   .then((res) => {
+                    successToast("Process Initiated", "File is processing successfully")
                     console.log(res.data);
                      if (Array.isArray(res.data.trackingData)) {
                     if (res.data.trackingData.length > 0) {
@@ -233,7 +196,6 @@ const UploadContent = () => {
                   {}
                 )
                 .then((res) => {
-                 console.log('OK========>',res.data);
                      if (Array.isArray(res.data.trackingData)) {
                     if (res.data.trackingData.length > 0) {
                         setProcessedRows(res.data.trackingData)
@@ -285,70 +247,18 @@ const UploadContent = () => {
                             <div className="ms-panel-body ">
                             {    
                             fileOutlook?
-                            <>
-                                <div className="d-flex flex-column justify-content-center">
-                                    <div className='d-flex align-items-center justify-content-center mt-3 mb-5'>
-                                        <h4 className="h5 text-secondary">Selected File <i  className="fa fa-arrow-circle-right text-info" />&nbsp;&nbsp;&nbsp;{fileName}</h4>
-                                    </div>
-                                    <div className="row d-flex justify-content-center">
-                                        <div className="col-xl-3 col-lg-6 col-md-6">
-                                            <div className="ms-card ms-widget has-graph-full-width ms-infographics-widget">
-                                                {/* <span className="ms-chart-label bg-black"><i className="material-icons">arrow_upward</i> 3.2%</span> */}
-                                                <div className="ms-card-body media">
-                                                    <div className="media-body d-flex flex-column align-items-center justify-content-center">
-                                                        <span className="black-text text-primary"><strong>Total Tracking Ids</strong></span>
-                                                        <h2 className='text-secondary'>{fileOutlook.totalTrackingIds}</h2>
-                                                    </div>
-                                                </div>
-                                                {/* <LineChart data={this.state.data1} options={options} /> */}
-                                            </div>
-                                        </div>
-                                        <div className="col-xl-3 col-lg-6 col-md-6">
-                                            <div className="ms-card ms-widget has-graph-full-width ms-infographics-widget">
-                                                {/* <span className="ms-chart-label bg-red"><i className="material-icons">arrow_downward</i> 4.5%</span> */}
-                                                <div className="ms-card-body media">
-                                                    <div className="media-body d-flex flex-column align-items-center justify-content-center">
-                                                        <span className="black-text text-primary"><strong>Dubplicate Tracking Ids</strong></span>
-                                                        <h2 className='text-secondary'>{fileOutlook.duplicateTackingIds}</h2>
-                                                    </div>
-                                                </div>
-                                                {/* <LineChart data={this.state.data2} options={options} /> */}
-                                            </div>
-                                        </div>
-                                        <div className="col-xl-3 col-lg-6 col-md-6">
-                                            <div className="ms-card ms-widget has-graph-full-width ms-infographics-widget">
-                                                {/* <span className="ms-chart-label bg-red"><i className="material-icons">arrow_downward</i> 4.5%</span> */}
-                                                <div className="ms-card-body media">
-                                                    <div className="media-body d-flex flex-column align-items-center justify-content-center">
-                                                        <span className="black-text text-primary"><strong>Emty Tracking Ids</strong></span>
-                                                        <h2 className='text-secondary'>{fileOutlook.emtyTrackingIds}</h2>
-                                                    </div>
-                                                </div>
-                                                {/* <LineChart data={this.state.data2} options={options} /> */}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {
-                                        !fileIsProcessing &&
-                                        <div className='d-flex mt-5 justify-content-center'>
-                                            <button type="button" onClick={processFile}  className="m-2 btn btn-success has-icon"><i className="flaticon-start" />Process File</button>
-                                            <button type="button" onClick={()=>{setFileOutlook(false); setFileName("");setFile(null);}}  className="m-2 btn btn-outline-secondary has-icon">Upload New</button>
-                                        </div>
-                                    }
-                                
-                            </div>
-                            {
                                 fileIsProcessing?
                                 <div className="d-flex justify-content-center flex-column align-items-center mt-5">
-                                    <div className="col-md-6">
+                                <CircleProgress progress={parseInt((processedRows.length/ parseInt(fileOutlook.total))*100)} />
+                                    {/* <div className="col-md-6">
                                         <div className="progress-rounded">
-                                            <div className="progress-value">{parseInt((processedRows.length/ parseInt(fileOutlook.totalTrackingIds))*100)}%</div>
+                                            <div className="progress-value">{parseInt((processedRows.length/ parseInt(fileOutlook.total))*100)}%</div>
                                             <svg>
-                                                <circle className="progress-cicle bg-info" cx={65} cy={65} r={57} strokeWidth={16} fill="none" aria-valuenow="38.8" aria-orientation="vertical" aria-valuemin={0} aria-valuemax={100} role="slider">
+                                                <circle className="progress-cicle bg-info" cx={65} cy={65} r={57} strokeWidth={16} fill="none" aria-valuenow={parseInt((processedRows.length/ parseInt(fileOutlook.total))*100)} aria-orientation="vertical" aria-valuemin={0} aria-valuemax={100} role="slider">
                                                 </circle>
                                             </svg>
                                         </div>
-                                    </div>
+                                    </div> */}
                                         <div className="table-responsive">
                                         <table className="table table-hover thead-primary">
                                             <thead>
@@ -357,7 +267,7 @@ const UploadContent = () => {
                                                     <th scope="col">Artical Type</th>
                                                     <th scope="col">Booked At</th>
                                                     <th scope="col">Date of Booking</th>
-                                                    <th scope="col">Primary Number</th>
+                                                    <th scope="col">Contact Number</th>
                                                     <th scope="col">Customer PIN Code</th>
                                                     <th scope="col">Amount</th>
                                                     <th scope="col">Validate (Validation Check)</th>
@@ -368,10 +278,11 @@ const UploadContent = () => {
                                                     processedRows && processedRows.length > 0?
                                                         processedRows.map((item, i) => (
                                                             <tr key={i}>
-                                                                <td>{item.name}</td>
+                                                                <td>{item.tracking_id}</td>
                                                                 <td>{item.type}</td>
                                                                 <td>{item.booked_at}</td>
                                                                 <td>{item.booking_date}</td>
+                                                                <td>{item.contact_number}</td>
                                                                 <td>{item.customer_pin_code}</td>
                                                                 <td>{item.amount}</td>
                                                                 <td>{item.book_status}</td>
@@ -385,9 +296,53 @@ const UploadContent = () => {
                                     </div>
                                 </div>
                                 :
-                                <></>
-                                }
-                            </>  
+                                <div className="d-flex flex-column justify-content-center">
+                                    <div className='d-flex align-items-center justify-content-center mt-3 mb-5'>
+                                        <h4 className="h5 text-secondary">Selected File <i  className="fa fa-arrow-circle-right text-info" />&nbsp;&nbsp;&nbsp;{fileName}</h4>
+                                    </div>
+                                    <div className="row d-flex justify-content-center">
+                                        <div className="col-xl-3 col-lg-6 col-md-6">
+                                            <div className="ms-card ms-widget has-graph-full-width ms-infographics-widget">
+                                                {/* <span className="ms-chart-label bg-black"><i className="material-icons">arrow_upward</i> 3.2%</span> */}
+                                                <div className="ms-card-body media">
+                                                    <div className="media-body d-flex flex-column align-items-center justify-content-center">
+                                                        <span className="black-text text-primary"><strong>Total Trackings</strong></span>
+                                                        <h2 className='text-secondary'>{fileOutlook.total}</h2>
+                                                    </div>
+                                                </div>
+                                                {/* <LineChart data={this.state.data1} options={options} /> */}
+                                            </div>
+                                        </div>
+                                        <div className="col-xl-3 col-lg-6 col-md-6">
+                                            <div className="ms-card ms-widget has-graph-full-width ms-infographics-widget">
+                                                {/* <span className="ms-chart-label bg-red"><i className="material-icons">arrow_downward</i> 4.5%</span> */}
+                                                <div className="ms-card-body media">
+                                                    <div className="media-body d-flex flex-column align-items-center justify-content-center">
+                                                        <span className="black-text text-primary"><strong>Dubplicate Trackings</strong></span>
+                                                        <h2 className='text-secondary'>{fileOutlook.duplicatesCount}</h2>
+                                                    </div>
+                                                </div>
+                                                {/* <LineChart data={this.state.data2} options={options} /> */}
+                                            </div>
+                                        </div>
+                                        <div className="col-xl-3 col-lg-6 col-md-6">
+                                            <div className="ms-card ms-widget has-graph-full-width ms-infographics-widget">
+                                                {/* <span className="ms-chart-label bg-red"><i className="material-icons">arrow_downward</i> 4.5%</span> */}
+                                                <div className="ms-card-body media">
+                                                    <div className="media-body d-flex flex-column align-items-center justify-content-center">
+                                                        <span className="black-text text-primary"><strong>Unique Trackings</strong></span>
+                                                        <h2 className='text-secondary'>{fileOutlook.uinque}</h2>
+                                                    </div>
+                                                </div>
+                                                {/* <LineChart data={this.state.data2} options={options} /> */}
+                                            </div>
+                                        </div>
+                                    </div>
+                                        <div className='d-flex mt-5 justify-content-center'>
+                                            <button type="button" onClick={processFile}  className="m-2 btn btn-success has-icon"><i className="flaticon-start" />Process File</button>
+                                            <button type="button" onClick={()=>{setFileOutlook(false); setFileName("");setFile(null);}}  className="m-2 btn btn-outline-secondary has-icon">Upload New</button>
+                                        </div>
+                                </div>
                             :
                             <Tab.Container defaultActiveKey="tab13">
                                     <Nav variant="tabs" className="nav nav-tabs d-flex nav-justified mb-4">
