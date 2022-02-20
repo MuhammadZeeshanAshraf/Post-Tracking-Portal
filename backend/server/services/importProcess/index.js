@@ -155,7 +155,6 @@ export const workSheetValidation = async (filePath, errorList) => {
                 let uinque = 0;
 
                 for (const sheet of trackingSheets) {
-                    console.log(sheet);
                     const arr = sheet.data.map(function (obj) {
                         return Object.keys(obj).reduce(function (arr, current) {
                             if (current === 'Tracking ID') {
@@ -168,14 +167,16 @@ export const workSheetValidation = async (filePath, errorList) => {
                     const findDuplicates = (arr) =>
                         arr.filter((item, index) => arr.indexOf(item) != index);
                     duplicates = duplicates.concat([...new Set(findDuplicates(arr1d))]);
-                    uinque += [...new Set(arr1d)].length;
-                    total += arr1d.length;
+                    uinque = [...new Set(arr1d)];
+                    total = arr1d;
                 }
                 return {
                     duplicates: duplicates,
-                    duplicatesCount: duplicates.length,
                     total: total,
-                    uinque: uinque
+                    uinque: uinque,
+                    duplicatesCount: duplicates.length,
+                    uinqueCount: uinque.length,
+                    totalCount: total.length
                 };
             }
         }
