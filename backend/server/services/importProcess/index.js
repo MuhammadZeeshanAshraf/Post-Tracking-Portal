@@ -18,7 +18,8 @@ export const importTrackingWorkSheet = async (
     filePath,
     errorList,
     models,
-    filename
+    filename,
+    processDate
 ) => {
     try {
         const scrapData = [];

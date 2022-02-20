@@ -14,7 +14,7 @@ export const importTrackingWorkSheet = async (request, response, next) => {
       'InternalFiles',
       request.file.filename
     );
-    const { Name, UserId, UserName } = request.body;
+    const { Name, UserId, UserName, processDate } = request.body;
     const processID = await processService.createProcess(Name, models, errorList);
     if (typeof processID !== 'object' && typeof processID !== 'function') {
       const userlog = Object.assign({}, TABLE_DETAILS.userDocumentLogging.ddl);
@@ -31,7 +31,8 @@ export const importTrackingWorkSheet = async (request, response, next) => {
         filePath,
         errorList,
         models,
-        Name
+        Name,
+        processDate
       );
       response.send(message);
       // response.send('Ok');
