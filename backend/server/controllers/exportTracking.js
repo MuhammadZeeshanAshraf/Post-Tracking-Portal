@@ -84,8 +84,6 @@ export const exportInValidTrackingsWorkSheet = async (request, response, next) =
         'process_id',
         ProcessId
       );
-    console.log(result);
-    console.log(ProcessId);
     for (const row of result) {
       const momentDate = moment(row.create_date);
       row.create_date = momentDate.format('YYYY-MM-DD hh:mm:ss A');
@@ -104,6 +102,39 @@ export const exportInValidTrackingsWorkSheet = async (request, response, next) =
     const exportPath = path.join(INTERNAL_FILES_PATH, (INVALIAD_TRACKING_WORKSHEET + EXCELFILE_EXTENSION));
     await workbook.xlsx.writeFile(exportPath);
     // return exportPath;
+    response.contentType('application/xlsx');
+    response.status(200).sendFile(exportPath);
+  } catch (error) {
+    return response.status(400).send({
+      message: error.message
+    });
+  }
+};
+
+export const exportProcessCustomerSheet = async (request, response, next) => {
+  try {
+    const { ProcessId } = request.query;
+    const result =
+      await models.generalDatabaseFunction.getDatabySingleWhereColumn(
+        SCHEMA,
+        TABLE_DETAILS.contactnumbers.name,
+        'process_id',
+        ProcessId
+      );
+    const workbook = new ExcelJS.Workbook(WORKBOOK_PROPERTIES);
+    const worksheet = workbook.addWorksheet('Customer Data');
+    worksheet.columns = CUSTOMER_SHEET_HEADER;
+    for (const row of result) {
+      const rowObject = {};
+      worksheet.columns[0]._worksheet._columns.forEach(element => {
+        rowObject[element._key] = row[element._key];
+      });
+      worksheet.addRow(rowObject);
+    }
+    styleWorkBookHeader(workbook);
+    const exportPath = path.join(INTERNAL_FILES_PATH, (TRACKING_WORKSHEET + EXCELFILE_EXTENSION));
+    await workbook.xlsx.writeFile(exportPath);
+
     response.contentType('application/xlsx');
     response.status(200).sendFile(exportPath);
   } catch (error) {

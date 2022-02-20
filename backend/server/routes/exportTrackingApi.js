@@ -12,4 +12,6 @@ router.get('/invalid-tracking-file', upload.single(TRACKING_WORKSHEET), /* valid
 
 router.get('/customer-file', upload.single(TRACKING_WORKSHEET), /* validator.exportTracking , */ asyncHandler(exportTrackingController.exportCustomerWorkSheet));
 
+router.get('/customer-file-by-process', upload.single(TRACKING_WORKSHEET), /* validator.exportTracking , */ asyncHandler(exportTrackingController.exportProcessCustomerSheet));
+
 export default router;
