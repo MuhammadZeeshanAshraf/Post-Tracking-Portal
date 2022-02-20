@@ -13,7 +13,7 @@ export const exportTrackingWorksheet = async (ProcessId, models, errorList) => {
                 'process_id',
                 ProcessId
             );
-        // console.log(trackingData.length);
+        console.log(trackingData.length);
         if (trackingData.length > 0) {
             const workbook = new ExcelJS.Workbook(WORKBOOK_PROPERTIES);
             const worksheet = workbook.addWorksheet('Tracking Data');
@@ -33,10 +33,10 @@ export const exportTrackingWorksheet = async (ProcessId, models, errorList) => {
             message = `Unable to export Tracking file, No data found aganist process id :- ${ProcessId}`;
         }
 
-        // console.log(message);
+        console.log(message);
         return message;
     } catch (error) {
         errorList.push(error.message);
-        // console.log(error);
+        console.log(error);
     }
 };

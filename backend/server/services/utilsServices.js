@@ -11,7 +11,7 @@ export const writeCSVFromJsonArray = (reportPath, errorList) => {
         csv
             .writeToPath(reportPath, errorList, { headers: true, quoteColumns: true })
             .on('error', (err) => {
-                // console.log(err);
+                console.log(err);
                 reject(err);
             })
             .on('finish', resolve('Done Writing'));
@@ -33,7 +33,7 @@ export const prepareResponse = async (
             errorLogFilePath: reportPath
         };
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 };
 
@@ -53,7 +53,7 @@ export const getTrackingSheet = async (
         return trackingSheets;
     } catch (error) {
         errorList.push(error.message);
-        // console.log(error);
+        console.log(error);
     }
 };
 
@@ -76,7 +76,7 @@ const trackingSheetValidation = (
         return headerCheck;
     } catch (error) {
         errorList.push(error.message);
-        // console.log(error);
+        console.log(error);
     }
 };
 
@@ -88,7 +88,7 @@ export const getSheetDetails = (sheet, errorList) => {
         return { headers, records };
     } catch (error) {
         errorList.push(error.message);
-        // console.log(error);
+        console.log(error);
     }
 };
 
@@ -107,7 +107,7 @@ export const convertSheetRowsIntoOjects = (headers, rows, errorList) => {
         return resultObjects;
     } catch (error) {
         errorList.push(error.message);
-        // console.log(error);
+        console.log(error);
     }
 };
 
@@ -121,7 +121,7 @@ export const validateHeader = (headers, exceptHeader, errorList) => {
         }
     } catch (error) {
         errorList.push(error.message);
-        // console.log(error);
+        console.log(error);
     }
 };
 
@@ -134,17 +134,17 @@ export const saveImageToDisk = async (url, filename, errorList) => {
             })
             .catch((err) => {
                 errorList.push(err.message);
-                // console.log(err);
+                console.log(err);
             });
     } catch (error) {
         errorList.push(error.message);
-        // console.log(error);
+        console.log(error);
     }
 };
 
 export const cleanFileDirectory = async (filePath, errorList) => {
     try {
-        // console.log('Deleting File Path :- ', filePath);
+        console.log('Deleting File Path :- ', filePath);
         if (fs.existsSync(filePath)) {
             try {
                 await del(filePath);
@@ -180,7 +180,7 @@ export const styleWorkBookHeader = (workbook) => {
             }
         });
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 };
 
@@ -193,7 +193,7 @@ export const getHeader = (attributeDataFilter) => {
         });
         return columns;
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 };
 
@@ -247,6 +247,6 @@ export const getDateCategory = (
 
         return category;
     } catch (error) {
-        // // console.log(error);
+        // console.log(error);
     }
 };

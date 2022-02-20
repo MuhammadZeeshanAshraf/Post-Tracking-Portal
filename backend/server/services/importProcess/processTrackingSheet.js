@@ -60,7 +60,7 @@ export const processTrackingSheet = async (
                 const recordsBatch = records.splice(0, 10);
                 const recordPromises = [];
                 for (const record of recordsBatch) {
-                    // console.log(x, '==>', record['Tracking ID']);
+                    console.log(x, '==>', record['Tracking ID']);
                     recordPromises.push(
                         processSingleTrackingID(
                             record['Tracking ID'],
@@ -107,7 +107,7 @@ export const processTrackingSheet = async (
         }
     } catch (error) {
         errorList.push(error.message);
-        // console.log(error);
+        console.log(error);
     }
 };
 
@@ -137,17 +137,17 @@ const processSingleTrackingID = async (
 
         const element = await page.waitForSelector(CAPTCHA_FORMULA);
         const captchaQuestion = await element.evaluate((el) => el.textContent);
-        // console.log(captchaQuestion);
+        console.log(captchaQuestion);
         // await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
         const image = await page.waitForSelector(CAPTCHA_IMAGE_ID, {
             timeout: 12000
         });
         const src = await image.evaluate((el) => el.src);
-        // console.log(src);
+        console.log(src);
         const catchResponse = await client.decode({
             url: src
         });
-        // // console.log('catchResponse :- ', catchResponse);
+        // console.log('catchResponse :- ', catchResponse);
 
         let answer = '';
         if (captchaQuestion === 'Evaluate the Expression') {
@@ -163,11 +163,11 @@ const processSingleTrackingID = async (
             const words = captchaQuestion.split(' ');
             const numberWord = NUMERAL_ADJECTIVES[words[2]];
             const arr = catchResponse.text.split('');
-            // // console.log(arr);
+            // console.log(arr);
             answer = arr[numberWord - 1];
         }
         answer = answer.toString();
-        // // console.log('Answer', answer);
+        // console.log('Answer', answer);
         await page.type(CAPTCHA_ANSWER, answer);
 
         await page.click(TRACK_NOW_ID);
@@ -182,11 +182,12 @@ const processSingleTrackingID = async (
             })
         );
 
-        // // console.log(data.length);
+        // console.log(data.length);
         if (data.length > 3) {
+            console.log(data);
             updateProcessObj.total_bill =
                 updateProcessObj.total_bill + parseFloat(data[3]);
-            // // console.log(updateProcessObj.total_bill);
+            // console.log(updateProcessObj.total_bill);
             let today = new Date();
             const dd = String(today.getDate()).padStart(2, '0');
             const mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -219,37 +220,37 @@ const processSingleTrackingID = async (
             return true;
         } else {
             // console.log({
-            'Tracking ID': trackingID,
-                'Contact Number': contactNumber
-        });
-        const obj = Object.assign({}, TABLE_DETAILS.invalidTracking.ddl);
-        obj.process_id = processID;
-        obj.tracking_id = trackingID;
-        obj.contact_number = contactNumber;
-        inValidData.push(obj);
-        invalidTrackings++;
-        const objj = Object.assign({}, TABLE_DETAILS.notifications.ddl);
-        objj.process_id = processID;
-        objj.notification_type = '2';
-        objj.description = `${trackingID} is not functional.`;
-        objj.tracking_id = trackingID;
-        notifications.notfunctional.push(obj);
-        // records.push({
-        //     'Tracking ID': trackingID,
-        //     'Contact Number': contactNumber
-        // });
-        // page.close();
+            //     'Tracking ID': trackingID,
+            //     'Contact Number': contactNumber
+            // });
+            const obj = Object.assign({}, TABLE_DETAILS.invalidTracking.ddl);
+            obj.process_id = processID;
+            obj.tracking_id = trackingID;
+            obj.contact_number = contactNumber;
+            inValidData.push(obj);
+            invalidTrackings++;
+            const objj = Object.assign({}, TABLE_DETAILS.notifications.ddl);
+            objj.process_id = processID;
+            objj.notification_type = '2';
+            objj.description = `${trackingID} is not functional.`;
+            objj.tracking_id = trackingID;
+            notifications.notfunctional.push(obj);
+            // records.push({
+            //     'Tracking ID': trackingID,
+            //     'Contact Number': contactNumber
+            // });
+            // page.close();
 
+            return true;
+        }
+    } catch (error) {
+        // page.close();
+        // console.log(error);
+        records.push({
+            'Tracking ID': trackingID,
+            'Contact Number': contactNumber
+        });
+        errorList.push(error.message);
         return true;
     }
-    } catch (error) {
-    // page.close();
-    // console.log(error);
-    records.push({
-        'Tracking ID': trackingID,
-        'Contact Number': contactNumber
-    });
-    errorList.push(error.message);
-    return true;
-}
 };

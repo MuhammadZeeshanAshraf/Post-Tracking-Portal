@@ -186,7 +186,7 @@ export const importTrackingBox = async (request, response, next) => {
   try {
     const errorList = [];
 
-    // console.log(request.body);
+    console.log(request.body);
     // const { Name } = request.body;
     // const processID = await processService.createProcess(Name, models, errorList);
     // if (typeof processID !== 'object' && typeof processID !== 'function') {

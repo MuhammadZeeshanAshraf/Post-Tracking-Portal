@@ -14,7 +14,7 @@ export const register = async (request, response, next) => {
       request.file.filename
     );
     const message = await userService.registerService(request.body, models, errorList, filePath);
-    // // console.log(errorList);
+    // console.log(errorList);
     response.send(message);
     // response.send('OK');
   } catch (error) {
@@ -28,7 +28,7 @@ export const postLogin = async (request, response, next) => {
   try {
     const errorList = [];
     const message = await userService.postLoginService(request, request.body, models, errorList);
-    // // console.log(errorList);
+    // console.log(errorList);
     response.send(message);
   } catch (error) {
     return response.status(400).send({

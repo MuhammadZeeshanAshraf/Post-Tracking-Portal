@@ -30,13 +30,13 @@ export const importTrackingWorkSheet = async (
         const whereObj = { id: processID };
         const updateProcessObj = Object.assign({}, TABLE_DETAILS.importprocess.ddl);
         delete updateProcessObj.file_name;
-        // console.log('Start Processing Post Tracking Worksheet');
+        console.log('Start Processing Post Tracking Worksheet');
         /**
          * * Reading Tracking worksheet
          */
         const workSheetsFromFile = xlsx.parse(filePath);
         const totalSheets = workSheetsFromFile.length;
-        // console.log('Total Number of Sheet : ', totalSheets);
+        console.log('Total Number of Sheet : ', totalSheets);
 
         if (totalSheets > 0) {
             /**
@@ -46,7 +46,7 @@ export const importTrackingWorkSheet = async (
                 workSheetsFromFile,
                 errorList
             );
-            // console.log('Total Number of Tracking Sheet : ', trackingSheets.length);
+            console.log('Total Number of Tracking Sheet : ', trackingSheets.length);
             if (trackingSheets.length > 0) {
                 let duplicates = [];
                 let total = 0;
@@ -127,7 +127,7 @@ export const importTrackingWorkSheet = async (
         return notifications;
     } catch (error) {
         errorList.push(error.message);
-        // // console.log(error);
+        // console.log(error);
     }
 };
 
@@ -138,7 +138,7 @@ export const workSheetValidation = async (filePath, errorList) => {
          */
         const workSheetsFromFile = xlsx.parse(filePath);
         const totalSheets = workSheetsFromFile.length;
-        // console.log('Total Number of Sheet : ', totalSheets);
+        console.log('Total Number of Sheet : ', totalSheets);
 
         if (totalSheets > 0) {
             /**
@@ -148,14 +148,14 @@ export const workSheetValidation = async (filePath, errorList) => {
                 workSheetsFromFile,
                 errorList
             );
-            // // console.log('Total Number of Tracking Sheet : ', trackingSheets.length);
+            // console.log('Total Number of Tracking Sheet : ', trackingSheets.length);
             if (trackingSheets.length > 0) {
                 let duplicates = [];
                 let total = 0;
                 let uinque = 0;
 
                 for (const sheet of trackingSheets) {
-                    // console.log(sheet);
+                    console.log(sheet);
                     const arr = sheet.data.map(function (obj) {
                         return Object.keys(obj).reduce(function (arr, current) {
                             if (current === 'Tracking ID') {
@@ -250,7 +250,7 @@ export const getUniqueTrakings = (sheet, errorList) => {
         return resArr;
     } catch (error) {
         errorList.push(error.message);
-        // // console.log(error);
+        // console.log(error);
     }
 };
 
@@ -261,7 +261,7 @@ export const getUniqueContactNumber = (sheet, errorList) => {
             .filter((value, index, self) => self.indexOf(value) === index);
     } catch (error) {
         errorList.push(error.message);
-        // // console.log(error);
+        // console.log(error);
     }
 };
 
@@ -320,7 +320,7 @@ export const getInValidTrackings = async (sheet, models, processID, errorList, f
         };
     } catch (error) {
         errorList.push(error.message);
-        // // console.log(error);
+        // console.log(error);
     }
 };
 

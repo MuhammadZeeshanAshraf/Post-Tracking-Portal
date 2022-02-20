@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
     }
   },
   onError: function (err, next) {
-    // console.log('error from multer : ', err);
+    console.log('error from multer : ', err);
     next(err);
   }
 });

@@ -84,8 +84,8 @@ export const exportInValidTrackingsWorkSheet = async (request, response, next) =
         'process_id',
         ProcessId
       );
-    // console.log(result);
-    // console.log(ProcessId);
+    console.log(result);
+    console.log(ProcessId);
     for (const row of result) {
       const momentDate = moment(row.create_date);
       row.create_date = momentDate.format('YYYY-MM-DD hh:mm:ss A');

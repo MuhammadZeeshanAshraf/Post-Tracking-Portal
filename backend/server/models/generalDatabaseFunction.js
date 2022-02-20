@@ -29,7 +29,7 @@ export default class GeneralDatabaseFunction {
       const result = this.db(`${schema}.${table}`).returning(returnColumnName).insert(mapObj);
       return result;
     } catch (error) {
-      // console.log('OOKKOKO========>', error);
+      console.log('OOKKOKO========>', error);
 
       return error.message;
     }
@@ -39,40 +39,40 @@ export default class GeneralDatabaseFunction {
     try {
       return this.db(`${schema}.${table}`).insert(mapObj);
     } catch (error) {
-      // console.log(error);
+      console.log(error);
     }
   }
 
   async updateSingleRowWithReturn(schema, table, mapObj, whereObj) {
     try {
-      // console.log(this.db(`${schema}.${table}`).where(whereObj).update(mapObj).toString());
+      console.log(this.db(`${schema}.${table}`).where(whereObj).update(mapObj).toString());
       return this.db(`${schema}.${table}`).where(whereObj).update(mapObj);
     } catch (error) {
-      // console.log(error);
+      console.log(error);
     }
   }
 
   async deleteData(schema, table, whereObj) {
     try {
-      // console.log(this.db(`${schema}.${table}`).where(whereObj).del().toString());
+      console.log(this.db(`${schema}.${table}`).where(whereObj).del().toString());
       return this.db(`${schema}.${table}`).where(whereObj).del();
     } catch (error) {
-      // console.log(error);
+      console.log(error);
     }
   }
 
   async deleteDataWhereIn(schema, table, whereColumnName, whereColumnValue) {
     try {
-      // console.log(this.db(`${schema}.${table}`).whereIn(whereColumnName, whereColumnValue).del().toString());
+      console.log(this.db(`${schema}.${table}`).whereIn(whereColumnName, whereColumnValue).del().toString());
       return this.db(`${schema}.${table}`).whereIn(whereColumnName, whereColumnValue).del();
     } catch (error) {
-      // console.log(error);
+      console.log(error);
     }
   }
 
   async insertMultipleRows(schema, table, data) {
     try {
-      // console.log('Rows :-', data.length);
+      console.log('Rows :-', data.length);
       const promises = [];
       while (data.length > 0) {
         const dataBatch = data.splice(0, BATCH_SIZE);
@@ -80,7 +80,7 @@ export default class GeneralDatabaseFunction {
       }
       await Promise.all(promises);
     } catch (error) {
-      // console.log(error);
+      console.log(error);
     }
   }
 
@@ -123,7 +123,7 @@ export default class GeneralDatabaseFunction {
         return maxID;
       }
     } catch (error) {
-      // console.log(error);
+      console.log(error);
     }
   }
 
@@ -137,7 +137,7 @@ export default class GeneralDatabaseFunction {
         return maxID;
       }
     } catch (error) {
-      // console.log(error);
+      console.log(error);
     }
   }
 
@@ -150,7 +150,7 @@ export default class GeneralDatabaseFunction {
           }
         });
     } catch (error) {
-      // console.log(error);
+      console.log(error);
     }
   }
 

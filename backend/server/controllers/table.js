@@ -129,7 +129,7 @@ export const getAllCustomers = async (request, response, next) => {
         SCHEMA,
         TABLE_DETAILS.importprocess.name,
         'id',
-        ['create_date', 'file_name', 'total_mobile_numbers']
+        ['id', 'create_date', 'file_name', 'total_mobile_numbers']
       );
 
     for (const row of result) {
