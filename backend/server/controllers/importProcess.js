@@ -61,6 +61,15 @@ export const getTrackingWorkData = async (request, response, next) => {
       'id',
       processID
     );
+
+    const notificationsData =
+      await models.generalDatabaseFunction.getDatabySingleWhereColumn(
+        SCHEMA,
+        TABLE_DETAILS.notifications.name,
+        'process_id',
+        processID
+      );
+
     const total = totalData[0].total_tracking_ids;
     trackingData =
       await models.generalDatabaseFunction.getDatabySingleWhereColumn(
@@ -71,6 +80,8 @@ export const getTrackingWorkData = async (request, response, next) => {
       );
     response.send({
       trackingData: trackingData,
+      notificationsData: notificationsData,
+      notificationsCount: notificationsData.length,
       total: total
     });
   } catch (error) {
@@ -123,7 +134,8 @@ export const getProcessData = async (request, response, next) => {
     response.send({
       total: total,
       trackingData: trackingData,
-      notificationsData: notificationsData
+      notificationsData: notificationsData,
+      notificationsCount: notificationsData.length
     });
   } catch (error) {
     return response.status(400).send({
