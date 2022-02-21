@@ -6,6 +6,7 @@ import $ from 'jquery';
 import axios from 'axios';
 import { Modal } from 'react-bootstrap';
 import CustomerModal from './CustomerModal';
+import download from "downloadjs";
 
 const ContentTable = ({startDate, endDate})=> {
 
@@ -23,8 +24,26 @@ const ContentTable = ({startDate, endDate})=> {
      };
 
      const exportFile = async (processId) => {
-         console.log('processId', processId);
-      };
+        // setLoading(true);
+        axios({
+        method: "get",
+        url: `export/customer-file-by-process?${processId}`,
+        responseType: "blob",
+        params: {
+            ProcessId:processId
+        }
+        })
+        .then(async (res) => {
+            const blob = new Blob([res.data], { type: "application/xlsx" });
+            const name = "Contact Numbers.xlsx";
+            // setLoading(false);
+            download(blob, name);
+        })
+        .catch((error) => {
+            // setLoading(false);
+            console.log(error);
+        });
+    };
     
     useEffect(()=>{
         $('#customerTable').DataTable({
@@ -47,7 +66,7 @@ const ContentTable = ({startDate, endDate})=> {
                 createdCell: (td, cellData, rowData, row, col) => {
                     ReactDOM.render(
                         <div>
-                            <a style={{cursor:"pointer"}} onClick={()=>handlePreview(rowData.id, rowData.file_name)} className="fas fa-eye text-success"></a >
+                            <a style={{cursor:"pointer"}} onClick={()=>handlePreview(rowData.id, rowData.file_name)} className="fas fa-eye text-success mr-3"></a >
                             <a style={{cursor:"pointer"}} onClick={()=>exportFile(rowData.id)} className="fas fa-download"></a >
                         </div>
                           , td);
