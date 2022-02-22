@@ -145,7 +145,7 @@ export const getProcessData = async (request, response, next) => {
   }
 };
 
-export const TrackingWorkSheetValidation = async (request, response, next) => {
+/* export const TrackingWorkSheetValidation = async (request, response, next) => {
   try {
     const errorList = [];
     const filePath = path.join(
@@ -173,7 +173,7 @@ export const TrackingWorkSheetValidation = async (request, response, next) => {
     });
   }
 };
-
+ */
 export const workSheetValidation = async (request, response, next) => {
   try {
     const errorList = [];
@@ -195,25 +195,89 @@ export const workSheetValidation = async (request, response, next) => {
   }
 };
 
-export const importTrackingBox = async (request, response, next) => {
+export const workSheetEditorValidation = async (request, response, next) => {
+  try {
+    if (request.body.length > 0) {
+      let duplicates = [];
+      let total = 0;
+      let uinque = 0;
+
+      const arr = request.body.map(function (obj) {
+        return Object.keys(obj).reduce(function (arr, current) {
+          if (current === 'TrackingID') {
+            arr.push(obj[current]);
+          }
+          return arr;
+        }, []);
+      });
+      const arr1d = [].concat(...arr);
+      const findDuplicates = (arr) =>
+        arr.filter((item, index) => arr.indexOf(item) != index);
+      duplicates = duplicates.concat([...new Set(findDuplicates(arr1d))]);
+      uinque = [...new Set(arr1d)];
+      total = arr1d;
+
+      response.send({
+        duplicates: duplicates,
+        total: total,
+        uinque: uinque,
+        duplicatesCount: duplicates.length,
+        uinqueCount: uinque.length,
+        totalCount: total.length
+      });
+    } else {
+      response.send({
+        duplicates: [],
+        total: [],
+        uinque: [],
+        duplicatesCount: 0,
+        uinqueCount: 0,
+        totalCount: 0
+      });
+    }
+  } catch (error) {
+    return response.status(400).send({
+      message: error.message
+    });
+  }
+};
+
+export const importTrackingEditor = async (request, response, next) => {
   try {
     const errorList = [];
-
-    console.log(request.body);
-    // const { Name } = request.body;
-    // const processID = await processService.createProcess(Name, models, errorList);
-    // if (typeof processID !== 'object' && typeof processID !== 'function') {
-    //   const message = await importProcessService.importTrackingWorkSheet(
-    //     processID,
-    //     filePath,
-    //     errorList,
-    //     models
-    //   );
-    //   response.send(message);
-    // } else {
-    //   response.send(processID);
-    // }
-    response.send('OK');
+    if (request.body.length > 0) {
+      const data = [];
+      const today = new Date();
+      const dd = String(today.getDate()).padStart(2, '0');
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const yyyy = today.getFullYear();
+      const HH = today.getHours();
+      const MM = today.getMinutes();
+      const SS = today.getSeconds();
+      const Name = `${yyyy}-${mm}-${dd} ${HH}:${MM}:${SS} Editor`;
+      for (const item of request.body) {
+        data.push({
+          'Tracking ID': item.TrackingID,
+          'Contact Number': item.ContactNumber
+        });
+      }
+      const processID = await processService.createProcess(Name, models, errorList);
+      if (typeof processID !== 'object' && typeof processID !== 'function') {
+        const message = await importProcessService.importTrackingWorkSheetEditor(
+          processID,
+          data,
+          errorList,
+          models
+        );
+        response.send(message);
+      } else {
+        response.send(processID);
+      }
+    } else {
+      response.send({
+        message: 'No tracking ids are porvided.'
+      });
+    }
   } catch (error) {
     return response.status(400).send({
       message: error.message

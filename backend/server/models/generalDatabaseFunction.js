@@ -29,8 +29,6 @@ export default class GeneralDatabaseFunction {
       const result = this.db(`${schema}.${table}`).returning(returnColumnName).insert(mapObj);
       return result;
     } catch (error) {
-      console.log('OOKKOKO========>', error);
-
       return error.message;
     }
   }

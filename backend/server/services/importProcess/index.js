@@ -228,7 +228,7 @@ const processContactNumber = (models, contactNumberList, errorList, processID) =
             obj.process_id = processID;
             data.push(obj);
         }
-
+        console.log(data);
         const count = data.length;
         models.generalDatabaseFunction.insertMultipleRows(SCHEMA, TABLE_DETAILS.contactnumbers.name, data);
         return count;
@@ -333,5 +333,113 @@ Array.prototype.remove = function (value) {
         if (this[i] === value) {
             this.splice(i, 1);
         }
+    }
+};
+
+export const importTrackingWorkSheetEditor = async (
+    processID,
+    trackingData,
+    errorList,
+    models,
+    filename,
+    processDate
+) => {
+    try {
+        const scrapData = [];
+        const inValidData = [];
+        let notifications = {
+            noMobileNumber: [],
+            notfunctional: []
+        };
+        const whereObj = { id: processID };
+        const updateProcessObj = Object.assign({}, TABLE_DETAILS.importprocess.ddl);
+        delete updateProcessObj.file_name;
+
+        const trackingSheets = [];
+        trackingSheets.push({
+            name: 'Tracking Editor Sheet',
+            data: trackingData,
+            header: ['Tracking ID', 'Contact Number']
+        });
+        if (trackingSheets.length > 0) {
+            let duplicates = [];
+            let total = 0;
+            let uinque = 0;
+            for (const sheet of trackingSheets) {
+                const arr = sheet.data.map(function (obj) {
+                    return Object.keys(obj).reduce(function (arr, current) {
+                        if (current === 'Tracking ID') {
+                            arr.push(obj[current]);
+                        }
+                        return arr;
+                    }, []);
+                });
+                const arr1d = [].concat(...arr);
+                const findDuplicates = (arr) =>
+                    arr.filter((item, index) => arr.indexOf(item) != index);
+                duplicates = duplicates.concat([...new Set(findDuplicates(arr1d))]);
+                uinque += [...new Set(arr1d)].length;
+                total += arr1d.length;
+            }
+            updateProcessObj.duplicate_ids = duplicates.length;
+            updateProcessObj.unique_ids = uinque;
+            updateProcessObj.total_tracking_ids = total;
+
+            for (const sheet of trackingSheets) {
+                /* Getting Unique Tracking IDs */
+                sheet.data = getUniqueTrakings(sheet, errorList);
+                await models.generalDatabaseFunction.updateSingleRowWithReturn(
+                    SCHEMA,
+                    TABLE_DETAILS.importprocess.name,
+                    updateProcessObj,
+                    whereObj
+                );
+
+                const invalidTrackings = await getInValidTrackings(sheet, models, processID, errorList, filename, notifications);
+                const invalidTrackingsCount = invalidTrackings.count;
+                notifications = invalidTrackings.notifications;
+                /* Handling Phone Number */
+                const contactNumberList = getUniqueContactNumber(sheet, errorList);
+                const numberCount = processContactNumber(models, contactNumberList, errorList, processID);
+                /* End Handling Phone Number */
+
+                await processTrackingSheet(
+                    sheet,
+                    updateProcessObj,
+                    errorList,
+                    scrapData,
+                    processID,
+                    models,
+                    whereObj,
+                    invalidTrackingsCount,
+                    inValidData,
+                    notifications,
+                    processDate
+                );
+                updateProcessObj.not_book_ids =
+                    updateProcessObj.total_tracking_ids - updateProcessObj.book_ids;
+                updateProcessObj.total_mobile_numbers = numberCount;
+                updateProcessObj.total_missing_numbers = Math.abs(total - numberCount);
+                updateProcessObj.not_book_on_same_date =
+                    updateProcessObj.total_tracking_ids -
+                    updateProcessObj.book_on_same_date;
+            }
+            updateProcessObj.status = 'Complete';
+            await models.generalDatabaseFunction.updateSingleRowWithReturn(
+                SCHEMA,
+                TABLE_DETAILS.importprocess.name,
+                updateProcessObj,
+                whereObj
+            );
+        }
+
+        const message = await prepareResponse(
+            'Processing Post Tracking Worksheet',
+            errorList,
+            INTERNAL_FILES_PATH
+        );
+        return notifications;
+    } catch (error) {
+        errorList.push(error.message);
     }
 };

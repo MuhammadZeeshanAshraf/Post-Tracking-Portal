@@ -21,6 +21,13 @@ router.post(
     asyncHandler(importProcessController.workSheetValidation)
 );
 
+router.post(
+    '/validation-editor',
+    upload.single(TRACKING_WORKSHEET),
+
+    asyncHandler(importProcessController.workSheetEditorValidation)
+);
+
 router.get(
     '/data',
     upload.single(TRACKING_WORKSHEET),
@@ -41,10 +48,10 @@ router.post(
 );
 
 router.post(
-    '/box',
+    '/editor',
     upload.single(TRACKING_WORKSHEET),
     /* validator.importProcess, */
-    asyncHandler(importProcessController.importTrackingBox)
+    asyncHandler(importProcessController.importTrackingEditor)
 );
 
 router.get(
