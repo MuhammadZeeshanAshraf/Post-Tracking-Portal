@@ -32,7 +32,7 @@ const ContentTable = ({sDate, eDate})=> {
 
         axios({
         method: "get",
-        url: `export/customer-file-by-process?${sDate}&${eDate}`,
+        url: `export/customer-file?${sDate}&${eDate}`,
         responseType: "blob",
         params: {
             startDate:document.getElementById('startDate').value,

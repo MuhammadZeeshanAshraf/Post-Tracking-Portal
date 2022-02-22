@@ -4,7 +4,7 @@ import "datatables.net-bs4/css/dataTables.bootstrap4.min.css"
 import $ from 'jquery';
 import axios from 'axios';
 
-const ContentTable = ({startDate, endDate})=> {
+const ContentTable = ({startDate, endDate, endPoint})=> {
      
     const [data, setData] =  useState([]);
     
@@ -32,7 +32,7 @@ const ContentTable = ({startDate, endDate})=> {
     }, [data]);
 
     useEffect(()=>{
-        let url ="/table/all-trackings";
+        let url = endPoint;
         var param = "";
 
         if(startDate && startDate.length>0){
@@ -49,16 +49,17 @@ const ContentTable = ({startDate, endDate})=> {
         if(param.length > 0){
             url = url + "?"+param;
         }
-        console.log(url);
+        // console.log(url);
         axios.get(url)
         .then(function (response) {
+            // console.log("response=", response.data.data);
             setData(response.data.data);
         })
         .catch(function (error) {
             // handle error
             console.log(error);
         });
-    }, [startDate, endDate]);
+    }, [startDate, endDate, endPoint]);
 
     return (
         <div className="ms-content-wrapper">

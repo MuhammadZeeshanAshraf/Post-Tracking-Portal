@@ -234,7 +234,7 @@ const HomeContent = () => {
                     </div>
                     </div>
                     <UploadRecords startDate={startDate}  endDate={endDate} />
-                    <ShipmentRecords startDate={startDate}  endDate={endDate} />
+                    <ShipmentRecords startDate={startDate}  endDate={endDate} endPoint={"/table/all-trackings"} />
                     <TrackingIssues startDate={startDate}  endDate={endDate} />
                 </div>
             </div>
