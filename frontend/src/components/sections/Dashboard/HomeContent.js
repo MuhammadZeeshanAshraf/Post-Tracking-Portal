@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import "../../../assets/css/homeContent.css"
 import axios from 'axios';
 import Breadcrumb from './Breadcrumb';
-import InvalidTrackings from './InvalidTrackings';
-import ShipmentRecords from './ShipmentRecords';
-import UploadedRecords from './UploadedRecords';
+import UploadRecords from '../UploadedRecords/ContentTable';
+import ShipmentRecords from '../ShipmentWiseRecord/ContentTable'
+import TrackingIssues from '../TrackingIssues/ContentTable'
 import { Bar as BarChart } from 'react-chartjs-2';
 import { Pie as PieChart } from 'react-chartjs-2';
 import Chart from "react-google-charts";
@@ -121,24 +121,6 @@ const HomeContent = () => {
 
 
     return (
-    //     <div className="ms-content-wrapper">
-    //     <div className="row">
-    //         <div className="col-md-12">
-    //             <div className="ms-panel">
-    //                 <div className="ms-panel-header">
-    //                     <h6>Uploaded Records</h6>
-    //                 </div>
-    //                 <div className="ms-panel-body">
-    //                     <div className="table-responsive">
-    //                         <table id="data-table-4" className="table w-100 thead-primary" >
-    //                         </table>
-    //                     </div>
-    //                 </div>
-    //             </div>
-    //         </div>
-    //     </div>
-    // </div>
-
         <div className="ms-content-wrapper">
             <div className='row'>
                 <div className="col-md-12">
@@ -251,9 +233,9 @@ const HomeContent = () => {
                         </div>
                     </div>
                     </div>
-                    <UploadedRecords startDate={startDate}  endDate={endDate} />
-                    <ShipmentRecords startDate={startDate}  endDate={endDate}/>
-                    <InvalidTrackings startDate={startDate}  endDate={endDate}/>    
+                    <UploadRecords startDate={startDate}  endDate={endDate} />
+                    <ShipmentRecords startDate={startDate}  endDate={endDate} />
+                    <TrackingIssues startDate={startDate}  endDate={endDate} />
                 </div>
             </div>
         </div>
