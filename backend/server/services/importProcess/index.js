@@ -100,7 +100,8 @@ export const importTrackingWorkSheet = async (
                         whereObj,
                         invalidTrackingsCount,
                         inValidData,
-                        notifications
+                        notifications,
+                        processDate
                     );
                     updateProcessObj.not_book_ids =
                         updateProcessObj.total_tracking_ids - updateProcessObj.book_ids;

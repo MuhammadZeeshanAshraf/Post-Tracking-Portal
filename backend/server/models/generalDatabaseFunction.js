@@ -45,7 +45,6 @@ export default class GeneralDatabaseFunction {
 
   async updateSingleRowWithReturn(schema, table, mapObj, whereObj) {
     try {
-      console.log(this.db(`${schema}.${table}`).where(whereObj).update(mapObj).toString());
       return this.db(`${schema}.${table}`).where(whereObj).update(mapObj);
     } catch (error) {
       console.log(error);

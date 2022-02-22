@@ -1,4 +1,5 @@
 import { evaluate } from 'mathjs';
+import moment from 'moment';
 import puppeteer from 'puppeteer-extra';
 import AdblockerPlugin from 'puppeteer-extra-plugin-adblocker';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
@@ -41,7 +42,8 @@ export const processTrackingSheet = async (
     whereObj,
     invalidTrackings,
     inValidData,
-    notifications
+    notifications,
+    processDate
 ) => {
     try {
         if (typeof sheet.data[0] === 'undefined') {
@@ -57,7 +59,7 @@ export const processTrackingSheet = async (
 
             while (records.length > 0) {
                 // const recordsBatch = records.splice(0, 1);
-                const recordsBatch = records.splice(0, 10);
+                const recordsBatch = records.splice(0, 5);
                 const recordPromises = [];
                 for (const record of recordsBatch) {
                     console.log(x, '==>', record['Tracking ID']);
@@ -74,7 +76,8 @@ export const processTrackingSheet = async (
                             record['Contact Number'],
                             invalidTrackings,
                             inValidData,
-                            notifications
+                            notifications,
+                            processDate
                         )
                     );
                     x++;
@@ -123,9 +126,17 @@ const processSingleTrackingID = async (
     contactNumber,
     invalidTrackings,
     inValidData,
-    notifications
+    notifications,
+    processDate
 ) => {
+    const momentDate = moment(processDate);
+    processDate = momentDate.format('DD/MM/YYYY');
+
     const page = await browser.newPage();
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const yyyy = today.getFullYear();
     try {
         await page.setUserAgent(randomUseragent.getRandom());
         await page.setViewport({ width: 1366, height: 768 });
@@ -137,13 +148,13 @@ const processSingleTrackingID = async (
 
         const element = await page.waitForSelector(CAPTCHA_FORMULA);
         const captchaQuestion = await element.evaluate((el) => el.textContent);
-        console.log(captchaQuestion);
+        // console.log(captchaQuestion);
         // await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
         const image = await page.waitForSelector(CAPTCHA_IMAGE_ID, {
             timeout: 12000
         });
         const src = await image.evaluate((el) => el.src);
-        console.log(src);
+        // console.log(src);
         const catchResponse = await client.decode({
             url: src
         });
@@ -184,49 +195,83 @@ const processSingleTrackingID = async (
 
         // console.log(data.length);
         if (data.length > 3) {
-            console.log(data);
-            updateProcessObj.total_bill =
-                updateProcessObj.total_bill + parseFloat(data[3]);
-            // console.log(updateProcessObj.total_bill);
-            let today = new Date();
-            const dd = String(today.getDate()).padStart(2, '0');
-            const mm = String(today.getMonth() + 1).padStart(2, '0');
-            const yyyy = today.getFullYear();
-
-            today = mm + '/' + dd + '/' + yyyy;
-            const ok = data[1].split(' ');
-            if (ok === today) {
-                updateProcessObj.book_on_same_date++;
-            }
+            let sameDate = 'No';
             updateProcessObj.book_ids++;
-            scrapData.push({
-                process_id: processID,
-                tracking_id: trackingID,
-                booking_date: data[1],
-                customer_pin_code: data[2],
-                amount: data[3],
-                book_status: BOOKED,
-                type: data[4],
-                booked_at: data[0],
-                delivery_location: data[5],
-                contact_number: contactNumber
-            });
-            // page.close();
-            // models.generalDatabaseFunction.insertMultipleRows(
-            //     SCHEMA,
-            //     TABLE_DETAILS.tracking.name,
-            //     scrapData
-            // );
+            const aDate = data[1].split(' ');
+            if (processDate === aDate[0]) {
+                updateProcessObj.book_on_same_date++;
+                sameDate = 'Yes';
+            }
+
+            if (data.length < 30 || data[0] === 'Registered Printed Book') {
+                updateProcessObj.total_bill =
+                    updateProcessObj.total_bill + 0;
+                scrapData.push({
+                    process_id: processID,
+                    tracking_id: trackingID,
+                    booking_date: `${data[1]} ${data[2]}`,
+                    customer_pin_code: 'NaN',
+                    amount: '0',
+                    book_status: BOOKED,
+                    type: data[0],
+                    booked_at: data[3],
+                    delivery_location: 'NaN',
+                    contact_number: contactNumber,
+                    data_status: 'InComplete Data',
+                    same_date: sameDate
+                });
+            } else {
+                const amountCheck = 1 + parseFloat(data[3]);
+                if (Number.isNaN(amountCheck) || amountCheck === '' || amountCheck === null) {
+                    updateProcessObj.total_bill =
+                        updateProcessObj.total_bill + 0;
+                    scrapData.push({
+                        process_id: processID,
+                        tracking_id: trackingID,
+                        booking_date: data[1],
+                        customer_pin_code: 'NaN',
+                        amount: '0',
+                        book_status: BOOKED,
+                        type: data[2],
+                        booked_at: data[0],
+                        delivery_location: data[3],
+                        contact_number: contactNumber,
+                        data_status: 'InComplete Data',
+                        same_date: sameDate
+                    });
+                } else {
+                    updateProcessObj.total_bill =
+                        updateProcessObj.total_bill + parseFloat(data[3]);
+                    scrapData.push({
+                        process_id: processID,
+                        tracking_id: trackingID,
+                        booking_date: data[1],
+                        customer_pin_code: data[2],
+                        amount: data[3],
+                        book_status: BOOKED,
+                        type: data[4],
+                        booked_at: data[0],
+                        delivery_location: data[5],
+                        contact_number: contactNumber,
+                        data_status: 'Full Data',
+                        same_date: sameDate
+                    });
+                }
+            }
+            if (!await page.isClosed()) {
+                await page.goto('about:blank');
+                const url = await page.url();
+                if (url === 'about:blank') {
+                    await page.close();
+                }
+            }
             return true;
         } else {
-            // console.log({
-            //     'Tracking ID': trackingID,
-            //     'Contact Number': contactNumber
-            // });
             const obj = Object.assign({}, TABLE_DETAILS.invalidTracking.ddl);
             obj.process_id = processID;
             obj.tracking_id = trackingID;
             obj.contact_number = contactNumber;
+            obj.create_date = `${yyyy}-${mm}-${dd}`;
             inValidData.push(obj);
             invalidTrackings++;
             const objj = Object.assign({}, TABLE_DETAILS.notifications.ddl);
@@ -235,16 +280,23 @@ const processSingleTrackingID = async (
             objj.description = `${trackingID} is not functional.`;
             objj.tracking_id = trackingID;
             notifications.notfunctional.push(obj);
-            // records.push({
-            //     'Tracking ID': trackingID,
-            //     'Contact Number': contactNumber
-            // });
-            // page.close();
-
+            if (!await page.isClosed()) {
+                await page.goto('about:blank');
+                const url = await page.url();
+                if (url === 'about:blank') {
+                    await page.close();
+                }
+            }
             return true;
         }
     } catch (error) {
-        // page.close();
+        if (!await page.isClosed()) {
+            await page.goto('about:blank');
+            const url = await page.url();
+            if (url === 'about:blank') {
+                await page.close();
+            }
+        }
         // console.log(error);
         records.push({
             'Tracking ID': trackingID,

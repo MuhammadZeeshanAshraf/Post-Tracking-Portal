@@ -82,7 +82,8 @@ export const TABLE_DETAILS = {
             delivery_location: '',
             amount: '',
             book_status: '',
-            contact_number: ''
+            contact_number: '',
+            data_status: ''
 
         }
     },
