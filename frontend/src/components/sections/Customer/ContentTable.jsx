@@ -8,14 +8,15 @@ import { Modal } from 'react-bootstrap';
 import CustomerModal from './CustomerModal';
 import download from "downloadjs";
 
-const ContentTable = ({startDate, endDate})=> {
+const ContentTable = ({sDate, eDate})=> {
 
     const [data, setData] =  useState([]);
     const [processId, setProcessId] = useState([]);
     const [fileName, setFileName] = useState([]); 
     // const [loading, setLoading]  = useState(false);
     const [showModal, setShowModal]  = useState(false);
-
+    // const [startDate, setStartDate]= useState('');
+    // const [endDate, setEndDate]= useState('');
 
     const handlePreview = async (id, fileName) => {
         setFileName(fileName);
@@ -23,7 +24,34 @@ const ContentTable = ({startDate, endDate})=> {
         setShowModal(!showModal);
      };
 
-     const exportFile = async (processId) => {
+     const filterAndExportFile = () =>{
+        sDate = document.getElementById('startDate').value;
+        eDate = document.getElementById('endDate').value;
+
+        console.log("startDate", sDate, "endDate", eDate);
+
+        axios({
+        method: "get",
+        url: `export/customer-file?${sDate}&${eDate}`,
+        responseType: "blob",
+        params: {
+            startDate:document.getElementById('startDate').value,
+            endDate:document.getElementById('endDate').value
+        }
+        })
+        .then(async (res) => {
+            const blob = new Blob([res.data], { type: "application/xlsx" });
+            const name = "Contact Numbers.xlsx";
+            // setLoading(false);
+            download(blob, name);
+        })
+        .catch((error) => {
+            // setLoading(false);
+            console.log(error);
+        });
+    }
+
+    const exportFile = async (processId) => {
         // setLoading(true);
         axios({
         method: "get",
@@ -78,22 +106,6 @@ const ContentTable = ({startDate, endDate})=> {
 
     useEffect(()=>{
         let url ="/table/all-customers";
-        var param = "";
-
-        if(startDate && startDate.length>0){
-            param = "startDate="+startDate;
-        }
-    
-        if(endDate && endDate.length > 0){
-            if(param.length > 0 ){
-                param = param + "&";
-            }
-            param = param + "endDate="+endDate
-        }
-
-        if(param.length > 0){
-            url = url + "?"+param;
-        }
         axios.get(url)
         .then(function (response) {
             let list = response.data.data.map(row=>{
@@ -105,13 +117,40 @@ const ContentTable = ({startDate, endDate})=> {
             // handle error
             console.log(error);
         });
-    }, [startDate, endDate]);
+    });
 
     return (
         <>
         <div className="ms-content-wrapper">
             <div className="row">
                 <div className="col-md-12">
+                    <div className="ms-panel">
+                        <div className="ms-panel-header">
+                                <h6>Search Filter</h6>
+                            </div>
+                        <div className="ms-panel-body">
+                            <div className='row'>
+                                <div class="form-group col-xl-3 col-md-12"></div>
+                                <div class="form-group col-xl-3 col-md-12">
+                                    <label for="startDate">Start Date</label>
+                                    <input type='date' className='form-control' id="startDate" />
+                                </div>
+                                <div class="form-group col-xl-3 col-md-12">
+                                    <label for="endDate">End Date</label>
+                                    <input type='date' className='form-control' id="endDate" />
+                                </div>
+                                <div class="form-group col-xl-3 col-md-12"></div>
+                            </div>
+                            <div className='row'>
+                                <div class="form-group col-xl-3 col-md-12"></div>
+                                <div class="form-group col-xl-3 col-md-12">
+                                  <button onClick={filterAndExportFile} className='btn btn-success'>Filter & Download</button>
+                                </div>
+                                <div class="form-group col-xl-3 col-md-12"></div>
+                                <div class="form-group col-xl-3 col-md-12"></div>
+                            </div>
+                        </div>
+                    </div>
                     <div className="ms-panel">
                         <div className="ms-panel-header">
                             <h6>Customer</h6>
