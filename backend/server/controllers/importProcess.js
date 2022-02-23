@@ -109,7 +109,7 @@ export const getProcessHistory = async (request, response, next) => {
 
 export const getProcessData = async (request, response, next) => {
   try {
-    const { ProcessId } = request.body;
+    const { ProcessId } = request.query;
     let trackingData = [];
     const totalData = await models.generalDatabaseFunction.getDatabySingleWhereColumn(
       SCHEMA,

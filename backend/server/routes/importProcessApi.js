@@ -40,7 +40,7 @@ router.get(
     asyncHandler(importProcessController.getProcessHistory)
 );
 
-router.post(
+router.get(
     '/data-by-id',
     upload.single(TRACKING_WORKSHEET),
     validator.getProcessData,
