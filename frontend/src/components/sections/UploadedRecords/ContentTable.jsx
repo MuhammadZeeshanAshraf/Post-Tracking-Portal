@@ -7,6 +7,7 @@ import { Modal } from 'react-bootstrap';
 import download from "downloadjs";
 import ReactDOM from 'react-dom'
 import ShipmentRecords from '../ShipmentWiseRecord/ContentTable'
+import InvalidRecordModal from './InvalidRecordModal';
 
 const ContentTable = ({startDate, endDate})=> {
      
@@ -20,11 +21,12 @@ const ContentTable = ({startDate, endDate})=> {
         setProcessId(id);
         setShowModal(!showModal);
     };
-    const exportFile = async (processId) => {
+    const exportFile = async (processId, endPoint, exportFileName) => {
         // setLoading(true);
+        console.log("processId", processId);
         axios({
         method: "get",
-        url: `/export/tracking-file?${processId}`,
+        url: endPoint,
         responseType: "blob",
         params: {
             ProcessId:processId
@@ -32,7 +34,7 @@ const ContentTable = ({startDate, endDate})=> {
         })
         .then(async (res) => {
             const blob = new Blob([res.data], { type: "application/xlsx" });
-            const name = "Working Records.xlsx";
+            const name = `${exportFileName} Records.xlsx`;
             // setLoading(false);
             download(blob, name);
         })
@@ -59,20 +61,32 @@ const ContentTable = ({startDate, endDate})=> {
                 { data:"book_ids", title: "Actual Trackings " },
                 { data:"book_ids", title: "Workings Trackings " },
                 { data:"not_book_ids", title: "Total Tracking Issues" },
-                { data:"actions", title: "Actions (Working Records)" },
+                { data:"working_record_actions", title: "Actions (Working Records)" },
+                { data:"invalid_record_actions", title: "Actions (Invalid Records)" },
             ],
             columnDefs :[
                {
-                   targets : [-1],
+                   targets : [-2],
                 createdCell: (td, cellData, rowData, row, col) => {
                     ReactDOM.render(
                         <div>
                             <a style={{cursor:"pointer"}} onClick={()=>handlePreview(rowData.id, rowData.file_name)} className="fas fa-eye text-success mr-3"></a >
-                            <a style={{cursor:"pointer"}} onClick={()=>exportFile(rowData.id)} className="fas fa-download"></a >
+                            <a style={{cursor:"pointer"}} onClick={()=>exportFile(rowData.id, `/export/tracking-file?${rowData.id}`, "Working")} className="fas fa-download"></a >
                         </div>
                           , td);
                     },
-                }
+                },
+                {
+                    targets : [-1],
+                 createdCell: (td, cellData, rowData, row, col) => {
+                     ReactDOM.render(
+                         <div>
+                             <a style={{cursor:"pointer"}} onClick={()=>handlePreview(rowData.id, rowData.file_name)} className="fas fa-eye text-success mr-3"></a >
+                             <a style={{cursor:"pointer"}} onClick={()=>exportFile(rowData.id, `/export/invalid-tracking-file?${rowData.id}`, "Invalid")} className="fas fa-download"></a >
+                         </div>
+                           , td);
+                     },
+                 }
             ]
         }); 
     }, [data]);
@@ -99,7 +113,7 @@ const ContentTable = ({startDate, endDate})=> {
         axios.get(url)
         .then(function (response) {
             let list = response.data.data.map(row=>{
-                return {...row, actions:""}  
+                return {...row, working_record_actions:"", invalid_record_actions:""}  
             })
             setData(list);
             // setData(response.data.data);
@@ -132,7 +146,8 @@ const ContentTable = ({startDate, endDate})=> {
         <Modal className="modal-min" show={showModal} onHide={()=>setShowModal(false)} aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Body className="text-center">
                 <button type="button" className="close" onClick={()=>setShowModal(false)}><span aria-hidden="true">×</span></button>
-                <ShipmentRecords endPoint={`/import-process/data-by-id?ProcessId=${processId}`} />
+                {/* <ShipmentRecords endPoint={`/import-process/data-by-id?ProcessId=${processId}`} /> */}
+                <InvalidRecordModal processId={processId}  fileName={fileName} />
             </Modal.Body>
         </Modal>
         </>
