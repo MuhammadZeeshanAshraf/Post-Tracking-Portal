@@ -18,7 +18,7 @@ const Content = () => {
         <div className="row">
             <div className="col-md-12">
                 <Breadcrumb />
-                <ContentTable/>
+                <ContentTable  endPoint="/table/all-trackings" />
             </div>
         </div>
     </div>

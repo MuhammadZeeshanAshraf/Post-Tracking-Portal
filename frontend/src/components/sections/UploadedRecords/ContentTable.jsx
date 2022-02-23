@@ -132,7 +132,7 @@ const ContentTable = ({startDate, endDate})=> {
         <Modal className="modal-min" show={showModal} onHide={()=>setShowModal(false)} aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Body className="text-center">
                 <button type="button" className="close" onClick={()=>setShowModal(false)}><span aria-hidden="true">×</span></button>
-                <ShipmentRecords startDate={startDate}  endDate={endDate} endPoint={`/import-process/data-by-id=${processId}`} />
+                <ShipmentRecords endPoint={`/import-process/data-by-id?ProcessId=${processId}`} />
             </Modal.Body>
         </Modal>
         </>
