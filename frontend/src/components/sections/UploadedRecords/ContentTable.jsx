@@ -6,24 +6,29 @@ import axios from 'axios';
 import { Modal } from 'react-bootstrap';
 import download from "downloadjs";
 import ReactDOM from 'react-dom'
-import ShipmentRecords from '../ShipmentWiseRecord/ContentTable'
 import InvalidRecordModal from './InvalidRecordModal';
+import WorkingRecordModal from './WorkingRecordModal';
 
 const ContentTable = ({startDate, endDate})=> {
      
     const [data, setData] =  useState([]);
     const [processId, setProcessId] = useState([]);
     const [fileName, setFileName] = useState([]); 
-    const [showModal, setShowModal]  = useState(false);
+    const [invalidRecordShowModal, setInvalidRecordShowModal]  = useState(false);
+    const [workingRecordShowModal, setWorkingRecordShowModal]  = useState(false);
     
+    const handleWorkingRecordPreview = async (id, fileName) => {
+        setFileName(fileName);
+        setProcessId(id);
+        setWorkingRecordShowModal(!workingRecordShowModal);
+    };
     const handlePreview = async (id, fileName) => {
         setFileName(fileName);
         setProcessId(id);
-        setShowModal(!showModal);
+        setInvalidRecordShowModal(!invalidRecordShowModal);
     };
     const exportFile = async (processId, endPoint, exportFileName) => {
         // setLoading(true);
-        console.log("processId", processId);
         axios({
         method: "get",
         url: endPoint,
@@ -70,7 +75,7 @@ const ContentTable = ({startDate, endDate})=> {
                 createdCell: (td, cellData, rowData, row, col) => {
                     ReactDOM.render(
                         <div>
-                            <a style={{cursor:"pointer"}} onClick={()=>handlePreview(rowData.id, rowData.file_name)} className="fas fa-eye text-success mr-3"></a >
+                            <a style={{cursor:"pointer"}} onClick={()=>handleWorkingRecordPreview(rowData.id, rowData.file_name)} className="fas fa-eye text-success mr-3"></a >
                             <a style={{cursor:"pointer"}} onClick={()=>exportFile(rowData.id, `/export/tracking-file?${rowData.id}`, "Working")} className="fas fa-download"></a >
                         </div>
                           , td);
@@ -143,10 +148,15 @@ const ContentTable = ({startDate, endDate})=> {
                 </div>
             </div>
         </div>
-        <Modal className="modal-min" show={showModal} onHide={()=>setShowModal(false)} aria-labelledby="contained-modal-title-vcenter" centered>
+        <Modal className="modal-min" show={workingRecordShowModal} onHide={()=>setWorkingRecordShowModal(false)} aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Body className="text-center">
-                <button type="button" className="close" onClick={()=>setShowModal(false)}><span aria-hidden="true">×</span></button>
-                {/* <ShipmentRecords endPoint={`/import-process/data-by-id?ProcessId=${processId}`} /> */}
+                <button type="button" className="close" onClick={()=>setWorkingRecordShowModal(false)}><span aria-hidden="true">×</span></button>
+                <WorkingRecordModal processId={processId}  fileName={fileName} />
+            </Modal.Body>
+        </Modal>
+        <Modal className="modal-min" show={invalidRecordShowModal} onHide={()=>setInvalidRecordShowModal(false)} aria-labelledby="contained-modal-title-vcenter" centered>
+            <Modal.Body className="text-center">
+                <button type="button" className="close" onClick={()=>setInvalidRecordShowModal(false)}><span aria-hidden="true">×</span></button>
                 <InvalidRecordModal processId={processId}  fileName={fileName} />
             </Modal.Body>
         </Modal>
