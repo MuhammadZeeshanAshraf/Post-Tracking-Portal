@@ -1,8 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import SearchFilter from '../../common/SearchFilter';
 import Breadcrumb from './Breadcrumb'
 import ContentTable from './ContentTable';
 
 const Content = () => {
+    const [startDate, setStartDate]= useState('');
+    const [endDate, setEndDate]= useState('');
     
     useEffect(()=>{
         // const fetchData = async () => {
@@ -18,7 +21,8 @@ const Content = () => {
         <div className="row">
             <div className="col-md-12">
                 <Breadcrumb />
-                <ContentTable/>
+                <SearchFilter setStartDate={setStartDate} setEndDate={setEndDate} />
+                <ContentTable startDate={startDate} endDate={endDate} />
             </div>
         </div>
     </div>
