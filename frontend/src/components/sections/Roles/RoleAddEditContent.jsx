@@ -10,8 +10,12 @@ const RoleAddEditContent = () => {
     const [openRoleModal ,setOpenRoleModal] = useState(false);
     const [rolesList ,setRolesList] = useState(null);
     const [roleName ,setRoleName] = useState("");
-    const [permissionLevel ,setPermissionLevel] = useState(1);
     const [roleId ,setRoleId] = useState(null);
+    const [deletePermissionLevel ,setDeletePermissionLevel] = useState(false);
+    const [updatePermissionLevel ,setUpdatePermissionLevel] = useState(false);
+    const [readPermissionLevel ,setReadPermissionLevel] = useState(false);
+
+
 
     const getRoles = async () =>{
         axios.get('/role')
@@ -46,14 +50,21 @@ const RoleAddEditContent = () => {
     }
 
     const openAddEditRoleModal = (data)=>{
-        console.log(data)
         if(data){
             setRoleName(data.role);
-            setPermissionLevel(data.permission_level);
+            if(data.permission_level === 1){
+                setReadPermissionLevel(true);
+            } else if(data.permission_level === 2){
+                setUpdatePermissionLevel(true);
+            } else if(data.permission_level === 3){
+                setDeletePermissionLevel(true);
+            }
             setRoleId(data.id);
         } else{
             setRoleName("");
-            setPermissionLevel(1);
+            setReadPermissionLevel(false);
+            setUpdatePermissionLevel(false);
+            setDeletePermissionLevel(false);
             setRoleId(null);
         }
         setOpenRoleModal(true);
@@ -61,14 +72,22 @@ const RoleAddEditContent = () => {
 
     const handleSubmit = (event)=>{
         event.preventDefault();
+        var permissionLevelVal = 0;
+        if(document.getElementById('deletePermission').checked){
+            permissionLevelVal = 3;
+        } else if(document.getElementById('updatePermission').checked){
+            permissionLevelVal = 2;
+        } else if(document.getElementById('readPermission').checked){
+            permissionLevelVal = 1;
+        }
         let endPOint = 'role/add';
         let action = "Add";
         let data = {
             role: roleName,
-            permission_level: permissionLevel
+            permission_level: permissionLevelVal
         }
         
-        if(roleId){ //editcase
+        if(roleId){
             data["id"] = roleId;
             endPOint = 'role/update';
             action = "Edit"
@@ -101,7 +120,7 @@ const RoleAddEditContent = () => {
                                 <h5 class="h5">Roles</h5>
                                 <div class="btn-toolbar mb-2 mb-md-0">
                                 <div class="mr-3">
-                                    {/* <button className="btn btn-success" onClick={openAddEditRoleModal}> Add New Role </button> */}
+                                    <button className="btn btn-success" onClick={openAddEditRoleModal}> Add New Role </button>
                                 </div>
                                 </div>
                             </div>
@@ -169,12 +188,50 @@ const RoleAddEditContent = () => {
                 <div className="ms-form-group has-icon">
                     <input  value={roleName} onChange={(e)=>setRoleName(e.target.value)} required type="text" placeholder="Role Name" className="form-control" name="role" />
                 </div>
-                <div className="ms-form-group has-icon">
-                    <select onChange={e => setPermissionLevel(e.target.value)} value={permissionLevel} className="form-control" name="permission_level">
-                        <option value="1">Permission Level 1</option>
-                        <option value="2">Permission Level 2</option>
-                        <option value="3">Permission Level 3</option>
-                    </select>
+                <div className="d-flex flex-column align-items-start">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" 
+                         onChange={()=>{
+                            setDeletePermissionLevel(false);
+                            setUpdatePermissionLevel(false);
+                            setReadPermissionLevel(document.getElementById('readPermission').checked);
+                        }}
+
+                         value="1" 
+                         id="readPermission"
+                         checked={readPermissionLevel || deletePermissionLevel || updatePermissionLevel}
+                         />
+                        
+                        <label class="form-check-label" for="readPermission">
+                            Read
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input 
+                         onChange={()=>{
+                            setDeletePermissionLevel(false);
+                            setUpdatePermissionLevel(document.getElementById('updatePermission').checked);
+                        }}
+                         checked={deletePermissionLevel || updatePermissionLevel}
+                         class="form-check-input" 
+                         type="checkbox" 
+                         value="2" 
+                         id="updatePermission"/>
+                        <label class="form-check-label" for="updatePermission">
+                            Add & Update
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input 
+                         checked={deletePermissionLevel}
+                         onChange={()=>{
+                            setDeletePermissionLevel(document.getElementById('deletePermission').checked);
+                        }}
+                         class="form-check-input" type="checkbox" value="3" id="deletePermission"/>
+                        <label class="form-check-label" for="deletePermission">
+                            Delete
+                        </label>
+                    </div>
                 </div>
                 <button type="submit"  className="btn btn-primary shadow-none">Save</button>
             </form>
