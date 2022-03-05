@@ -25,12 +25,8 @@ const generateDefaultEditorRow = (rows)=>{
 }
 
 const UploadContent = () => {
-    const [openRoleModal ,setOpenRoleModal] = useState(false);
-    const [staffList ,setStaffList] = useState(null);
-    const [roles ,setRoles] = useState([]);
-    const [roleName ,setRoleName] = useState("");
-    const [roleVal ,setRoleVal] = useState(1);
-    const [roleId ,setRoleId] = useState(null);
+    const [showListModal ,setShowListModal] = useState(false);
+    const [fileOutlookItem ,setFileOutlookItem] = useState("");
     const [fileName, setFileName] = React.useState(null);
     const [file, setFile] = React.useState(null);
     const [editorData, setEditorData] = React.useState(generateDefaultEditorRow(5))
@@ -159,67 +155,59 @@ const UploadContent = () => {
     }, [editorData]);
 
     const processFile = async () => {
-          setFileIsProcessing(true);
-          if (file) {
-            const data = new FormData();
-            data.append("TrackingWorkSheet", file[0]);
-            data.append("Name", fileName);
-            data.append("UserId", "1");
-            data.append("UserName", "Usman");
-            axios
-              .post(
-                "import-process",
-                data,
-                {}
-              )
-              .then((res) => {
-                clearInterval(interval);
+          var processDate = document.getElementById("processDate").value;
+          if(processDate.length === 0 ){
+            sweetAlertError("Process Date Required", "To process file date is required field")
+          } else{
+            setFileIsProcessing(true);
+            if (file) {
+                const data = new FormData();
+                data.append("TrackingWorkSheet", file[0]);
+                data.append("Name", fileName);
+                data.append("UserId", "1");
+                data.append("UserName", "Usman");
+                data.append("processDate", processDate);
                 axios
-                  .get(
-                    "import-process/data",
+                .post(
+                    "import-process",
+                    data,
                     {}
-                  )
-                  .then((res) => {
-                    successToast("Process Initiated", "File is processing successfully")
-                    console.log(res.data);
-                     if (Array.isArray(res.data.trackingData)) {
-                    if (res.data.trackingData.length > 0) {
-                        setProcessedRows(res.data.trackingData)
-                    }
-                  }
-                  });
-              });
-            const interval = setInterval(() => {
-              axios
-                .get(
-                  "import-process/data",
-                  {}
                 )
                 .then((res) => {
-                     if (Array.isArray(res.data.trackingData)) {
-                    if (res.data.trackingData.length > 0) {
-                        setProcessedRows(res.data.trackingData)
+                    clearInterval(interval);
+                    axios
+                    .get(
+                        "import-process/data",
+                        {}
+                    )
+                    .then((res) => {
+                        successToast("Process Initiated", "File is processing successfully")
+                        console.log(res.data);
+                        if (Array.isArray(res.data.trackingData)) {
+                        if (res.data.trackingData.length > 0) {
+                            setProcessedRows(res.data.trackingData)
+                        }
                     }
-                  }
+                    });
                 });
-            }, 20000);
+                const interval = setInterval(() => {
+                axios
+                    .get(
+                    "import-process/data",
+                    {}
+                    )
+                    .then((res) => {
+                        if (Array.isArray(res.data.trackingData)) {
+                        if (res.data.trackingData.length > 0) {
+                            setProcessedRows(res.data.trackingData)
+                        }
+                    }
+                    });
+                }, 20000);
+            }
           }
     }
     
-    const openAddEditRoleModal = (data)=>{
-        console.log(data)
-        if(data){
-            setRoleName(data.role);
-            setRoleVal(data.permission_level);
-            setRoleId(data.id);
-        } else{
-            setRoleName("");
-            setRoleVal(1);
-            setRoleId(null);
-        }
-        setOpenRoleModal(true);
-    }
-
     return (
         <div className="ms-content-wrapper">
             <div className="row">
@@ -249,7 +237,10 @@ const UploadContent = () => {
                             fileOutlook?
                                 fileIsProcessing?
                                 <div className="d-flex justify-content-center flex-column align-items-center mt-5">
-                                <CircleProgress progress={parseInt((processedRows.length/ parseInt(fileOutlook.total))*100)} />
+                                <div className="progress" style={{width:'100%'}}>
+                                    <div className="progress-bar bg-success" role="progressbar" style={{ width: `${parseInt((processedRows.length/ parseInt(fileOutlook.totalCount))*100)}%` }} aria-valuenow={parseInt((processedRows.length/ parseInt(fileOutlook.totalCount))*100)} aria-valuemin={0} aria-valuemax={100}>{parseInt((processedRows.length/ parseInt(fileOutlook.totalCount))*100)}%</div>
+                                </div>
+                                {/* <CircleProgress progress={parseInt((processedRows.length/ parseInt(fileOutlook.totalCount))*100)} /> */}
                                     {/* <div className="col-md-6">
                                         <div className="progress-rounded">
                                             <div className="progress-value">{parseInt((processedRows.length/ parseInt(fileOutlook.total))*100)}%</div>
@@ -302,41 +293,52 @@ const UploadContent = () => {
                                     </div>
                                     <div className="row d-flex justify-content-center">
                                         <div className="col-xl-3 col-lg-6 col-md-6">
-                                            <div className="ms-card ms-widget has-graph-full-width ms-infographics-widget">
+                                            <div onClick={()=>{setFileOutlookItem("total");setShowListModal(true)}} className="ms-card ms-widget has-graph-full-width ms-infographics-widget">
                                                 {/* <span className="ms-chart-label bg-black"><i className="material-icons">arrow_upward</i> 3.2%</span> */}
                                                 <div className="ms-card-body media">
                                                     <div className="media-body d-flex flex-column align-items-center justify-content-center">
                                                         <span className="black-text text-primary"><strong>Total Trackings</strong></span>
-                                                        <h2 className='text-secondary'>{fileOutlook.total}</h2>
+                                                        <h2 className='text-secondary'>{fileOutlook.totalCount?fileOutlook.totalCount:0}</h2>
                                                     </div>
                                                 </div>
                                                 {/* <LineChart data={this.state.data1} options={options} /> */}
                                             </div>
                                         </div>
                                         <div className="col-xl-3 col-lg-6 col-md-6">
-                                            <div className="ms-card ms-widget has-graph-full-width ms-infographics-widget">
+                                            <div onClick={()=>{setFileOutlookItem("duplicates");setShowListModal(true)}} className="ms-card ms-widget has-graph-full-width ms-infographics-widget">
                                                 {/* <span className="ms-chart-label bg-red"><i className="material-icons">arrow_downward</i> 4.5%</span> */}
                                                 <div className="ms-card-body media">
                                                     <div className="media-body d-flex flex-column align-items-center justify-content-center">
                                                         <span className="black-text text-primary"><strong>Dubplicate Trackings</strong></span>
-                                                        <h2 className='text-secondary'>{fileOutlook.duplicatesCount}</h2>
+                                                        <h2 className='text-secondary'>{fileOutlook.duplicatesCount?fileOutlook.total:0}</h2>
                                                     </div>
                                                 </div>
                                                 {/* <LineChart data={this.state.data2} options={options} /> */}
                                             </div>
                                         </div>
                                         <div className="col-xl-3 col-lg-6 col-md-6">
-                                            <div className="ms-card ms-widget has-graph-full-width ms-infographics-widget">
+                                            <div onClick={()=>{setFileOutlookItem("uinque");setShowListModal(true)}} className="ms-card ms-widget has-graph-full-width ms-infographics-widget">
                                                 {/* <span className="ms-chart-label bg-red"><i className="material-icons">arrow_downward</i> 4.5%</span> */}
                                                 <div className="ms-card-body media">
                                                     <div className="media-body d-flex flex-column align-items-center justify-content-center">
                                                         <span className="black-text text-primary"><strong>Unique Trackings</strong></span>
-                                                        <h2 className='text-secondary'>{fileOutlook.uinque}</h2>
+                                                        <h2 className='text-secondary'>{fileOutlook.uinqueCount?fileOutlook.uinqueCount:0}</h2>
                                                     </div>
                                                 </div>
                                                 {/* <LineChart data={this.state.data2} options={options} /> */}
                                             </div>
                                         </div>
+                                    </div>
+                                    <div className='row'>
+                                    <div class="form-group col-xl-1 col-md-12"></div>
+                                        <div class="form-group col-xl-4 col-md-12">
+                                            <div className="ml-5 mr-5 mt-5">
+                                                <label>Process Date<span className="text-danger">&nbsp;*</span></label>
+                                                <input type="date" className='form-control' id="processDate" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-xl-3 col-md-12"></div>
+                                        <div class="form-group col-xl-3 col-md-12"></div>
                                     </div>
                                         <div className='d-flex mt-5 justify-content-center'>
                                             <button type="button" onClick={processFile}  className="m-2 btn btn-success has-icon"><i className="flaticon-start" />Process File</button>
@@ -437,6 +439,25 @@ const UploadContent = () => {
                     </div>
                 </div>
             </div>
+            <Modal className="modal-min" show={showListModal} onHide={()=>setShowListModal(false)} aria-labelledby="contained-modal-title-vcenter" >
+                <Modal.Body className="text-center">
+                    <button type="button" className="close" onClick={()=>setShowListModal(false)}><span aria-hidden="true">×</span></button>
+                    <h1 className="text-secondary">{fileOutlookItem.toString().toUpperCase()}</h1>
+                    <div style={{marginTop:"20px", marginBottom:"10px"}} >
+                    {   
+                    fileOutlook &&
+                        fileOutlook[fileOutlookItem] ?
+                        fileOutlook[fileOutlookItem].map((item, index)=>{
+                            return (
+                                <p>{index+1})&nbsp;&nbsp;&nbsp;{item}</p>
+                            );
+                        })
+                        :
+                        <></>
+                    }
+                    </div>
+                </Modal.Body>
+            </Modal>
         </div>
     );
 };

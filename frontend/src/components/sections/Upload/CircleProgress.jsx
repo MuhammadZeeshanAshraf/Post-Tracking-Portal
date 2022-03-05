@@ -21,6 +21,7 @@ class CircleProgress extends Component {
     render() {
         return (
         <div className="col-md-6">
+
             <div className="progress-rounded progress-round-tiny">
                 <div className="progress-value">{this.props.progress}%</div>
                 <svg>

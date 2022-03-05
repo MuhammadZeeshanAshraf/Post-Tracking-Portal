@@ -1,20 +1,14 @@
 import React, { useEffect } from 'react';
 import Breadcrumb from './Breadcrumb'
-import { Link } from 'react-router-dom';
-import { Modal } from 'react-bootstrap';
 import { useState } from 'react';
 import axios from 'axios';
-import { sweetAlertError, sweetAlertSuccess } from '../../utility/common';
+import { sweetAlertError } from '../../utility/common';
 import Switch from '../../common/Switch';
 import RoleSelect from '../../common/RoleSelect';
 
 const StaffContent = () => {
-    const [openRoleModal ,setOpenRoleModal] = useState(false);
     const [staffList ,setStaffList] = useState(null);
     const [roles ,setRoles] = useState([]);
-    const [roleName ,setRoleName] = useState("");
-    const [roleVal ,setRoleVal] = useState(1);
-    const [roleId ,setRoleId] = useState(null);
 
     const getStaff  =  async ()=>{
         axios.get('/user')
@@ -50,52 +44,7 @@ const StaffContent = () => {
          fetchData();
     }, []);
 
-    const openAddEditRoleModal = (data)=>{
-        console.log(data)
-        if(data){
-            setRoleName(data.role);
-            setRoleVal(data.permission_level);
-            setRoleId(data.id);
-        } else{
-            setRoleName("");
-            setRoleVal(1);
-            setRoleId(null);
-        }
-        setOpenRoleModal(true);
-    }
-
-    const handleSubmit = (event)=>{
-        event.preventDefault();
-        
-        let endPOint = 'role/add';
-        let action = "Add";
-
-        let data = {
-            role: roleName,
-            permission_level: roleVal
-          }
-        
-          if(roleId){ //editcase
-            data["id"] = roleId;
-            endPOint = 'role/update';
-            action = "Edit"
-        } 
-        axios.post(endPOint, data )
-          .then(function (response) {
-            setOpenRoleModal(false);
-            if(response.data.roleId){
-                sweetAlertSuccess(`Role ${action} Successfully`)
-            } else if(response.data.message){
-                sweetAlertError("Oops", "Error in saving role, please try again");
-            }
-          })
-          .catch(function (error) {
-            sweetAlertError("Oops", "Error connecting with server, please try agian");
-        });
-    }
-
     return (
-        <>
         <div className="ms-content-wrapper">
         <div className="row">
             <div className="col-md-12">
@@ -106,17 +55,6 @@ const StaffContent = () => {
                             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
                                 <h5 class="h5">Staff Page</h5>
                                 <div class="btn-toolbar mb-2 mb-md-0">
-                                <div class="mr-3">
-                                    <button className="btn btn-success" onClick={openAddEditRoleModal}> Add New Role </button>
-                                </div>
-                                    {/* <div class="btn-group mr-2">
-                                        <button class="btn btn-danger" type="button"
-                                                onclick="onPublishUnpublish('publish')">Publish
-                                        </button>
-                                        <button class="btn btn-danger" type="button"
-                                                onclick="onPublishUnpublish('unpublish')">Unpublish
-                                        </button>
-                                    </div> */}
                                 </div>
                             </div>
                         </div>
@@ -184,28 +122,6 @@ const StaffContent = () => {
             </div>
         </div>
     </div>
-    <Modal className="modal-min" show={openRoleModal} onHide={()=>setOpenRoleModal(false)} aria-labelledby="contained-modal-title-vcenter" centered>
-        <Modal.Body className="text-center">
-            <button type="button" className="close" onClick={()=>setOpenRoleModal(false)}><span aria-hidden="true">×</span></button>
-            <i className="flaticon-user d-block" />
-            <h1> {roleId ? "Edit" : "Add" } Role</h1>
-            <form id="formAddEditRole" onSubmit={handleSubmit}>
-                <input type="hidden" name="id" value={roleId} />
-                <div className="ms-form-group has-icon">
-                    <input  value={roleName} onChange={(e)=>setRoleName(e.target.value)} required type="text" placeholder="Role Name" className="form-control" name="role" />
-                </div>
-                <div className="ms-form-group has-icon">
-                    <select onChange={e => setRoleVal(e.target.value)} value={roleVal} className="form-control" name="permission_level">
-                        <option value="1">Permission Level 1</option>
-                        <option value="2">Permission Level 2</option>
-                        <option value="3">Permission Level 3</option>
-                    </select>
-                </div>
-                <button type="submit"  className="btn btn-primary shadow-none">Save</button>
-            </form>
-        </Modal.Body>
-    </Modal>
-</>
     );
 };
 
