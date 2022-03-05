@@ -4,6 +4,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useHistory } from 'react-router-dom';
+import { sweetAlertError} from '../../utility/common';
+
 
 const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -32,23 +34,39 @@ const validationSchema = Yup.object().shape({
         .required('Mother Name is required'),
 });
   
-const register = (values)=>{
-    axios.post('/user/register', values)
-    .then(function (response) {
-      return response;
-    })
-    .catch(function (error) {
-      console.log(error);
-  });
-}
 const RegForm = () => {
     const history = useHistory();
+  
+    const register = (values)=>{
+        var formData  = new FormData();
+        for ( var key in values ) {
+            formData.append(key, values[key]);
+        }
+        formData.append("profile_image", )
+        axios({
+            method: "post",
+            url: '/user/register',
+            data: formData,
+            headers: { "Content-Type": "multipart/form-data" },
+          })
+            .then(function (response) {
+                console.log(response)
+                if(response.userId){
+                    history.push('/otp')
+                } else{
+                    sweetAlertError("Error", response.error);
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                sweetAlertError("Error", "Error connecting to server please try agin");
+        });
+    }
     return (
         <Formik
          validationSchema={validationSchema}
          onSubmit={(values) => {
             register(values);
-            history.push('/otp')
           }}
          initialValues={{
            name: '',
@@ -79,7 +97,7 @@ const RegForm = () => {
                 <div className="ms-auth-col">
                     <div className="ms-auth-form">
                         <form   style={{height:"90%", marginBottom:'20px' }} noValidate>
-                            {/* <h3>Create Account</h3>
+                            <h3>Create Account</h3>
                             <p>Please enter personal information to continue</p>
                             <div className="form-row">
                                 <div className="col-md-12 ">
@@ -98,7 +116,7 @@ const RegForm = () => {
                                         </div>
                                     </div>
                                 </div>
-                            </div> */}
+                            </div>
                             <div className="form-row">
                                 <div className="col-md-12 ">
                                     <label>Email Address</label>

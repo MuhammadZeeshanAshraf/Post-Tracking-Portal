@@ -6,7 +6,7 @@ import Scrollbar from 'react-perfect-scrollbar'
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import peopleLogo from '../../assets/img/costic/customer-6.jpg'
 import costiclogo from '../../assets/img/costic/costic-logo-84x41.png'
-// import ProfileModal from '../common/ProfileModal';
+import ProfileModal from '../common/ProfileModal';
 
 const Topnavigation = () => {
 
@@ -30,8 +30,8 @@ const Topnavigation = () => {
                  <Modal show={topNavigationShowModal} >
                 <Modal.Body>
                     {/* <button type="button" className="close"><span aria-hidden="false">×</span></button> */}
-                    <Button>sdfds</Button>
-                    {/* <ProfileModal /> */}
+                    <Button onClick={handleProfileView}>sdfds</Button>
+                    <ProfileModal />
                 </Modal.Body>
             </Modal>
             <nav className="navbar ms-navbar">
@@ -44,27 +44,7 @@ const Topnavigation = () => {
                     <Link className="pl-0 ml-0 text-center navbar-brand mr-0" to="/"><img src={costiclogo} alt="logo" /> </Link>
                 </div>
                 <ul className="ms-nav-list ms-inline mb-0" id="ms-nav-options">
-                    {/* <li className="ms-nav-item ms-search-form pb-0 py-0">
-                        <form className="ms-form" method="post">
-                            <div className="ms-form-group my-0 mb-0 has-icon fs-14">
-                                <input type="search" className="ms-form-input" name="search" placeholder="Search here..." /> <i className="flaticon-search text-disabled" />
-                            </div>
-                        </form>
-                    </li>
-                    <li className="ms-nav-item dropdown">
-                        <Dropdown className="custom-dropdown">
-
-                            <Dropdown.Toggle as={NavLink} className="text-disabled ms-has-notification p-0" ><i className="flaticon-mail" /></Dropdown.Toggle>
-                            <Dropdown.Menu className="dropdown-menu dropdown-menu-right" aria-labelledby="mailDropdown">
-                                <div className="dropdown-menu-header">
-                                    <h6 className="dropdown-header ms-inline m-0"><span className="text-disabled">Mail</span></h6><span className="badge badge-pill badge-success">3 New</span>
-                                    <Modal show={topNavigationShowModal} >
-                <Modal.Body>
-                    {/* <button type="button" className="close"><span aria-hidden="false">×</span></button> */}
-                    <Button>sdfds</Button>
-                    {/* <ProfileModal /> */}
-                </Modal.Body>
-            </Modal>     <Link className="media p-2" to="#">
+                  {/* <Link className="media p-2" to="#">
                                         <div className="ms-chat-status ms-status-offline ms-chat-img mr-2 align-self-center">
                                             <img src="assets/img/costic/customer-3.jpg" className="ms-img-round" alt="people" />
                                         </div>
@@ -95,7 +75,7 @@ const Topnavigation = () => {
                             </Dropdown.Menu>
 
                         </Dropdown>
-                    </li> */}
+                    </li>  */}
                     <li className="ms-nav-item dropdown">
                         <Dropdown className="custom-dropdown">
                             <Dropdown.Toggle as={NavLink} className="text-disabled ms-has-notification p-0"><i className="flaticon-bell" /></Dropdown.Toggle>
