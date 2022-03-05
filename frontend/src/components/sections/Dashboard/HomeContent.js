@@ -209,7 +209,7 @@ const HomeContent = () => {
                             <div className="ms-panel-body">
                                 <div className="pieChartDiv">
                                 <Chart
-                                    height={'340px'}
+                                    height={'303px'}
                                     chartType="PieChart"
                                     loader={<div>Load ing Chart</div>}
                                     data={[
