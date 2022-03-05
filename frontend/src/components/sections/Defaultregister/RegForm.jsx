@@ -78,6 +78,7 @@ const RegForm = () => {
            mother_name:'',
            password: '',
            confirmPassword: '',
+           profile_image : null,
             }}
         >
         {({
@@ -99,6 +100,41 @@ const RegForm = () => {
                         <form   style={{height:"90%", marginBottom:'20px' }} noValidate>
                             <h3>Create Account</h3>
                             <p>Please enter personal information to continue</p>
+                            <div className="form-row">
+                                <div className="col-md-12 ">
+                                    {
+                                    values.profile_image?                                    
+                                        <img 
+                                            style={{
+                                                width: 200,
+                                                height: 200,
+                                                borderRadius: 200 / 2,
+                                                borderColor: 'gray',
+                                                borderWidth: 2,
+                                            }}
+                                            source={URL.createObjectURL(values.profile_image)}
+                                            alt="profile image"
+                                        />
+                                        :
+                                        <></>
+                                    }
+                                    <label>Profile Image</label>
+                                    <div className="input-group">
+                                        <input 
+                                         id="image"
+                                         accept="image/*"
+                                         type="file" 
+                                         className={`form-control ${touched.profile_image && errors.profile_image ? 'is-invalid' : ''}`} 
+                                         name="profile_image"
+                                         value={values.profile_image}
+                                         onChange={handleChange}
+                                         required />
+                                       <div className="invalid-feedback">
+                                            {errors.profile_image}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div className="form-row">
                                 <div className="col-md-12 ">
                                     <label>Name</label>
