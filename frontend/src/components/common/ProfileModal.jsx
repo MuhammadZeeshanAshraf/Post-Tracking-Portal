@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Formik } from 'formik';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useHistory } from 'react-router-dom';
@@ -41,8 +41,28 @@ const register = (values)=>{
       console.log(error);
   });
 }
-const RegForm = () => {
+
+
+const ProfileModal = () => {
+    const [data, setData] =  useState([]);
     const history = useHistory();
+
+    useEffect(()=>{
+        axios.get('user/login')
+        .then(function (response) {
+            let user_status = response.data;
+            if (user_status.loggedIn) {
+                setData(response.data.user);
+            } else {
+                
+            }
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        });
+    },[]);
+
     return (
         <Formik
          validationSchema={validationSchema}
@@ -50,17 +70,7 @@ const RegForm = () => {
             register(values);
             history.push('/otp')
           }}
-         initialValues={{
-           name: '',
-           primary_phone: '',
-           alternative_phone:'',
-           dob: '',
-           email: '',
-           father_name:'',
-           mother_name:'',
-           password: '',
-           confirmPassword: '',
-            }}
+         initialValues={data}
         >
         {({
           handleSubmit,
@@ -74,31 +84,25 @@ const RegForm = () => {
         <div className="ms-content-wrapper ms-auth">
             <div className="ms-auth-container">
                 <div className="ms-auth-col">
-                    <div className="ms-auth-bg" />
-                </div>
-                <div className="ms-auth-col">
                     <div className="ms-auth-form">
-                        <form   style={{height:"90%", marginBottom:'20px' }} noValidate>
-                            {/* <h3>Create Account</h3>
-                            <p>Please enter personal information to continue</p>
-                            <div className="form-row">
-                                <div className="col-md-12 ">
-                                    <label>Name</label>
-                                    <div className="input-group">
-                                        <input 
-                                         type="text" 
-                                         className={`form-control ${touched.name && errors.name ? 'is-invalid' : ''}`} 
-                                         placeholder="Name" 
-                                         name="name"
-                                         value={values.name}
-                                         onChange={handleChange}
-                                         required />
-                                       <div className="invalid-feedback">
-                                            {errors.name}
-                                        </div>
+                        <form noValidate>
+                            <h3>Profile</h3>
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-2 col-form-label">Name</label>
+                                <div class="col-sm-10">
+                                    <input
+                                        type="text" 
+                                        className={`form-control ${touched.name && errors.name ? 'is-invalid' : ''}`} 
+                                        placeholder="Name" 
+                                        name="name"
+                                        value={values.name}
+                                        onChange={handleChange}
+                                        required />
+                                    <div className="invalid-feedback">
+                                        {errors.name}
                                     </div>
                                 </div>
-                            </div> */}
+                            </div>
                             <div className="form-row">
                                 <div className="col-md-12 ">
                                     <label>Email Address</label>
@@ -258,4 +262,4 @@ const RegForm = () => {
     );
 }
 
-export default RegForm;
+export default ProfileModal;

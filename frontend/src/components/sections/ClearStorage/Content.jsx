@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Breadcrumb from './Breadcrumb'
 import { Modal } from 'react-bootstrap';
 import { useState } from 'react';

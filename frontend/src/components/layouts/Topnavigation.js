@@ -1,26 +1,41 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom'
 import $ from 'jquery';
-import { Dropdown, NavLink } from 'react-bootstrap';
+import { Button, Dropdown, Modal, NavLink } from 'react-bootstrap';
 import Scrollbar from 'react-perfect-scrollbar'
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import peopleLogo from '../../assets/img/costic/customer-6.jpg'
 import costiclogo from '../../assets/img/costic/costic-logo-84x41.png'
+// import ProfileModal from '../common/ProfileModal';
 
-class Topnavigation extends Component {
-    addsidenavigation = () => {
+const Topnavigation = () => {
+
+    const [topNavigationShowModal, settopNavigationShowModal]  = useState(false);
+
+    const addsidenavigation = () => {
         $('.ms-body').toggleClass('ms-aside-left-open');
         $('#ms-side-nav').toggleClass('ms-aside-open');
         $(".ms-aside-overlay.ms-overlay-left").toggleClass('d-block');
     }
-    topbaropen = () => {
+    const topbaropen = () => {
         $('#ms-nav-options').toggleClass('ms-slide-down');
     }
 
-    render() {
+    const handleProfileView = async (id) => {
+        settopNavigationShowModal(!topNavigationShowModal);
+     };
+
         return (
+            <>
+                 <Modal show={topNavigationShowModal} >
+                <Modal.Body>
+                    {/* <button type="button" className="close"><span aria-hidden="false">×</span></button> */}
+                    <Button>sdfds</Button>
+                    {/* <ProfileModal /> */}
+                </Modal.Body>
+            </Modal>
             <nav className="navbar ms-navbar">
-                <div className="ms-aside-toggler ms-toggler pl-0" onClick={this.addsidenavigation}>
+                <div className="ms-aside-toggler ms-toggler pl-0" onClick={addsidenavigation()}>
                     <span className="ms-toggler-bar bg-primary" />
                     <span className="ms-toggler-bar bg-primary" />
                     <span className="ms-toggler-bar bg-primary" />
@@ -43,10 +58,13 @@ class Topnavigation extends Component {
                             <Dropdown.Menu className="dropdown-menu dropdown-menu-right" aria-labelledby="mailDropdown">
                                 <div className="dropdown-menu-header">
                                     <h6 className="dropdown-header ms-inline m-0"><span className="text-disabled">Mail</span></h6><span className="badge badge-pill badge-success">3 New</span>
-                                </div>
-                                <div className="dropdown-divider" />
-                                <Scrollbar className="ms-scrollable ms-dropdown-list">
-                                    <Link className="media p-2" to="#">
+                                    <Modal show={topNavigationShowModal} >
+                <Modal.Body>
+                    {/* <button type="button" className="close"><span aria-hidden="false">×</span></button> */}
+                    <Button>sdfds</Button>
+                    {/* <ProfileModal /> */}
+                </Modal.Body>
+            </Modal>     <Link className="media p-2" to="#">
                                         <div className="ms-chat-status ms-status-offline ms-chat-img mr-2 align-self-center">
                                             <img src="assets/img/costic/customer-3.jpg" className="ms-img-round" alt="people" />
                                         </div>
@@ -125,7 +143,7 @@ class Topnavigation extends Component {
                                 </div>
                                 <div className="dropdown-divider" />
                                 <div className="ms-dropdown-list">
-                                    <Link className="media fs-14 p-2" to="/user-profiles"> <span><i className="flaticon-user mr-2" /> Profile</span>
+                                    <Link className="media fs-14 p-2" onClick={()=>handleProfileView()}> <span><i className="flaticon-user mr-2" /> Profile</span>
                                     </Link>
                                     {/* <Link className="media fs-14 p-2" to="/email"> <span><i className="flaticon-mail mr-2" /> Inbox</span> <span className="badge badge-pill badge-info">3</span>
                                     </Link>
@@ -145,14 +163,15 @@ class Topnavigation extends Component {
                         </Dropdown>
                     </li>
                 </ul>
-                <div className="ms-toggler ms-d-block-sm pr-0 ms-nav-toggler" onClick={this.topbaropen}>
+                <div className="ms-toggler ms-d-block-sm pr-0 ms-nav-toggler" onClick={topbaropen()}>
                     <span className="ms-toggler-bar bg-primary" />
                     <span className="ms-toggler-bar bg-primary" />
                     <span className="ms-toggler-bar bg-primary" />
                 </div>
             </nav >
+        
+            </>
         );
-    }
 }
 
 export default Topnavigation;
