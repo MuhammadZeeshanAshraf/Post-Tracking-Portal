@@ -41,7 +41,7 @@ router.post(
   /* validator.exportTracking , */ asyncHandler(userController.otpVerfication)
 );
 
-router.post(
+router.patch(
   '/activeController',
   upload.single(''),
   /* validator.exportTracking , */ asyncHandler(userController.activationControlller)
