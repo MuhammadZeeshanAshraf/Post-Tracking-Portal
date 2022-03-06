@@ -165,3 +165,23 @@ export const getAllUsers = async (request, response, next) => {
     });
   }
 };
+
+export const activationControlller = async (request, response, next) => {
+  try {
+    const { id, active } = request.body;
+    delete request.body.id;
+    await models.generalDatabaseFunction.updateSingleRowWithReturn(
+      SCHEMA,
+      TABLE_DETAILS.users.name,
+      request.body,
+      { id: id }
+    );
+    response.send({
+      userId: id
+    });
+  } catch (error) {
+    return response.status(400).send({
+      message: error.message
+    });
+  }
+};
