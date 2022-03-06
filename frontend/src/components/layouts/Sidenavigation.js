@@ -1,24 +1,27 @@
-import React, { Component } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom'
 import $ from 'jquery';
 import Scrollbar from 'react-perfect-scrollbar'
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import logo from '../../assets/img/costic/logo.png';
+import { UserContext } from '../../custom_hooks/UserContext';
 
-class Sidenavigation extends Component {
-
-    adddarkmode = (e) => {
+const Sidenavigation = () => {
+    const {user, setUser} = useContext(UserContext);
+    const adddarkmode = (e) => {
         var elem = e.target,
         parentTask = elem.closest('.ms-body');
         $(parentTask).toggleClass('ms-dark-theme');
     }
-    removeoverlay = () => {
+    const removeoverlay = () => {
         $('.ms-body').toggleClass('ms-aside-left-open');
         $('#ms-side-nav').toggleClass('ms-aside-open');
         $(".ms-aside-overlay.ms-overlay-left").toggleClass('d-block');
     }
-    componentDidMount() {
-        function setActiveMenuItem() {
+
+    useEffect(()=>{
+        console.log("user=",user);
+        const  setActiveMenuItem = ()=> {
             $('.ms-main-aside .menu-item>a').on('click', function () {
                 $(this).removeAttr('href');
                 var element = $(this).parent('li');
@@ -37,11 +40,11 @@ class Sidenavigation extends Component {
             });
         }
         setActiveMenuItem();
-    }
-    render() {
+    }, []);
+
         return (
             <div>
-                <div className="ms-aside-overlay ms-overlay-left ms-toggler" onClick={this.removeoverlay}></div>
+                <div className="ms-aside-overlay ms-overlay-left ms-toggler" onClick={removeoverlay}></div>
                 <div className="ms-aside-overlay ms-overlay-right ms-toggler"></div>
                 <Scrollbar id="ms-side-nav" className="side-nav fixed ms-aside-scrollable ms-aside-left">
                     {/* Logo */}
@@ -56,9 +59,15 @@ class Sidenavigation extends Component {
                         <li className="menu-item">
                             <Link to="/dashboard"> <span><i className="material-icons fs-16" >dashboard</i>Dashboard </span></Link>
                         </li>
-                        <li className="menu-item">
-                            <Link to="/uploadFile"> <span><i className="fa fa-tasks fs-16" ></i>Process Trackings</span></Link>
-                        </li>
+                        {
+                            user.roleDetails.permission_level != 1?
+
+                            <li className="menu-item">
+                                <Link to="/processTrackings"> <span><i className="fa fa-tasks fs-16" ></i>Process Trackings</span></Link>
+                            </li>
+                            :
+                            <></>
+                        }
                         {/* Records */}
                         <li className="menu-item">
                             <Link to="#" className="has-chevron"> <span><i className="fa fa-archive fs-16" />Records </span>
@@ -89,30 +98,42 @@ class Sidenavigation extends Component {
                             <Link to="/comingSoon"> <span><i className="material-icons md-36" >redeem</i>Coupun</span>
                             </Link>
                         </li >
-                        <li className="menu-item">
-                            <Link to="#" className="has-chevron"> <span><i className="material-icons fs-16" >group</i>Our Staff </span>
-                            </Link>
-                            <ul id="ourStaff" className="collapse" aria-labelledby="ourStaff" data-parent="#side-nav-accordion">
-                                <li> <Link to="/staff" >Staff</Link>
-                                </li>
-                                <li> <Link to="/roles" >Roles</Link>
-                                </li>
-                                <li> <Link to="/userLoginRecords" >User Login Records</Link>
-                                </li>
-                                <li> <Link to="/userDocumentRecords" >User Documents Uploaded Records</Link>
-                                </li>
-                            </ul >
-                        </li >
+                        {
+                            user.roleDetails.permission_level == 3?
+                           
+                            <li className="menu-item">
+                                <Link to="#" className="has-chevron"> <span><i className="material-icons fs-16" >group</i>Our Staff </span>
+                                </Link>
+                                <ul id="ourStaff" className="collapse" aria-labelledby="ourStaff" data-parent="#side-nav-accordion">
+                                    <li> <Link to="/staff" >Staff</Link>
+                                    </li>
+                                    <li> <Link to="/roles" >Roles</Link>
+                                    </li>
+                                    <li> <Link to="/userLoginRecords" >User Login Records</Link>
+                                    </li>
+                                    <li> <Link to="/userDocumentRecords" >User Documents Uploaded Records</Link>
+                                    </li>
+                                </ul >
+                            </li >
+                             :
+                             <></>
+                         }
                         <li className="menu-item">
                             <Link to="#" className="has-chevron">
                                 <span><i className="material-icons fs-20" >settings</i>Settings</span>
                             </Link>
                             <ul id="setting" className="collapse" aria-labelledby="setting" data-parent="#side-nav-accordion">
-                                <li> <Link to="/clearStorage" >Clear Storage</Link></li>
+                                {
+                                    user.roleDetails.permission_level == 3?
+
+                                    <li> <Link to="/clearStorage" >Clear Storage</Link></li>
+                                    :
+                                    <></>
+                                }
                                 <li>
                                     <span className="ml-4"> Dark Mode </span>
                                     <label className="ms-switch">
-                                        <input type="checkbox" id="dark-mode" onClick={this.adddarkmode} /> <span className="ms-switch-slider round" />
+                                        <input type="checkbox" id="dark-mode" onClick={adddarkmode} /> <span className="ms-switch-slider round" />
                                     </label>
                                 </li>
                             </ul >
@@ -123,7 +144,6 @@ class Sidenavigation extends Component {
                 </Scrollbar >
             </div >
         );
-    }
 }
 
 export default Sidenavigation;
