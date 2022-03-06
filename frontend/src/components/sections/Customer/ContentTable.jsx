@@ -7,6 +7,7 @@ import axios from 'axios';
 import { Modal } from 'react-bootstrap';
 import CustomerModal from './CustomerModal';
 import download from "downloadjs";
+import { sweetAlertError, sweetAlertSuccess } from '../../utility/common';
 
 const ContentTable = ({sDate, eDate})=> {
 
@@ -15,6 +16,9 @@ const ContentTable = ({sDate, eDate})=> {
     const [fileName, setFileName] = useState([]); 
     // const [loading, setLoading]  = useState(false);
     const [showModal, setShowModal]  = useState(false);
+    const [messageTitle , setMessageTitle] = useState("");
+    const [messageContent , setMessageContent] = useState("");
+    const [showMessageModal ,setShowMessageModal] = useState(false);
     // const [startDate, setStartDate]= useState('');
     // const [endDate, setEndDate]= useState('');
 
@@ -72,6 +76,21 @@ const ContentTable = ({sDate, eDate})=> {
             console.log(error);
         });
     };
+    
+    const handleSendMessage = ()=>{
+        axios.post('/user/activeController')
+          .then(async (response)=> {
+            setShowMessageModal(false);
+            if(response.data.messageSent){
+                sweetAlertSuccess(`${messageTitle}: Message Sent Successfully`)
+            } else if(response.data.message){
+                sweetAlertError("Oops", "Error in saving role, please try again");
+            }
+          })
+          .catch(function (error) {
+            sweetAlertError("Oops", "Error connecting with server, please try agian");
+        });
+    }
     
     useEffect(()=>{
         $('#customerTable').DataTable({
@@ -153,7 +172,14 @@ const ContentTable = ({sDate, eDate})=> {
                     </div>
                     <div className="ms-panel">
                         <div className="ms-panel-header">
+                        <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
                             <h6>Customer</h6>
+                            <div class="btn-toolbar mb-2 mb-md-0">
+                                <div class="mr-3">
+                                    <button className="btn btn-success" onClick={()=>setShowMessageModal(true)}> Send Message </button>
+                                </div>
+                            </div>
+                        </div>
                         </div>
                         <div className="ms-panel-body">
                             <div className="table-responsive">
@@ -169,6 +195,22 @@ const ContentTable = ({sDate, eDate})=> {
             <Modal.Body className="text-center">
                 <button type="button" className="close" onClick={()=>setShowModal(false)}><span aria-hidden="true">×</span></button>
                 <CustomerModal processId={processId} fileName={fileName} />
+            </Modal.Body>
+        </Modal>
+        <Modal className="modal-min" show={showMessageModal} onHide={()=>setShowMessageModal(false)} aria-labelledby="contained-modal-title-vcenter" centered>
+            <Modal.Body className="text-center">
+                <button type="button" className="close" onClick={()=>setShowMessageModal(false)}><span aria-hidden="true">×</span></button>
+                {/* <i className="flaticon-user d-block" /> */}
+                <h1>Message</h1>
+                <form id="formAddEditRole" onSubmit={handleSendMessage}>
+                    <div className="ms-form-group has-icon">
+                        <input onChange={(e)=>setMessageTitle(e.target.value)} required type="text" placeholder="Message title" className="form-control" name="messageTitle" />
+                    </div>
+                    <div className="ms-form-group has-icon">
+                        <textarea onChange={(e)=>setMessageContent(e.target.value)} required type="text" placeholder="Enter message text here..." rows="7" className="form-control" name="messageContent" />
+                    </div>
+                    <button type="submit"  className="btn btn-primary shadow-none">Send</button>
+                </form>
             </Modal.Body>
         </Modal>
         </>

@@ -4,19 +4,19 @@ import "../../assets/css/switch.css";
 import { errorToast, successToast } from "../utility/common";
 
 const Switch = ({ isOn, id , onColor }) => {
-   const [value , setValue] = useState(isOn);
+   const [value ,   setValue] = useState(isOn);
     return (
     <label style={{ background: "#eee" }} className="react-switch">
       <input
-        checked={value}
+        checked={value ==1 ? false : true}
         onChange={()=>{
-            setValue(!value);
-            axios.get('/user', {
-                id: id,
-                isActive: value
+            setValue(value ==1? 0 :1);
+            axios.post('/user/activeController', {
+                id: id+"",
+                active: value ==1? 0 :1
               })
               .then(function (response) {
-                if(response.data){
+                if(response.data.userId){
                     successToast("Success" ,"Successfully updated the status")
                 } else{
                     errorToast("Oops", "Error in updating the user status");
