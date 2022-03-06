@@ -170,15 +170,21 @@ export const activationControlller = async (request, response, next) => {
   try {
     const { id, active } = request.body;
     delete request.body.id;
-    await models.generalDatabaseFunction.updateSingleRowWithReturn(
+    const result = await models.generalDatabaseFunction.updateSingleRowWithReturn(
       SCHEMA,
       TABLE_DETAILS.users.name,
       request.body,
       { id: id }
     );
-    response.send({
-      userId: id
-    });
+    if (result) {
+      response.send({
+        userId: id
+      });
+    } else {
+      response.send({
+        message: 'Enable to activated user.'
+      });
+    }
   } catch (error) {
     return response.status(400).send({
       message: error.message
