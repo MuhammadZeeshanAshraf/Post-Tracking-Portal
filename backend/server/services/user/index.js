@@ -100,6 +100,13 @@ export const postLoginService = async (request, body, models, errorList) => {
                         error: message
                     };
                 } else {
+                    const roleDetails =
+                        await models.generalDatabaseFunction.getDatabySingleWhereColumn(
+                            SCHEMA,
+                            TABLE_DETAILS.roles.name,
+                            'id',
+                            users[0].role_id
+                        );
                     const check = bcrypt.compareSync(body.password, users[0].password);
                     if (check) {
                         const userlog = Object.assign({}, TABLE_DETAILS.userLogging.ddl);
@@ -109,7 +116,7 @@ export const postLoginService = async (request, body, models, errorList) => {
                         userlog.meta_data = JSON.stringify(users[0]);
                         userlog.login_at = moment(new Date()).format('YYYY-MM-DD hh:mm:ss A');
                         const id = await models.generalDatabaseFunction.insertSingleRowWithReturn(SCHEMA, TABLE_DETAILS.userLogging.name, userlog, 'id');
-
+                        users[0].roleDetails = roleDetails[0];
                         request.session.user = {
                             user: users[0],
                             loggingId: id[0]
