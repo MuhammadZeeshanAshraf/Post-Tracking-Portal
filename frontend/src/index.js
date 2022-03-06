@@ -15,7 +15,8 @@ import './assets/css/style.css';
 import axios from "axios";
 
 
-axios.defaults.baseURL = 'http://localhost:5000/post-tracking-portal/api/v1/';
+// axios.defaults.baseURL = 'http://localhost:5000/post-tracking-portal/api/v1/';
+axios.defaults.baseURL = 'https://exam360logistics.herokuapp.com/post-tracking-portal/api/v1/';
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
