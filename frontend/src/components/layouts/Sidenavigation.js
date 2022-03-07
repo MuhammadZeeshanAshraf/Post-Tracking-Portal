@@ -7,7 +7,9 @@ import logo from '../../assets/img/costic/logo.png';
 import { UserContext } from '../../custom_hooks/UserContext';
 
 const Sidenavigation = () => {
-    const {user, setUser} = useContext(UserContext);
+    const {user} = useContext(UserContext);
+//   const [cookies, setCookie] = useCookies(['user']);
+
     const adddarkmode = (e) => {
         var elem = e.target,
         parentTask = elem.closest('.ms-body');
@@ -60,7 +62,7 @@ const Sidenavigation = () => {
                             <Link to="/dashboard"> <span><i className="material-icons fs-16" >dashboard</i>Dashboard </span></Link>
                         </li>
                         {
-                            user.roleDetails.permission_level != 1?
+                            user.roleDetails?.permission_level != 1?
 
                             <li className="menu-item">
                                 <Link to="/processTrackings"> <span><i className="fa fa-tasks fs-16" ></i>Process Trackings</span></Link>
@@ -99,7 +101,7 @@ const Sidenavigation = () => {
                             </Link>
                         </li >
                         {
-                            user.roleDetails.permission_level == 3?
+                            user.roleDetails?.permission_level == 3?
                            
                             <li className="menu-item">
                                 <Link to="#" className="has-chevron"> <span><i className="material-icons fs-16" >group</i>Our Staff </span>
@@ -124,7 +126,7 @@ const Sidenavigation = () => {
                             </Link>
                             <ul id="setting" className="collapse" aria-labelledby="setting" data-parent="#side-nav-accordion">
                                 {
-                                    user.roleDetails.permission_level == 3?
+                                    user.roleDetails?.permission_level == 3?
 
                                     <li> <Link to="/clearStorage" >Clear Storage</Link></li>
                                     :

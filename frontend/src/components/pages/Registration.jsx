@@ -1,17 +1,20 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import RegForm from '../sections/Defaultregister/RegForm';
+import LoadingOverlay from 'react-loading-overlay';
 
-class Registration extends Component {
-    render() {
-        return (
-            <div className="ms-body ms-primary-theme ms-logged-out">
-                {/* <Sidenavigation /> */}
-                <main className="body-content">
-                    {/* <Topnavigation /> */}
-                    <RegForm/>
-                </main>
-            </div>
-        );
-    }
+const Registration= ()=> {
+    const [startLoading, setStartLoading] = useState(false);
+    return (
+        <LoadingOverlay
+            active={startLoading}
+            spinner
+            text='Saving ...'>
+        <div className="ms-body ms-primary-theme ms-logged-out">
+            <main className="body-content">
+                <RegForm setStartLoading = {setStartLoading}/>
+            </main>
+        </div>
+        </LoadingOverlay>
+    );
 }
 export default Registration;

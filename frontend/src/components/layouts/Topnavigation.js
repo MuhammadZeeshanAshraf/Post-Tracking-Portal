@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import $ from 'jquery';
 import { Button, Dropdown, Modal, NavLink } from 'react-bootstrap';
 import Scrollbar from 'react-perfect-scrollbar'
@@ -7,10 +7,13 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import peopleLogo from '../../assets/img/costic/customer-6.jpg'
 import costiclogo from '../../assets/img/costic/costic-logo-84x41.png'
 import ProfileModal from '../common/ProfileModal';
+import { useCookies } from 'react-cookie';
 
-const Topnavigation = () => {
 
+const Topnavigation = ({notification}) => {
+    const [cookies, setCookie, removeCookie] = useCookies(['user']);
     const [topNavigationShowModal, settopNavigationShowModal]  = useState(false);
+    const history = useHistory();
 
     const addsidenavigation = () => {
         $('.ms-body').toggleClass('ms-aside-left-open');
@@ -29,8 +32,8 @@ const Topnavigation = () => {
             <>
                  <Modal show={topNavigationShowModal} >
                 <Modal.Body>
-                    {/* <button type="button" className="close"><span aria-hidden="false">×</span></button> */}
-                    <Button onClick={handleProfileView}>sdfds</Button>
+                    <button type="button" onClick={handleProfileView} className="close"><span aria-hidden="false">×</span></button>
+                    {/* <Button onClick={handleProfileView}>Close</Button> */}
                     <ProfileModal />
                 </Modal.Body>
             </Modal>
@@ -81,34 +84,26 @@ const Topnavigation = () => {
                             <Dropdown.Toggle as={NavLink} className="text-disabled ms-has-notification p-0"><i className="flaticon-bell" /></Dropdown.Toggle>
                             <Dropdown.Menu className="dropdown-menu dropdown-menu-right" aria-labelledby="notificationDropdown">
                                 <div className="dropdown-menu-header">
-                                    <h6 className="dropdown-header ms-inline m-0"><span className="text-disabled">Notifications</span></h6><span className="badge badge-pill badge-info">4 New</span>
+                                    <h6 className="dropdown-header ms-inline m-0"><span className="text-disabled">Notifications</span></h6><span className="badge badge-pill badge-info">{notification?notification.length: 0} New</span>
                                 </div>
                                 <div className="dropdown-divider" />
                                 <Scrollbar className="ms-scrollable ms-dropdown-list">
-                                    <Link className="media p-2" to="#">
-                                        <div className="media-body"> <span>12 ways to improve your crypto dashboard</span>
-                                            <p className="fs-10 my-1 text-disabled"><i className="material-icons">access_time</i> 30 seconds ago</p>
-                                        </div>
-                                    </Link>
-                                    <Link className="media p-2" to="#">
-                                        <div className="media-body"> <span>You have newly registered users</span>
-                                            <p className="fs-10 my-1 text-disabled"><i className="material-icons">access_time</i> 45 minutes ago</p>
-                                        </div>
-                                    </Link>
-                                    <Link className="media p-2" to="#">
-                                        <div className="media-body"> <span>Your account was logged in from an unauthorized IP</span>
-                                            <p className="fs-10 my-1 text-disabled"><i className="material-icons">access_time</i> 2 hours ago</p>
-                                        </div>
-                                    </Link>
-                                    <Link className="media p-2" to="#">
-                                        <div className="media-body"> <span>An application form has been submitted</span>
-                                            <p className="fs-10 my-1 text-disabled"><i className="material-icons">access_time</i> 1 day ago</p>
-                                        </div>
-                                    </Link>
+                                    {
+                                        notification && notification.map(notif=>{
+                                            return(
+                                            <Link className="media p-2" to="#">
+                                                <div className="media-body"> 
+                                                    <span>{notif.description}</span>
+                                                    <p className="fs-10 my-1 text-disabled"><i className="material-icons">access_time</i>jsut now</p>
+                                                </div>
+                                            </Link>
+                                            )
+                                        })
+                                    }
                                 </Scrollbar>
                                 <div className="dropdown-divider" />
-                                <div className="dropdown-menu-footer text-center"> <Link to="#">View all Notifications</Link>
-                                </div>
+                                {/* <div className="dropdown-menu-footer text-center"> <Link to="#">View all Notifications</Link> */}
+                                {/* </div> */}
                             </Dropdown.Menu>
                         </Dropdown>
                     </li>
@@ -136,7 +131,9 @@ const Topnavigation = () => {
                                     </Link>
                                 </div> */}
                                 <div className="dropdown-menu-footer">
-                                    <Link className="media fs-14 p-2" to="/default-login"> <span><i className="flaticon-shut-down mr-2" /> Logout</span>
+                                    <Link className="media fs-14 p-2" to="/" onClick={(e)=>{e.preventDefault();
+                                        removeCookie('user')
+                                        history.replace("/login")}}> <span><i className="flaticon-shut-down mr-2" /> Logout</span>
                                     </Link>
                                 </div>
                             </Dropdown.Menu>

@@ -2,47 +2,48 @@ import axios from 'axios';
 import React, { Component, ReactDOM } from 'react';
 import Button from 'react-bootstrap/Button';
 import "../../../assets/css/optinput.css";
-import { withRouter } from 'react-router-dom';
+import { useHistory, useLocation, withRouter } from 'react-router-dom';
+import { errorToast } from '../../utility/common';
+import { useState } from 'react';
+import LoadingOverlay from 'react-loading-overlay';
 
 
-class Otpinput extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = { value: '', otp1: "", otp2: "", otp3: "", otp4: "", otp5: "", disable: true };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-
+const Otpinput = () => {
+  const location = useLocation();
+  const history = useHistory();
+  const [startLoading, setStartLoading] = useState(false);
+  const [state , setState] = useState({ value: '', otp1: "", otp2: "", otp3: "", otp4: "", otp5: "", otp6: "", disable: true });
+  const handleChange = (value1, event)=> {
+    setState({...state, [value1]: event.target.value });
   }
 
-  handleChange(value1, event) {
-
-    this.setState({ [value1]: event.target.value });
-  }
-
-  handleSubmit(event) {
+  const handleSubmit = (event)=> {
     event.preventDefault();
-    let data = this.state;
-    data = data.otp1 + data.otp2 + data.otp3 + data.otp4 + data.otp5; 
-    this.props.history.push("/login");
-    console.log(data);
-    axios.get('/otp', {
+    let data = state;
+    data = data.otp1 + data.otp2 + data.otp3 + data.otp4 + data.otp5+ data.otp6; 
+    setStartLoading(true);
+    axios.post('user/verifyotp', {
         otp: data,
+        id: location.state?.userId
       })
       .then(function (response) {
-        if(response.data){
-
-          // successToast("Success" ,"Successfully updated the status")
+        setStartLoading(false);
+        if(response.data.userId){
+          history.push({
+            pathname: '/login',
+            state: { userId: response.data.userId }
+          });
         } else{
-            // errorToast("Oops", "Error in updating the user status");
+            errorToast("Invalid OTP", "please try again");
         }
       })
       .catch(function (error) {
-        // errorToast("Oops", "Error contacting with server");
+        setStartLoading(false);
+        errorToast("Oops", "Error contacting with server");
     });
   }
 
-  inputfocus = (elmnt) => {
+  const inputfocus = (elmnt) => {
     if (elmnt.key === "Delete" || elmnt.key === "Backspace") {
       const next = elmnt.target.tabIndex - 2;
       if (next > -1) {
@@ -51,85 +52,96 @@ class Otpinput extends React.Component {
       }
     }
     else {
-      console.log("next");
      
         const next = elmnt.target.tabIndex;
-        if (next < 5) {
+        if (next < 6) {
           elmnt.target.form.elements[next].focus()
         }
     }
 
   }
-
-  render() {
     return (
-      <form className="d-flex flex-column justify-content-center align-items-center" onSubmit={this.handleSubmit}>
-        <div className="otpContainer">
+      <LoadingOverlay
+      active={startLoading}
+      spinner
+      text='Verifying ...'>
+        <form className="d-flex flex-column justify-content-center align-items-center" onSubmit={handleSubmit}>
+          <div className="otpContainer">
 
-          <input
-            name="otp1"
-            required={true}
-            type="text"
-            autoComplete="off"
-            className="otpInput"
-            value={this.state.otp1}
-            onKeyPress={this.keyPressed}
-            onChange={e => this.handleChange("otp1", e)}
-            tabIndex="1" maxLength="1" onKeyUp={e => this.inputfocus(e)}
+            <input
+              name="otp1"
+              required={true}
+              type="text"
+              autoComplete="off"
+              className="otpInput"
+              value={state.otp1}
+              // onKeyPress={keyPressed}
+              onChange={e => handleChange("otp1", e)}
+              tabIndex="1" maxLength="1" onKeyUp={e => inputfocus(e)}
 
-          />
-          <input
-            name="otp2"
-            required={true}
-            type="text"
-            autoComplete="off"
-            className="otpInput"
-            value={this.state.otp2}
-            onChange={e => this.handleChange("otp2", e)}
-            tabIndex="2" maxLength="1" onKeyUp={e => this.inputfocus(e)}
+            />
+            <input
+              name="otp2"
+              required={true}
+              type="text"
+              autoComplete="off"
+              className="otpInput"
+              value={state.otp2}
+              onChange={e => handleChange("otp2", e)}
+              tabIndex="2" maxLength="1" onKeyUp={e => inputfocus(e)}
 
-          />
-          <input
-            name="otp3"
-            required={true}
-            type="text"
-            autoComplete="off"
-            className="otpInput"
-            value={this.state.otp3}
-            onChange={e => this.handleChange("otp3", e)}
-            tabIndex="3" maxLength="1" onKeyUp={e => this.inputfocus(e)}
+            />
+            <input
+              name="otp3"
+              required={true}
+              type="text"
+              autoComplete="off"
+              className="otpInput"
+              value={state.otp3}
+              onChange={e => handleChange("otp3", e)}
+              tabIndex="3" maxLength="1" onKeyUp={e => inputfocus(e)}
 
-          />
-          <input
-            name="otp4"
-            required={true}
-            type="text"
-            autoComplete="off"
-            className="otpInput"
-            value={this.state.otp4}
-            onChange={e => this.handleChange("otp4", e)}
-            tabIndex="4" maxLength="1" onKeyUp={e => this.inputfocus(e)}
-          />
+            />
+            <input
+              name="otp4"
+              required={true}
+              type="text"
+              autoComplete="off"
+              className="otpInput"
+              value={state.otp4}
+              onChange={e => handleChange("otp4", e)}
+              tabIndex="4" maxLength="1" onKeyUp={e => inputfocus(e)}
+            />
 
-          <input
-            name="otp5"
-            required={true}
-            type="text"
-            autoComplete="off"
-            className="otpInput"
-            value={this.state.otp5}
-            onChange={e => this.handleChange("otp5", e)}
-            tabIndex="5" maxLength="1" onKeyUp={e => this.inputfocus(e)}
-          />
-        </div>
-        <div>
-            <button type="button"  className="btn btn-outline-dark mr-3">Send Again</button>
-            <button type="submit" className="btn btn-success">Verify</button>
-        </div>
-        
-      </form>
+            <input
+              name="otp5"
+              required={true}
+              type="text"
+              autoComplete="off"
+              className="otpInput"
+              value={state.otp5}
+              onChange={e => handleChange("otp5", e)}
+              tabIndex="5" maxLength="1" onKeyUp={e => inputfocus(e)}
+            />
+            <input
+              name="otp6"
+              required={true}
+              type="text"
+              autoComplete="off"
+              className="otpInput"
+              value={state.otp6}
+              onChange={e => handleChange("otp6", e)}
+              tabIndex="6" maxLength="1" onKeyUp={e => inputfocus(e)}
+            />
+          </div>
+          <div>
+              {/* <button type="button"  className="btn btn-outline-dark mr-3">Send Again</button> */}
+              <button type="submit" className="btn btn-success">Verify</button>
+          </div>
+          
+        </form>
+      </LoadingOverlay>
     );
-  }
 }
 
 export default withRouter(Otpinput);;

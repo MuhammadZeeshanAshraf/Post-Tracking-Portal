@@ -1,15 +1,14 @@
 import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap';
-import RoleSelect from '../../common/RoleSelect';
 import { sweetAlertError, sweetAlertSuccess, errorToast, successToast } from '../../utility/common';
 import Breadcrumb from './Breadcrumb';
-import CircleProgress from './CircleProgress';
 import '../../../assets/css/uploadFile.css';
 import uploadIcon from '../../../assets/img/uplaod_file.png';
 import Dropzone from 'react-dropzone';
 import { Link } from 'react-router-dom';
 import { Tab, Nav } from "react-bootstrap";
+import ContentTable from './ContentTable';
 
 const generateDefaultEditorRow = (rows)=>{
     let list = [];
@@ -24,7 +23,7 @@ const generateDefaultEditorRow = (rows)=>{
     return list;
 }
 
-const UploadContent = () => {
+const UploadContent = ({setNotifications}) => {
     const [showListModal ,setShowListModal] = useState(false);
     const [fileOutlookItem ,setFileOutlookItem] = useState("");
     const [fileName, setFileName] = React.useState(null);
@@ -35,6 +34,7 @@ const UploadContent = () => {
     const [focusLast, setFocusLast] = React.useState(false);
     const [nextFocus, setNextFocus] = React.useState(null);
     const [processedRows, setProcessedRows] = React.useState([]);
+    const [progress, setProgress] = React.useState(0.4);
         
     const handleEditorInputChange = (e, index) => {
         const { name, value } = e.target;
@@ -49,7 +49,6 @@ const UploadContent = () => {
             const rows = data.split("\n");
             let newEditorRows = [...editorData];
             rows.map(row => {
-                console.log(row)
                 const rowData = row.trim().split(/[ ,]+/);
                 let trackId = "";
                 let number = "";
@@ -78,7 +77,6 @@ const UploadContent = () => {
 
     const handleEdiotrKeyPress = (e, index) => {
         if(e.key === 'Enter'){
-          console.log('enter press here! ')
           let i =  parseInt(index)+1;
           const nextSibling =  document.getElementById("editRow_"+i);
           // If found, focus the next field
@@ -109,7 +107,7 @@ const UploadContent = () => {
     
     const uplopadFile  =  async (isEditor)=>{
         var data = null;
-        var list  = []
+        var list  = [];
         if(isEditor){
             editorData.map(row=>{
                 if(row.trackId && row.trackId.length >0){
@@ -124,7 +122,6 @@ const UploadContent = () => {
             data.append("Name", fileName);
         }
         if(data && data !== null){
-            console.log(data)
             axios
             .post("import-process/validation", data)
             .then(resp => {
@@ -147,7 +144,6 @@ const UploadContent = () => {
             lastInput.focus();    
             setFocusLast(false);
         } else if(nextFocus){
-            console.log(nextFocus);
             const nextInput =  document.getElementById("editRow_"+nextFocus);
             nextInput.focus();    
             setNextFocus(null);
@@ -155,6 +151,7 @@ const UploadContent = () => {
     }, [editorData]);
 
     const processFile = async () => {
+          setProgress(0.6);
           var processDate = document.getElementById("processDate").value;
           if(processDate.length === 0 ){
             sweetAlertError("Process Date Required", "To process file date is required field")
@@ -182,7 +179,7 @@ const UploadContent = () => {
                     )
                     .then((res) => {
                         successToast("Process Initiated", "File is processing successfully")
-                        console.log(res.data);
+                        setProgress(100);
                         if (Array.isArray(res.data.trackingData)) {
                         if (res.data.trackingData.length > 0) {
                             setProcessedRows(res.data.trackingData)
@@ -199,7 +196,10 @@ const UploadContent = () => {
                     .then((res) => {
                         if (Array.isArray(res.data.trackingData)) {
                         if (res.data.trackingData.length > 0) {
-                            setProcessedRows(res.data.trackingData)
+                            console.log(res)
+                            setNotifications(res.data.notificationsData);
+                            setProgress(parseInt((res.data.trackingData.length/ parseInt(fileOutlook.totalCount))*100));
+                            setProcessedRows(res.data.trackingData);
                         }
                     }
                     });
@@ -236,11 +236,11 @@ const UploadContent = () => {
                             {    
                             fileOutlook?
                                 fileIsProcessing?
-                                <div className="d-flex justify-content-center flex-column align-items-center mt-5">
+                                <div className="d-flex justify-content-center flex-column align-items-center m-5">
                                 <div className="progress" style={{width:'100%'}}>
-                                    <div className="progress-bar bg-success" role="progressbar" style={{ width: `${parseInt((processedRows.length/ parseInt(fileOutlook.totalCount))*100)}%` }} aria-valuenow={parseInt((processedRows.length/ parseInt(fileOutlook.totalCount))*100)} aria-valuemin={0} aria-valuemax={100}>{parseInt((processedRows.length/ parseInt(fileOutlook.totalCount))*100)}%</div>
+                                    <div className="progress-bar bg-success" role="progressbar" style={{ width: `${progress}%` }} aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>{progress}%</div>
                                 </div>
-                                {/* <CircleProgress progress={parseInt((processedRows.length/ parseInt(fileOutlook.totalCount))*100)} /> */}
+                                {/* <CircleProgress progress={progress} /> */}
                                     {/* <div className="col-md-6">
                                         <div className="progress-rounded">
                                             <div className="progress-value">{parseInt((processedRows.length/ parseInt(fileOutlook.total))*100)}%</div>
@@ -250,41 +250,7 @@ const UploadContent = () => {
                                             </svg>
                                         </div>
                                     </div> */}
-                                        <div className="table-responsive">
-                                        <table className="table table-hover thead-primary">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">Tracking Id</th>
-                                                    <th scope="col">Artical Type</th>
-                                                    <th scope="col">Booked At</th>
-                                                    <th scope="col">Date of Booking</th>
-                                                    <th scope="col">Contact Number</th>
-                                                    <th scope="col">Customer PIN Code</th>
-                                                    <th scope="col">Amount</th>
-                                                    <th scope="col">Validate (Validation Check)</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {
-                                                    processedRows && processedRows.length > 0?
-                                                        processedRows.map((item, i) => (
-                                                            <tr key={i}>
-                                                                <td>{item.tracking_id}</td>
-                                                                <td>{item.type}</td>
-                                                                <td>{item.booked_at}</td>
-                                                                <td>{item.booking_date}</td>
-                                                                <td>{item.contact_number}</td>
-                                                                <td>{item.customer_pin_code}</td>
-                                                                <td>{item.amount}</td>
-                                                                <td>{item.book_status}</td>
-                                                            </tr>
-                                                        ))
-                                                        :
-                                                        <></>
-                                                }
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                    <ContentTable dataRow={processedRows}/>
                                 </div>
                                 :
                                 <div className="d-flex flex-column justify-content-center">

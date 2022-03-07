@@ -6908,6 +6908,10 @@ table td .progress{
   .ms-content-wrapper.ms-auth{
     min-height: 100vh;
   }
+
+  .ms-content-wrapper.ms-profile{
+    min-height: 100%;
+  }
   .ms-website-performance li.ms-list-item{
     float: left;
     width: 50%;
@@ -7706,4 +7710,7 @@ background-image: none;
 }
 .ms-form-wizard.style3-wizard ul[role="tablist"] li>a:before{
   display: none;
+}
+._loading_overlay_overlay{
+  position: fixed;
 }

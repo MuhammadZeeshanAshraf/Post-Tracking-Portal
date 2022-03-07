@@ -6,11 +6,12 @@ import { UserContext } from '../custom_hooks/UserContext';
 import routes from './routes';
 
 const ProtectedRoutes = () => {
-  const {user, setUser} = useContext(UserContext);
+  const {user} = useContext(UserContext);
   let restrictedRoutes = [];
-  if(user.roleDetails.permission_level == 1){
+  console.log("user",user);
+  if(user.roleDetails?.permission_level == 1){
     restrictedRoutes = ['processTrackings', 'staff', 'clearStorage'];
-  }else if(user.roleDetails.permission_level == 2){
+  }else if(user.roleDetails?.permission_level == 2){
     restrictedRoutes = ['staff', 'clearStorage'];
   }
  return(

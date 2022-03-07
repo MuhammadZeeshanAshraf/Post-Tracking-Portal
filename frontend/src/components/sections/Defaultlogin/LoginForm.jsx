@@ -1,10 +1,13 @@
 import axios from 'axios';
 import { Formik } from 'formik';
-import React from 'react';
-import { Modal } from 'react-bootstrap';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useHistory } from 'react-router-dom';
+import { sweetAlertError } from '../../utility/common';
+import LoadingOverlay from 'react-loading-overlay';
+import { useCookies } from 'react-cookie';
+
 
 
 const validationSchema = Yup.object().shape({
@@ -19,24 +22,56 @@ const validationSchema = Yup.object().shape({
 
 const LoginForm = () => {
     const history = useHistory();
+    const [cookies, setCookie] = useCookies(['user']);
+    const [startLoading, setStartLoading] = useState(false);
 
-    const register = (values)=>{
-        history.push('/dashboard')
-        axios.post('/user/register', values)
-        .then(function (response) {
-            if(response == "OK"){
-                
+    const login = (values)=>{
+        setStartLoading(true);
+        axios.get("https://api.ipify.org/?format=json")
+        .then(function(e){
+            const data = {
+                email:values.email,
+                password : values.password,
+                ip_address : e.ip
             }
-        })
-        .catch(function (error) {
-          console.log(error);
-      });
+
+            axios.post('/user/login', data)
+            .then(function (response) {
+                  setStartLoading(false);
+                  if(response.data.user){
+                    let date = new Date();
+                    date.setTime(date.getTime() + (14*24*60*60*1000));
+                    let expires = date.toUTCString();
+                    window.location.reload();
+                    setCookie('user',{
+                        userInfo :response.data.user,
+                        expires,
+                        isLogin:true
+                    });
+                    // history.push("/dashboard")
+                } else{
+                    sweetAlertError("Error", response.data.error);
+                }
+            })
+            .catch(function (error) {
+              console.log(error);
+              setStartLoading(false);
+              sweetAlertError("Error", "Error connecting with server please, try again");
+          });  
+        }).catch(e=>{
+            setStartLoading(false);
+        })  
     }
+
     return (
+        <LoadingOverlay
+         active={startLoading}
+         spinner
+         text='Verifying ...'>
         <Formik
          validationSchema={validationSchema}
          onSubmit={(values) => {
-            register(values);
+            login(values);
           }}
          initialValues={{
            email: '',
@@ -122,6 +157,7 @@ const LoginForm = () => {
         </div>
         )}
         </Formik>
+        </LoadingOverlay>
     );
 }
 

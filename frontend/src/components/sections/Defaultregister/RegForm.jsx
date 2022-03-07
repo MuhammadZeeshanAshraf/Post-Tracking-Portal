@@ -1,10 +1,12 @@
 import axios from 'axios';
 import { Formik } from 'formik';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useHistory } from 'react-router-dom';
 import { sweetAlertError} from '../../utility/common';
+import { useState } from 'react';
+import { UserContext } from '../../../custom_hooks/UserContext';
 
 
 const validationSchema = Yup.object().shape({
@@ -34,15 +36,17 @@ const validationSchema = Yup.object().shape({
         .required('Mother Name is required'),
 });
   
-const RegForm = () => {
+const RegForm = ({setStartLoading}) => {
     const history = useHistory();
-  
+    const [profileImage, setProfileImage] = useState(null);
+
     const register = (values)=>{
         var formData  = new FormData();
         for ( var key in values ) {
             formData.append(key, values[key]);
         }
-        formData.append("profile_image", )
+        formData.append("profile_image", profileImage)
+        setStartLoading(true);
         axios({
             method: "post",
             url: '/user/register',
@@ -50,15 +54,19 @@ const RegForm = () => {
             headers: { "Content-Type": "multipart/form-data" },
           })
             .then(function (response) {
-                console.log(response)
-                if(response.userId){
-                    history.push('/otp')
+                setStartLoading(false);
+                if(response.data.userId){
+                    history.push({
+                    pathname: '/otp',
+                    state: { userId: response.data.userId }
+                 })
                 } else{
-                    sweetAlertError("Error", response.error);
+                    sweetAlertError("Error", response.data.error);
                 }
             })
             .catch(function (error) {
                 console.log(error);
+                setStartLoading(false);
                 sweetAlertError("Error", "Error connecting to server please try agin");
         });
     }
@@ -66,7 +74,13 @@ const RegForm = () => {
         <Formik
          validationSchema={validationSchema}
          onSubmit={(values) => {
-            register(values);
+             if(profileImage){
+                register(values);
+                document.getElementById('profileImage').classList.remove("is-invalid");
+            } else{
+                document.getElementById('profileImage').classList.add("is-invalid");
+            }
+
           }}
          initialValues={{
            name: '',
@@ -77,8 +91,7 @@ const RegForm = () => {
            father_name:'',
            mother_name:'',
            password: '',
-           confirmPassword: '',
-           profile_image : null,
+           confirmPassword: ''
             }}
         >
         {({
@@ -102,35 +115,38 @@ const RegForm = () => {
                             <p>Please enter personal information to continue</p>
                             <div className="form-row">
                                 <div className="col-md-12 ">
+                                    <div className='d-flex flex-row algin-items-center justify-content-center'>
                                     {
-                                    values.profile_image?                                    
+                                        profileImage?                                    
                                         <img 
                                             style={{
-                                                width: 200,
-                                                height: 200,
+                                                width: 100,
+                                                height: 100,
                                                 borderRadius: 200 / 2,
                                                 borderColor: 'gray',
                                                 borderWidth: 2,
                                             }}
-                                            source={URL.createObjectURL(values.profile_image)}
-                                            alt="profile image"
+                                            src={URL.createObjectURL(profileImage)}
                                         />
                                         :
                                         <></>
                                     }
+                                    </div>
                                     <label>Profile Image</label>
                                     <div className="input-group">
                                         <input 
-                                         id="image"
+                                         id="profileImage"
                                          accept="image/*"
                                          type="file" 
                                          className={`form-control ${touched.profile_image && errors.profile_image ? 'is-invalid' : ''}`} 
                                          name="profile_image"
                                          value={values.profile_image}
-                                         onChange={handleChange}
+                                         onChange={(e)=> {setProfileImage(e.target.files[0]);
+                                            e.target.classList.remove("is-invalid");
+                                        }}
                                          required />
-                                       <div className="invalid-feedback">
-                                            {errors.profile_image}
+                                        <div className="invalid-feedback">
+                                            Profile image in required field
                                         </div>
                                     </div>
                                 </div>
