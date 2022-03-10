@@ -42,6 +42,12 @@ router.post(
 );
 
 router.post(
+  '/verifypassword',
+  upload.single(''),
+  /* validator.exportTracking , */ asyncHandler(userController.passwordVerfication)
+);
+
+router.post(
   '/activeController',
   upload.single(''),
   /* validator.exportTracking , */ asyncHandler(userController.activationControlller)
