@@ -45,11 +45,11 @@ const ContentTable = ({dataRow})=> {
     }, [data]);
 
     return (
-        <div className="ms-panel-body">
+        // <div className="ms-panel-body">
             <div className="table-responsive">
                 <table id="platformTable" className="table w-100 thead-primary" />
             </div>
-        </div>
+        // </div>
     );
 }
 

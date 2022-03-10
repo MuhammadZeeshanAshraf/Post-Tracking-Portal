@@ -8,7 +8,6 @@ import routes from './routes';
 const ProtectedRoutes = () => {
   const {user} = useContext(UserContext);
   let restrictedRoutes = [];
-  console.log("user",user);
   if(user.roleDetails?.permission_level == 1){
     restrictedRoutes = ['processTrackings', 'staff', 'clearStorage'];
   }else if(user.roleDetails?.permission_level == 2){

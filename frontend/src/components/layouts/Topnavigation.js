@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom'
 import $ from 'jquery';
 import { Button, Dropdown, Modal, NavLink } from 'react-bootstrap';
@@ -8,12 +8,14 @@ import peopleLogo from '../../assets/img/costic/customer-6.jpg'
 import costiclogo from '../../assets/img/costic/costic-logo-84x41.png'
 import ProfileModal from '../common/ProfileModal';
 import { useCookies } from 'react-cookie';
+import { UserContext } from '../../custom_hooks/UserContext';
 
 
 const Topnavigation = ({notification}) => {
     const [cookies, setCookie, removeCookie] = useCookies(['user']);
     const [topNavigationShowModal, settopNavigationShowModal]  = useState(false);
     const history = useHistory();
+    const {user} = useContext(UserContext);
 
     const addsidenavigation = () => {
         $('.ms-body').toggleClass('ms-aside-left-open');
@@ -110,11 +112,11 @@ const Topnavigation = ({notification}) => {
                     <li className="ms-nav-item ms-nav-user dropdown">
                         <Dropdown className="custom-dropdown">
                             <Dropdown.Toggle as={NavLink} id="userDropdown" className="p-0">
-                                <img className="ms-user-img ms-img-round" src={peopleLogo} alt="people" />
+                                <img className="ms-user-img ms-img-round" src={user.profile_image} alt="Profile" />
                             </Dropdown.Toggle>
                             <Dropdown.Menu className="dropdown-menu dropdown-menu-right user-dropdown" aria-labelledby="userDropdown">
                                 <div className="dropdown-menu-header">
-                                    <h6 className="dropdown-header ms-inline m-0"><span className="text-disabled">Welcome, Anny Farisha</span></h6>
+                                    <h6 className="dropdown-header ms-inline m-0"><span className="text-disabled">Welcome, {user.name}</span></h6>
                                 </div>
                                 <div className="dropdown-divider" />
                                 <div className="ms-dropdown-list">
