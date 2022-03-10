@@ -28,7 +28,7 @@ const UploadContent = ({setNotifications}) => {
     const [fileOutlookItem ,setFileOutlookItem] = useState("");
     const [fileName, setFileName] = React.useState(null);
     const [file, setFile] = React.useState(null);
-    const [editorData, setEditorData] = React.useState(generateDefaultEditorRow(5))
+    const [editorData, setEditorData] = React.useState(generateDefaultEditorRow(1))
     const [fileOutlook, setFileOutlook] = React.useState(null);
     const [fileIsProcessing, setFileIsProcessing] = React.useState(false);
     const [focusLast, setFocusLast] = React.useState(false);
@@ -49,7 +49,8 @@ const UploadContent = ({setNotifications}) => {
             const rows = data.split("\n");
             let newEditorRows = [...editorData];
             rows.map(row => {
-                const rowData = row.trim().split(/[ ,]+/);
+                const rowData = row.trim().split(/[ ,\t]+/);
+                console.log(rowData);
                 let trackId = "";
                 let number = "";
                 try{
@@ -58,7 +59,9 @@ const UploadContent = ({setNotifications}) => {
                 }catch(err){
                     console.log(err);
                 }
-                newEditorRows = [...newEditorRows, { trackId: trackId, number: number, id : newEditorRows.length + 1}];
+                if(trackId?.length>0 || number?.length>0){
+                    newEditorRows = [...newEditorRows, { trackId: trackId, number: number, id : newEditorRows.length + 1}];
+                }
             })
             setEditorData(newEditorRows);
         }
@@ -108,7 +111,10 @@ const UploadContent = ({setNotifications}) => {
     const uplopadFile  =  async (isEditor)=>{
         var data = null;
         var list  = [];
+        let url = "import-process/validation";
+        
         if(isEditor){
+            url = "import-process/validation-editor"
             editorData.map(row=>{
                 if(row.trackId && row.trackId.length >0){
                     list.push({TrackingID: row.trackId, ContactNumber: row.number});
@@ -123,7 +129,7 @@ const UploadContent = ({setNotifications}) => {
         }
         if(data && data !== null){
             axios
-            .post("import-process/validation", data)
+            .post(url, data)
             .then(resp => {
                 console.log(resp)
                 if(resp.status === 200){
@@ -254,9 +260,14 @@ const UploadContent = ({setNotifications}) => {
                                 </div>
                                 :
                                 <div className="d-flex flex-column justify-content-center">
-                                    <div className='d-flex align-items-center justify-content-center mt-3 mb-5'>
-                                        <h4 className="h5 text-secondary">Selected File <i  className="fa fa-arrow-circle-right text-info" />&nbsp;&nbsp;&nbsp;{fileName}</h4>
-                                    </div>
+                                    {
+                                        fileName?
+                                        <div className='d-flex align-items-center justify-content-center mt-3 mb-5'>
+                                            <h4 className="h5 text-secondary">Selected File <i  className="fa fa-arrow-circle-right text-info" />&nbsp;&nbsp;&nbsp;{fileName}</h4>
+                                        </div>
+                                        :
+                                        <></>
+                                    }
                                     <div className="row d-flex justify-content-center">
                                         <div className="col-xl-3 col-lg-6 col-md-6">
                                             <div onClick={()=>{setFileOutlookItem("total");setShowListModal(true)}} className="ms-card ms-widget has-graph-full-width ms-infographics-widget">
@@ -276,7 +287,7 @@ const UploadContent = ({setNotifications}) => {
                                                 <div className="ms-card-body media">
                                                     <div className="media-body d-flex flex-column align-items-center justify-content-center">
                                                         <span className="black-text text-primary"><strong>Dubplicate Trackings</strong></span>
-                                                        <h2 className='text-secondary'>{fileOutlook.duplicatesCount?fileOutlook.total:0}</h2>
+                                                        <h2 className='text-secondary'>{fileOutlook.duplicatesCount?fileOutlook.duplicatesCount:0}</h2>
                                                     </div>
                                                 </div>
                                                 {/* <LineChart data={this.state.data2} options={options} /> */}
@@ -358,8 +369,8 @@ const UploadContent = ({setNotifications}) => {
                                             <div></div>
                                             <div className="editor">
                                             <div className="d-flex editorHeader mb-2" onPaste={e=>handlePastEvent(e)}>
-                                                <h5 className='mr-2 text-secondary'>Track ID</h5>
-                                                <h5 className='mr-2 text-secondary'>Number</h5>
+                                                <h5 className='mr-2 text-secondary'>Tracking Id</h5>
+                                                <h5 className='mr-2 text-secondary'>Contact Number</h5>
                                             </div>
                                                 {
                                                     editorData.map((row, index)=>{ 
@@ -385,7 +396,14 @@ const UploadContent = ({setNotifications}) => {
                                                                 />
                                                                 <Link title="Add new" onClick={()=>{setNextFocus(index+1); addEditorRow(index);}} to="#"><i class="fas fa-plus-circle ml-2 mr-2 fs-16 text-success"/></Link>
                                                                 {/* <Link onPaste={(e)=>handlePastEvent(e)} title="Copy from clipboard" onClick={(e)=>copyFromClipboard(e ,index)} to="#"><i class="fas  fa-clipboard mr-2 fs-16 text-secondary"/></Link> */}
-                                                                <Link title="Delte" onClick={()=>deleteEditorRow(index)} to="#"><i className="material-icons fs-18 mr-2 text-danger">delete</i></Link> 
+                                                                <Link title="Delete" 
+                                                                onClick={
+                                                                    ()=>{editorData.length == 1 && index == 0?
+                                                                    console.log("cannot be deleted")
+                                                                    :deleteEditorRow(index)}
+                                                                    } to="#">
+                                                                    <i className="material-icons fs-18 mr-2 text-danger">delete</i>
+                                                                </Link> 
                                                             </div>
                                                         );
                                                     })

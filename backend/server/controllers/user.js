@@ -3,6 +3,7 @@ import models from '../models';
 import * as userService from '../services/user';
 import moment from 'moment';
 import path from 'path';
+import bcrypt from 'bcrypt';
 
 export const register = async (request, response, next) => {
   try {
@@ -123,6 +124,43 @@ export const otpVerfication = async (request, response, next) => {
       );
       response.send({
         userId: request.body.id
+      });
+    }
+  } catch (error) {
+    return response.status(400).send({
+      message: error.message
+    });
+  }
+};
+
+export const passwordVerfication = async (request, response, next) => {
+  try {
+    const { id, password } = request.body;
+    const users = await models.generalDatabaseFunction.getDatabySingleWhereColumn(SCHEMA, TABLE_DETAILS.users.name, 'id', id);
+    if (Array.isArray(users)) {
+      if (users.length > 0) {
+        const check = bcrypt.compareSync(password, users[0].password);
+        if (check) {
+          response.send({
+            user: id,
+            isValid: true
+          });
+        } else {
+          response.send({
+            user: id,
+            isValid: false
+          });
+        }
+      } else {
+        const message = `User having id: ${id} does not exist.`;
+        response.status(400).send({
+          message: message
+        });
+      }
+    } else {
+      const message = `User having id: ${id} does not exist.`;
+      response.status(400).send({
+        message: message
       });
     }
   } catch (error) {
