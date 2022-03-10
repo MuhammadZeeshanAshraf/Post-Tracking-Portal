@@ -51,7 +51,7 @@ const Sidenavigation = () => {
                 <Scrollbar id="ms-side-nav" className="side-nav fixed ms-aside-scrollable ms-aside-left">
                     {/* Logo */}
                     <div className="logo-sn ms-d-block-lg">
-                        <Link className="pl-0 ml-0 text-center" to="/">
+                        <Link className="pl-0 ml-0 text-center" to="/dashboard">
                             <img src={logo} alt="logo" />
                         </Link>
                     </div>

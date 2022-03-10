@@ -148,13 +148,13 @@ const ContentTable = ({startDate, endDate})=> {
                 </div>
             </div>
         </div>
-        <Modal className="modal-min" show={workingRecordShowModal} onHide={()=>setWorkingRecordShowModal(false)} aria-labelledby="contained-modal-title-vcenter" centered>
+        <Modal size="xl" className=" tables-modal" show={workingRecordShowModal} onHide={()=>setWorkingRecordShowModal(false)} aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Body className="text-center">
                 <button type="button" className="close" onClick={()=>setWorkingRecordShowModal(false)}><span aria-hidden="true">×</span></button>
                 <WorkingRecordModal processId={processId}  fileName={fileName} />
             </Modal.Body>
         </Modal>
-        <Modal className="modal-min" show={invalidRecordShowModal} onHide={()=>setInvalidRecordShowModal(false)} aria-labelledby="contained-modal-title-vcenter" centered>
+        <Modal size="xl" className="modal-min" show={invalidRecordShowModal} onHide={()=>setInvalidRecordShowModal(false)} aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Body className="text-center">
                 <button type="button" className="close" onClick={()=>setInvalidRecordShowModal(false)}><span aria-hidden="true">×</span></button>
                 <InvalidRecordModal processId={processId}  fileName={fileName} />

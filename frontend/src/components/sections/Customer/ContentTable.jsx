@@ -191,7 +191,7 @@ const ContentTable = ({sDate, eDate})=> {
                 </div>
             </div>
         </div>
-        <Modal className="modal-min" show={showModal} onHide={()=>setShowModal(false)} aria-labelledby="contained-modal-title-vcenter" centered>
+        <Modal size="lg" className="modal-min" show={showModal} onHide={()=>setShowModal(false)} aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Body className="text-center">
                 <button type="button" className="close" onClick={()=>setShowModal(false)}><span aria-hidden="true">×</span></button>
                 <CustomerModal processId={processId} fileName={fileName} />
@@ -209,7 +209,7 @@ const ContentTable = ({sDate, eDate})=> {
                     <div className="ms-form-group has-icon">
                         <textarea onChange={(e)=>setMessageContent(e.target.value)} required type="text" placeholder="Enter message text here..." rows="7" className="form-control" name="messageContent" />
                     </div>
-                    <button type="submit"  className="btn btn-primary shadow-none">Send</button>
+                    <button type="submit" disabled={true}  className="btn btn-primary">Send</button>
                 </form>
             </Modal.Body>
         </Modal>

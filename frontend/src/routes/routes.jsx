@@ -11,6 +11,8 @@ import TrackingIssues from '../components/pages/TrackingIssues';
 import UploadedRecords from '../components/pages/UploadedRecords';
 import UploadFile from '../components/pages/UploadFile';
 import UserDocumentRecords from '../components/pages/UserDocumentRecords';
+import UserLoginRecords from '../components/pages/UserLoginRecords';
+import UserProfile from '../components/pages/UserProfile';
 
 const routes = [
   {
@@ -59,8 +61,8 @@ const routes = [
     exact: true
   },
   {
-    path: 'userDocumentRecords',
-    component: UserDocumentRecords,
+    path: 'userLoginRecords',
+    component: UserLoginRecords,
     exact: true
   },
   {
@@ -71,6 +73,11 @@ const routes = [
   {
     path: 'userDocumentRecords',
     component: UserDocumentRecords,
+    exact: true
+  },
+  {
+    path: 'profile',
+    component: UserProfile,
     exact: true
   },
   {

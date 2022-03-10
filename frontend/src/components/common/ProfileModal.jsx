@@ -7,7 +7,6 @@ import { UserContext } from '../../custom_hooks/UserContext';
 const ProfileModal = ({setStartLoading}) => {
     const history = useHistory();
     const {user} = useContext(UserContext);
-    console.log("user - ",user);
     const [profileImage, setProfileImage] = useState(user.profile_image);
     return (
         <Formik
@@ -29,7 +28,7 @@ const ProfileModal = ({setStartLoading}) => {
                 <div className="ms-auth-col ">
                     <div className="ms-auth-form">
                         <form   style={{ flex:1, marginBottom:'20px' }} noValidate>
-                            <h3>User Profile</h3>
+                            <h3>Profile</h3>
                             <div className="form-row">
                                 <div className="col-md-12 ">
                                     <div className='d-flex flex-row algin-items-center justify-content-center'>

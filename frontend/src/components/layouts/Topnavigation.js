@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom'
 import $ from 'jquery';
-import { Button, Dropdown, Modal, NavLink } from 'react-bootstrap';
+import { Dropdown, NavLink } from 'react-bootstrap';
 import Scrollbar from 'react-perfect-scrollbar'
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import peopleLogo from '../../assets/img/costic/customer-6.jpg'
 import costiclogo from '../../assets/img/costic/costic-logo-84x41.png'
-import ProfileModal from '../common/ProfileModal';
 import { useCookies } from 'react-cookie';
 
 
 const Topnavigation = ({notification}) => {
     const [cookies, setCookie, removeCookie] = useCookies(['user']);
-    const [topNavigationShowModal, settopNavigationShowModal]  = useState(false);
     const history = useHistory();
 
     const addsidenavigation = () => {
@@ -24,19 +22,7 @@ const Topnavigation = ({notification}) => {
         $('#ms-nav-options').toggleClass('ms-slide-down');
     }
 
-    const handleProfileView = async (id) => {
-        settopNavigationShowModal(!topNavigationShowModal);
-     };
-
         return (
-            <>
-                 <Modal show={topNavigationShowModal} >
-                <Modal.Body>
-                    <button type="button" onClick={handleProfileView} className="close"><span aria-hidden="false">×</span></button>
-                    {/* <Button onClick={handleProfileView}>Close</Button> */}
-                    <ProfileModal />
-                </Modal.Body>
-            </Modal>
             <nav className="navbar ms-navbar">
                 <div className="ms-aside-toggler ms-toggler pl-0" onClick={addsidenavigation()}>
                     <span className="ms-toggler-bar bg-primary" />
@@ -118,7 +104,7 @@ const Topnavigation = ({notification}) => {
                                 </div>
                                 <div className="dropdown-divider" />
                                 <div className="ms-dropdown-list">
-                                    <Link className="media fs-14 p-2" onClick={()=>handleProfileView()}> <span><i className="flaticon-user mr-2" /> Profile</span>
+                                    <Link className="media fs-14 p-2" to="/profile" > <span><i className="flaticon-user mr-2" /> Profile</span>
                                     </Link>
                                     {/* <Link className="media fs-14 p-2" to="/email"> <span><i className="flaticon-mail mr-2" /> Inbox</span> <span className="badge badge-pill badge-info">3</span>
                                     </Link>
@@ -146,8 +132,6 @@ const Topnavigation = ({notification}) => {
                     <span className="ms-toggler-bar bg-primary" />
                 </div>
             </nav >
-        
-            </>
         );
 }
 

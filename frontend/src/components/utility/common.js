@@ -24,6 +24,16 @@ export function sweetAlertSuccess(title){
     });
 }
 
+
+export function sweetAlertInfo(title){
+    Swal.fire({
+        position: 'top-center',
+        icon: 'info',
+        title: title,
+        showConfirmButton: false,
+        timer: 1500
+    });
+}
 toastr.options =
 {
     "closeButton": false,
